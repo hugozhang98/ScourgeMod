@@ -1,0 +1,3 @@
+displayName = The Scourge
+author = HugoZhange
+version = 0.1
