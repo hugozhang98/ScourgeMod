@@ -3,7 +3,7 @@
 
 Items: {
 	Hugos: {
-		DisplayName: "Hugos"
+		DisplayName: Hugos
 		Tooltip:
 			'''
 			Template of an item
