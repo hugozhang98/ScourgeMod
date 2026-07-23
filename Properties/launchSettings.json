@@ -9,8 +9,8 @@
 		"TerrariaServer": {
 			"commandName": "Executable",
 			"executablePath": "$(DotNetName)",
-			"commandLineArgs": "$(tMLServerPath)",
+			"commandLineArgs": "$(tMLServerPath) -world \"C:\\Users\\CARY\\Documents\\My Games\\Terraria\\tModLoader\\Worlds\\骷髅的无望肖像.wld\" -players 4 -port 7777 -password \"\"",
 			"workingDirectory": "$(tMLSteamPath)"
-		}
+	    }
 	}
 }
