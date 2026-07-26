@@ -1,5 +1,4 @@
-﻿using System;
-using Microsoft.Xna.Framework;
+﻿using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Graphics;
 using ScourgeMod.Helper;
 using Terraria;
@@ -10,9 +9,9 @@ using Terraria.ModLoader;
 
 namespace ScourgeMod.Common.BackWeapons
 {
-    public class BackSwordShoulderDrawLayer : PlayerDrawLayer
+    public class BackSwordWaistDrawLayer : PlayerDrawLayer
     {
-        public override Position GetDefaultPosition() => new BeforeParent(PlayerDrawLayers.Head);
+        public override Position GetDefaultPosition() => new AfterParent(PlayerDrawLayers.Skin);
 
         public override bool GetDefaultVisibility(PlayerDrawSet drawInfo)
         {
@@ -20,7 +19,7 @@ namespace ScourgeMod.Common.BackWeapons
             Item heldItem = player.HeldItem;
 
             return BackWeaponHelper.GetDefaultVisibility(heldItem, player)
-                && BackWeaponRegistry.IsBackSword_Shoulder(heldItem);
+                && BackWeaponRegistry.IsBackSword_Waist(heldItem);
         }
 
         protected override void Draw(ref PlayerDrawSet drawInfo)
@@ -35,15 +34,15 @@ namespace ScourgeMod.Common.BackWeapons
             Rectangle frame = texture.Frame();
 
             SpriteEffects effects = GetEffects(player);
-            Vector2 origin = GetOrigin(frame, player);
+            Vector2 origin = GetOrigin(frame, player, heldItem);
             Vector2 position = GetPosition(drawInfo.Center, player, heldItem);
-            float rotation = GetRotation(player);
-            Color lightColor = GetColor(player, heldItem);
+            float rotation = GetRotation(player, heldItem);
+            Color lightColor = GetColor(player);
             float scale = GetScale();
 
             DrawData drawData = new DrawData(
                 texture,
-                position,
+                position.Floor(),
                 frame,
                 lightColor,
                 rotation,
@@ -67,54 +66,35 @@ namespace ScourgeMod.Common.BackWeapons
             return effects;
         }
 
-        private Vector2 GetOrigin(Rectangle frame, Player player) =>
-            frame.Size()
-            * new Vector2(player.direction == 1 ? 0f : 1f, player.gravDir == 1f ? 1f : 0f);
+        private Vector2 GetOrigin(Rectangle frame, Player player, Item item) => frame.Size() * 0.5f;
 
         private Vector2 GetPosition(Vector2 basePosition, Player player, Item item)
         {
             //默认坐标（屏幕坐标）
             Vector2 position = basePosition - Main.screenPosition;
             //默认偏移
-            position += new Vector2(player.direction * 18f, player.gravDir * 4f);
-
-            //特殊物品偏移
-            if (item.type == ItemID.StylistKilLaKillScissorsIWish)
-            {
-                position += new Vector2(player.direction * 5f, 3f);
-            }
-
-            if (item.type == ItemID.Keybrand)
-            {
-                position += new Vector2(player.direction * 6f, 5f);
-            }
+            position += new Vector2(player.direction * 2f, player.gravDir * 6f);
 
             return position.Floor();
         }
 
-        private float GetRotation(Player player)
+        private float GetRotation(Player player, Item item)
         {
             //默认旋转角度
-            float baseRotation = AngleHelper.DegToRad(0 - player.direction * 90);
+            float baseRotation = AngleHelper.DegToRad(0f - player.direction * 150f);
+
+            if (item.type == ItemID.Ruler)
+            {
+                baseRotation = AngleHelper.DegToRad(0f - player.direction * 110f);
+            }
 
             float moveSway = BackWeaponHelper.GetMoveSway(player, 4f);
 
             return (baseRotation + moveSway) * player.gravDir;
         }
 
-        private Color GetColor(Player player, Item item)
-        {
-            Color baseColor = Lighting.GetColor(player.Center.ToTileCoordinates());
-
-            if (item.type == ItemID.PsychoKnife)
-            {
-                // 变态刀的潜行透明度：1 为正常显示，接近 0 时接近隐身
-                float stealth = MathF.Max(player.stealth, 0.07f);
-                baseColor *= stealth;
-            }
-
-            return baseColor;
-        }
+        private Color GetColor(Player player) =>
+            Lighting.GetColor(player.Center.ToTileCoordinates());
 
         private float GetScale() => 1f;
     }
