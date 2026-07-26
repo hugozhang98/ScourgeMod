@@ -14,8 +14,7 @@ namespace ScourgeMod.Common.BackWeapons
             //三叉戟
             ItemID.Trident,
             //史莱姆长矛
-            //ItemID.SlimeSpear,
-
+            //ItemID.SlimeSpear, rrzz
             //风暴长矛
             ItemID.ThunderSpear,
             //腐叉
@@ -49,7 +48,7 @@ namespace ScourgeMod.Common.BackWeapons
             //北极
             ItemID.NorthPole,
             //燧石
-            //ItemID.DeadCellsFlint,
+            //ItemID.DeadCellsFlint, rrzz
             //瞌睡章鱼
             ItemID.MonkStaffT1,
             //腐化者之戟
@@ -324,16 +323,66 @@ namespace ScourgeMod.Common.BackWeapons
         public static bool IsBackMace(Item item) =>
             item.ModItem is IBackMace || VanillaBackMace.Contains(item.type);
         #endregion
+
+        #region BackYoyo ==========================================================================================================================
+        public static readonly HashSet<int> VanillaBackYoyo = new()
+        {
+            //利刃手套
+            ItemID.BladedGlove,
+            //臭虎爪
+            ItemID.FetidBaghnakhs,
+            //木悠悠球
+            ItemID.WoodYoyo,
+            //对打球
+            ItemID.Rally,
+            //抑郁球
+            ItemID.CorruptYoyo,
+            //血脉球
+            ItemID.CrimsonYoyo,
+            //亚马逊球
+            ItemID.JungleYoyo,
+            //代码1球
+            ItemID.Code1,
+            //蜂巢球
+            ItemID.HiveFive,
+            //英勇球
+            ItemID.Valor,
+            //喷流球
+            ItemID.Cascade,
+            //好胜球
+            ItemID.FormatC,
+            //渐变球
+            ItemID.Gradient,
+            //吉克球
+            ItemID.Chik,
+            //狱火球
+            ItemID.HelFire,
+            //冰雪悠悠球
+            ItemID.Amarok,
+            //代码2球
+            ItemID.Code2,
+            //叶列茨球
+            ItemID.Yelets,
+            //Red的抛球
+            ItemID.RedsYoyo,
+            //女武神悠悠球
+            ItemID.ValkyrieYoyo,
+            //克拉肯球
+            ItemID.Kraken,
+            //克苏鲁之眼
+            ItemID.TheEyeOfCthulhu,
+            //泰拉悠悠球
+            ItemID.Terrarian,
+        };
+
+        public static bool IsBackYoyo(Item item) =>
+            item.ModItem is IBackYoyo || VanillaBackYoyo.Contains(item.type);
+        #endregion
     }
 }
 
 
-//利刃手套
-//ItemID.BladedGlove,
-//臭虎爪
-//ItemID.FetidBaghnakhs,
-
 ////悲剧雨伞
-//ItemID.TragicUmbrella,
+//ItemID.TragicUmbrella, rrzz
 //    //伞
 //ItemID.Umbrella,

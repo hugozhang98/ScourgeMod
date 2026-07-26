@@ -6,5 +6,7 @@
 
     public interface IBackSword_Waist { }
 
+    public interface IBackYoyo { }
+
     public interface IBackMace { }
 }
