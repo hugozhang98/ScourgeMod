@@ -82,7 +82,7 @@ namespace ScourgeMod.Common.BackWeapons
             //默认旋转角度
             float baseRotation = AngleHelper.DegToRad(0f - player.direction * 180f);
 
-            float moveSway = BackWeaponHelper.GetMoveSway(player, 30f);
+            float moveSway = BackWeaponHelper.GetMoveSway(player, 20f);
 
             return (baseRotation + moveSway) * player.gravDir;
         }
@@ -90,6 +90,6 @@ namespace ScourgeMod.Common.BackWeapons
         private Color GetColor(Player player) =>
             Lighting.GetColor(player.Center.ToTileCoordinates());
 
-        private float GetScale() => 0.6f;
+        private float GetScale() => 0.7f;
     }
 }
