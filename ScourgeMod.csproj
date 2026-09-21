@@ -1,9 +1,30 @@
 <Project Sdk="Microsoft.NET.Sdk">
-  <!-- Import tModLoader mod properties -->
-  <Import Project="..\tModLoader.targets" />
+  <!-- Each developer supplies the tModLoader installation folder locally. -->
+  <Import Project="tModLoader.local.props" Condition="Exists('tModLoader.local.props')" />
 
-  <!-- General -->
-  <PropertyGroup></PropertyGroup>
+  <PropertyGroup>
+    <TModLoaderTargetsPath Condition="'$(TModLoaderPath)' != ''">$(TModLoaderPath)/tMLMod.targets</TModLoaderTargetsPath>
+    <TModLoaderDotNetPath Condition="$([MSBuild]::IsOSPlatform('OSX'))">$(TModLoaderPath)/dotnet/dotnet</TModLoaderDotNetPath>
+    <TModLoaderDotNetPath Condition="$([MSBuild]::IsOSPlatform('Windows'))">dotnet</TModLoaderDotNetPath>
+    <TModLoaderDotNetPath Condition="'$(TModLoaderDotNetPath)' == ''">dotnet</TModLoaderDotNetPath>
+    <TModLoaderNativeLibraryPath Condition="$([MSBuild]::IsOSPlatform('OSX'))">$(TModLoaderPath)/Libraries/Native/OSX</TModLoaderNativeLibraryPath>
+    <IsMacOS>$([MSBuild]::IsOSPlatform('OSX'))</IsMacOS>
+  </PropertyGroup>
 
-  <!-- References -->
+  <Import Project="$(TModLoaderTargetsPath)" Condition="Exists('$(TModLoaderTargetsPath)')" />
+
+  <Target Name="ValidateTModLoaderConfiguration" BeforeTargets="PrepareForBuild">
+    <Error Condition="'$(TModLoaderPath)' == ''" Text="tModLoader is not configured. Copy tModLoader.local.props.example to tModLoader.local.props and set TModLoaderPath." />
+    <Error Condition="!Exists('$(TModLoaderTargetsPath)')" Text="tModLoader was not found at '$(TModLoaderPath)'. Update TModLoaderPath in tModLoader.local.props." />
+  </Target>
+
+  <!-- Override tML's build target so macOS sets its native-library paths in a shell launcher. -->
+  <Target Name="BuildMod" AfterTargets="Build" Condition="'$(BuildMod)' == 'true'">
+    <Exec Condition="'$(IsMacOS)' == 'true'"
+          Command="/bin/bash &quot;$(MSBuildProjectDirectory)/scripts/run-tmodloader-macos.sh&quot; &quot;$(TModLoaderPath)&quot; $(tMLServerPath) -build &quot;$(ProjectDir)&quot; -eac &quot;$(TargetPath)&quot; -define &quot;$(DefineConstants)&quot; -unsafe $(AllowUnsafeBlocks) $(ExtraBuildModFlags)"
+          WorkingDirectory="$(tMLSteamPath)" />
+    <Exec Condition="'$(IsMacOS)' != 'true'"
+          Command="&quot;$(TModLoaderDotNetPath)&quot; $(tMLServerPath) -build &quot;$(ProjectDir)&quot; -eac &quot;$(TargetPath)&quot; -define &quot;$(DefineConstants)&quot; -unsafe $(AllowUnsafeBlocks) $(ExtraBuildModFlags)"
+          WorkingDirectory="$(tMLSteamPath)" />
+  </Target>
 </Project>

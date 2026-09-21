@@ -2,9 +2,13 @@
 	"profiles": {
 		"Terraria": {
 			"commandName": "Executable",
-			"executablePath": "$(DotNetName)",
+			"executablePath": "$(TModLoaderDotNetPath)",
 			"commandLineArgs": "$(tMLPath)",
-			"workingDirectory": "$(tMLSteamPath)"
+			"workingDirectory": "$(tMLSteamPath)",
+			"environmentVariables": {
+				"DYLD_LIBRARY_PATH": "$(TModLoaderNativeLibraryPath)",
+				"VK_ICD_FILENAMES": "$(TModLoaderNativeLibraryPath)/MoltenVK_icd.json"
+			}
 		},
 		"TerrariaServer": {
 			"commandName": "Executable",
