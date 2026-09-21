@@ -1,0 +1,8 @@
+{
+  "name": "scourge-mod-dev-tools",
+  "private": true,
+  "version": "0.0.0",
+  "scripts": {
+    "setup:tmodloader": "node scripts/setup-tmodloader.js"
+  }
+}

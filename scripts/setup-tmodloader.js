@@ -1,18 +1,13 @@
-import fs from 'node:fs';
-import path from 'node:path';
-import { fileURLToPath } from 'node:url';
+'use strict';
 
-type Options = {
-  force: boolean;
-  tModLoaderPath?: string;
-};
+const fs = require('node:fs');
+const path = require('node:path');
 
-const scriptDirectory = path.dirname(fileURLToPath(import.meta.url));
-const projectDirectory = path.resolve(scriptDirectory, '..');
+const projectDirectory = path.resolve(__dirname, '..');
 const configPath = path.join(projectDirectory, 'tModLoader.local.props');
 
-function printUsage(): void {
-  console.log(`Usage: npx --yes tsx scripts/setup-tmodloader.ts [options]
+function printUsage() {
+  console.log(`Usage: node scripts/setup-tmodloader.js [options]
 
 Options:
   --tmodloader-path <path>  Use this Steam tModLoader installation directory.
@@ -20,8 +15,8 @@ Options:
   --help                    Show this message.`);
 }
 
-function parseOptions(args: string[]): Options {
-  const options: Options = { force: false };
+function parseOptions(args) {
+  const options = { force: false };
 
   for (let index = 0; index < args.length; index += 1) {
     const argument = args[index];
@@ -46,13 +41,13 @@ function parseOptions(args: string[]): Options {
   return options;
 }
 
-function tModLoaderTargetExists(candidate: string): boolean {
+function tModLoaderTargetExists(candidate) {
   return fs.existsSync(path.join(candidate, 'tMLMod.targets'));
 }
 
-function steamRoots(): string[] {
-  const home = process.env.HOME ?? process.env.USERPROFILE;
-  const roots: string[] = [];
+function steamRoots() {
+  const home = process.env.HOME || process.env.USERPROFILE;
+  const roots = [];
 
   if (process.platform === 'win32') {
     for (const programFiles of [process.env['ProgramFiles(x86)'], process.env.ProgramFiles]) {
@@ -71,7 +66,7 @@ function steamRoots(): string[] {
   return [...new Set(roots)];
 }
 
-function librariesFromVdf(steamRoot: string): string[] {
+function librariesFromVdf(steamRoot) {
   const libraryFoldersPath = path.join(steamRoot, 'steamapps', 'libraryfolders.vdf');
   if (!fs.existsSync(libraryFoldersPath)) {
     return [];
@@ -82,8 +77,8 @@ function librariesFromVdf(steamRoot: string): string[] {
     .map((match) => match[1].replace(/\\\\/g, '\\'));
 }
 
-function findTModLoader(options: Options): string | undefined {
-  const candidates: string[] = [];
+function findTModLoader(options) {
+  const candidates = [];
   if (options.tModLoaderPath) {
     candidates.push(options.tModLoaderPath);
   }
@@ -98,7 +93,7 @@ function findTModLoader(options: Options): string | undefined {
   return [...new Set(candidates)].find(tModLoaderTargetExists);
 }
 
-function escapeXml(value: string): string {
+function escapeXml(value) {
   return value
     .replaceAll('&', '&amp;')
     .replaceAll('<', '&lt;')
@@ -107,7 +102,7 @@ function escapeXml(value: string): string {
     .replaceAll("'", '&apos;');
 }
 
-function writeConfig(tModLoaderPath: string): void {
+function writeConfig(tModLoaderPath) {
   const contents = [
     '<Project>',
     '  <PropertyGroup>',

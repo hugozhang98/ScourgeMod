@@ -15,5 +15,6 @@ Thumbs.db
 *.tmp
 #IDE
 .vs/
+node_modules/
 #log
 logfile.txt

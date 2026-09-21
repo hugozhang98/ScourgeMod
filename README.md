@@ -7,23 +7,23 @@
 在克隆项目后需要运行一次初始化脚本（需要 Node.js 18+）：
 
 ```sh
-npx --yes tsx scripts/setup-tmodloader.ts
+node scripts/setup-tmodloader.js
 ```
 
-使用 Yarn 2+ 也可以直接运行：
+使用 Yarn（包括 Yarn 1）也可以：
 
 ```sh
-yarn dlx tsx scripts/setup-tmodloader.ts
+yarn setup:tmodloader
 ```
 
 若 tModLoader 安装在非标准位置，可显式传入安装目录：
 
 ```sh
-npx --yes tsx scripts/setup-tmodloader.ts --tmodloader-path "D:/SteamLibrary/steamapps/common/tModLoader"
+node scripts/setup-tmodloader.js --tmodloader-path "D:/SteamLibrary/steamapps/common/tModLoader"
 ```
 
 ```sh
-yarn dlx tsx scripts/setup-tmodloader.ts --tmodloader-path "D:/SteamLibrary/steamapps/common/tModLoader"
+yarn setup:tmodloader --tmodloader-path "D:/SteamLibrary/steamapps/common/tModLoader"
 ```
 
 脚本会生成 `tModLoader.local.props`。在 macOS 与 Windows 间切换时，需要重新运行脚本；若自动发现失败，只修改其中的 `TModLoaderPath`，不需要改动 `.csproj`、VS Code 任务或启动配置。
