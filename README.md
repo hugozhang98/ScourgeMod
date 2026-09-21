@@ -1,6 +1,6 @@
 ## 开发者注意事项
 
-本项目通过根目录的 `tModLoader.local.props` 文件定位本机的 Steam tModLoader 安装目录。它是本机环境配置，已被 Git 忽略，不应提交。
+本项目必须通过根目录的 `tModLoader.local.props` 文件定位本机的 Steam tModLoader 安装目录。它是本机环境配置，已被 Git 忽略，不应提交。
 通过初始化脚本可以自动生成 `tModLoader.local.props` 文件。
 初始化脚本会优先从 Steam 默认目录和 Steam 库配置中自动定位 tModLoader；找不到时会生成一个待填写的模板。
 
@@ -10,7 +10,7 @@
 node scripts/setup-tmodloader.js
 ```
 
-使用 Yarn（包括 Yarn 1）也可以：
+使用 Yarn 也可以：
 
 ```sh
 yarn setup:tmodloader
