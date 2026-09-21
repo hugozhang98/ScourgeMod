@@ -1,11 +1,19 @@
 ## 开发者注意事项
 
-本项目通过根目录的 `tModLoader.local.props` 定位本机的 Steam tModLoader 安装目录。它是本机配置，已被 Git 忽略，不应提交。初始化脚本会优先从 Steam 默认目录和 Steam 库配置中自动定位 tModLoader；找不到时会生成一个待填写的模板。
+本项目通过根目录的 `tModLoader.local.props` 文件定位本机的 Steam tModLoader 安装目录。它是本机环境配置，已被 Git 忽略，不应提交。
+通过初始化脚本可以自动生成 `tModLoader.local.props` 文件。
+初始化脚本会优先从 Steam 默认目录和 Steam 库配置中自动定位 tModLoader；找不到时会生成一个待填写的模板。
 
-在克隆项目后运行一次（需要 Node.js 18+；`npx` 会自动下载执行 TypeScript 所需的 `tsx`）：
+在克隆项目后需要运行一次初始化脚本（需要 Node.js 18+）：
 
 ```sh
 npx --yes tsx scripts/setup-tmodloader.ts
+```
+
+使用 Yarn 2+ 也可以直接运行：
+
+```sh
+yarn dlx tsx scripts/setup-tmodloader.ts
 ```
 
 若 tModLoader 安装在非标准位置，可显式传入安装目录：
@@ -14,7 +22,11 @@ npx --yes tsx scripts/setup-tmodloader.ts
 npx --yes tsx scripts/setup-tmodloader.ts --tmodloader-path "D:/SteamLibrary/steamapps/common/tModLoader"
 ```
 
-脚本会生成 `tModLoader.local.props`。在 macOS 与 Windows 间切换时，重新运行脚本；若自动发现失败，只修改其中的 `TModLoaderPath`，不需要改动 `.csproj`、VS Code 任务或启动配置。
+```sh
+yarn dlx tsx scripts/setup-tmodloader.ts --tmodloader-path "D:/SteamLibrary/steamapps/common/tModLoader"
+```
+
+脚本会生成 `tModLoader.local.props`。在 macOS 与 Windows 间切换时，需要重新运行脚本；若自动发现失败，只修改其中的 `TModLoaderPath`，不需要改动 `.csproj`、VS Code 任务或启动配置。
 
 ```xml
 <TModLoaderPath>/你的/tModLoader/安装目录</TModLoaderPath>
