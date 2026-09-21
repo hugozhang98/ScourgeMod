@@ -1,0 +1,57 @@
+﻿using System;
+using Microsoft.Xna.Framework;
+using Microsoft.Xna.Framework.Graphics;
+
+namespace ScourgeMod.Helper
+{
+    public static class TextureHelper
+    {
+        public static Rectangle GetVisibleFrame(Texture2D texture, byte alphaThreshold = 1)
+        {
+            Color[] pixels = new Color[texture.Width * texture.Height];
+            texture.GetData(pixels);
+
+            int minX = texture.Width;
+            int minY = texture.Height;
+            int maxX = -1;
+            int maxY = -1;
+
+            for (int y = 0; y < texture.Height; y++)
+            {
+                for (int x = 0; x < texture.Width; x++)
+                {
+                    Color color = pixels[x + y * texture.Width];
+
+                    if (color.A < alphaThreshold)
+                        continue;
+
+                    minX = Math.Min(minX, x);
+                    minY = Math.Min(minY, y);
+                    maxX = Math.Max(maxX, x);
+                    maxY = Math.Max(maxY, y);
+                }
+            }
+
+            // 整张图完全透明
+            if (maxX < minX || maxY < minY)
+                return Rectangle.Empty;
+
+            return new Rectangle(minX, minY, maxX - minX + 1, maxY - minY + 1);
+        }
+
+        public static Vector2 ApplyFlipToOrigin(
+            Vector2 origin,
+            Rectangle frame,
+            SpriteEffects effects
+        )
+        {
+            if (effects.HasFlag(SpriteEffects.FlipHorizontally))
+                origin.X = frame.Width - origin.X;
+
+            if (effects.HasFlag(SpriteEffects.FlipVertically))
+                origin.Y = frame.Height - origin.Y;
+
+            return origin;
+        }
+    }
+}
