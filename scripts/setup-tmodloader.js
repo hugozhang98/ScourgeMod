@@ -2,6 +2,7 @@
 
 const fs = require('node:fs');
 const path = require('node:path');
+const { execFileSync } = require('node:child_process');
 
 const projectDirectory = path.resolve(__dirname, '..');
 const configPath = path.join(projectDirectory, 'tModLoader.local.props');
@@ -45,6 +46,33 @@ function tModLoaderTargetExists(candidate) {
   return fs.existsSync(path.join(candidate, 'tMLMod.targets'));
 }
 
+function windowsRegistrySteamRoots() {
+  const queries = [
+    ['HKCU\\Software\\Valve\\Steam', 'SteamPath'],
+    ['HKLM\\SOFTWARE\\WOW6432Node\\Valve\\Steam', 'InstallPath'],
+    ['HKLM\\SOFTWARE\\Valve\\Steam', 'InstallPath'],
+  ];
+  const roots = [];
+
+  for (const [registryKey, valueName] of queries) {
+    try {
+      const output = execFileSync('reg', ['query', registryKey, '/v', valueName], {
+        encoding: 'utf8',
+        stdio: ['ignore', 'pipe', 'ignore'],
+      });
+      const valueLine = output.split(/\r?\n/).find((line) => line.includes('REG_SZ'));
+      const match = valueLine?.match(/REG_SZ\s+(.+)$/);
+      if (match?.[1]) {
+        roots.push(match[1].trim());
+      }
+    } catch {
+      // Steam may not have registered this location; the other discovery paths still apply.
+    }
+  }
+
+  return roots;
+}
+
 function steamRoots() {
   const home = process.env.HOME || process.env.USERPROFILE;
   const roots = [];
@@ -55,6 +83,7 @@ function steamRoots() {
         roots.push(path.join(programFiles, 'Steam'));
       }
     }
+    roots.push(...windowsRegistrySteamRoots());
   } else if (home) {
     roots.push(
       path.join(home, 'Library', 'Application Support', 'Steam'),
@@ -64,6 +93,11 @@ function steamRoots() {
   }
 
   return [...new Set(roots)];
+}
+
+function hasPlaceholderConfig() {
+  return fs.existsSync(configPath)
+    && fs.readFileSync(configPath, 'utf8').includes('REPLACE_WITH_YOUR_TMODLOADER_PATH');
 }
 
 function librariesFromVdf(steamRoot) {
@@ -118,7 +152,7 @@ function writeConfig(tModLoaderPath) {
 try {
   const options = parseOptions(process.argv.slice(2));
 
-  if (fs.existsSync(configPath) && !options.force) {
+  if (fs.existsSync(configPath) && !options.force && !hasPlaceholderConfig()) {
     console.log(`Keeping existing local configuration: ${configPath}`);
   } else {
     const tModLoaderPath = findTModLoader(options);
@@ -128,8 +162,7 @@ try {
       console.log(`Found tModLoader and wrote local configuration: ${tModLoaderPath}`);
     } else {
       writeConfig('REPLACE_WITH_YOUR_TMODLOADER_PATH');
-      console.error(`Could not find tModLoader. Generated a template for manual editing: ${configPath}`);
-      process.exitCode = 1;
+      console.log(`Could not find tModLoader. Generated a template for manual editing: ${configPath}`);
     }
   }
 } catch (error) {
