@@ -21,10 +21,10 @@
   <!-- Override tML's build target so macOS sets its native-library paths in a shell launcher. -->
   <Target Name="BuildMod" AfterTargets="Build" Condition="'$(BuildMod)' == 'true'">
     <Exec Condition="'$(IsMacOS)' == 'true'"
-          Command="/bin/bash &quot;$(MSBuildProjectDirectory)/scripts/run-tmodloader-macos.sh&quot; &quot;$(TModLoaderPath)&quot; $(tMLServerPath) -build &quot;$(ProjectDir)&quot; -eac &quot;$(TargetPath)&quot; -define &quot;$(DefineConstants)&quot; -unsafe $(AllowUnsafeBlocks) $(ExtraBuildModFlags)"
+          Command="/bin/bash &quot;$(MSBuildProjectDirectory)/scripts/run-tmodloader-macos.sh&quot; &quot;$(TModLoaderPath)&quot; $(tMLServerPath) -build &quot;$(MSBuildProjectDirectory)&quot; -eac &quot;$(TargetPath)&quot; -define &quot;$(DefineConstants)&quot; -unsafe $(AllowUnsafeBlocks) $(ExtraBuildModFlags)"
           WorkingDirectory="$(tMLSteamPath)" />
     <Exec Condition="'$(IsMacOS)' != 'true'"
-          Command="&quot;$(TModLoaderDotNetPath)&quot; $(tMLServerPath) -build &quot;$(ProjectDir)&quot; -eac &quot;$(TargetPath)&quot; -define &quot;$(DefineConstants)&quot; -unsafe $(AllowUnsafeBlocks) $(ExtraBuildModFlags)"
+          Command="&quot;$(TModLoaderDotNetPath)&quot; $(tMLServerPath) -build &quot;$(MSBuildProjectDirectory)&quot; -eac &quot;$(TargetPath)&quot; -define &quot;$(DefineConstants)&quot; -unsafe $(AllowUnsafeBlocks) $(ExtraBuildModFlags)"
           WorkingDirectory="$(tMLSteamPath)" />
   </Target>
 </Project>
