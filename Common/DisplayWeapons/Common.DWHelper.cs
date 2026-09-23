@@ -4,7 +4,6 @@ using Microsoft.Xna.Framework.Graphics;
 using ScourgeMod.Helper;
 using Terraria;
 using Terraria.DataStructures;
-using Terraria.GameContent;
 
 namespace ScourgeMod.Common.DisplayWeapons
 {
@@ -28,25 +27,8 @@ namespace ScourgeMod.Common.DisplayWeapons
         //    return heldItem;
         //}
 
-        public static (
-            Player player,
-            Item item,
-            Texture2D texture,
-            Rectangle frame
-        ) GetHeldItemDrawData(PlayerDrawSet drawInfo)
+        public static bool GetDefaultVisibility(Player player, Item item)
         {
-            Player player = drawInfo.drawPlayer;
-            Item heldItem = player.HeldItem;
-            Texture2D texture = TextureAssets.Item[heldItem.type].Value;
-            Rectangle frame = texture.Frame();
-
-            return (player, heldItem, texture, frame);
-        }
-
-        public static bool GetDefaultVisibility(PlayerDrawSet drawInfo)
-        {
-            var (player, item, texture, frame) = GetHeldItemDrawData(drawInfo);
-
             //角色死亡不绘制
             if (player.dead)
                 return false;

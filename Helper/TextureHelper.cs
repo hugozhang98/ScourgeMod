@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Collections.Generic;
 using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Graphics;
 
@@ -6,8 +7,14 @@ namespace ScourgeMod.Helper
 {
     public static class TextureHelper
     {
+        private static readonly Dictionary<(Texture2D texture, byte alphaThreshold), Rectangle> VisibleFrameCache = new();
+
         public static Rectangle GetVisibleFrame(Texture2D texture, byte alphaThreshold = 1)
         {
+            var cacheKey = (texture, alphaThreshold);
+            if (VisibleFrameCache.TryGetValue(cacheKey, out Rectangle visibleFrame))
+                return visibleFrame;
+
             Color[] pixels = new Color[texture.Width * texture.Height];
             texture.GetData(pixels);
 
@@ -32,11 +39,18 @@ namespace ScourgeMod.Helper
                 }
             }
 
-            // 整张图完全透明
-            if (maxX < minX || maxY < minY)
-                return Rectangle.Empty;
+            visibleFrame =
+                maxX < minX || maxY < minY
+                    ? Rectangle.Empty
+                    : new Rectangle(minX, minY, maxX - minX + 1, maxY - minY + 1);
 
-            return new Rectangle(minX, minY, maxX - minX + 1, maxY - minY + 1);
+            VisibleFrameCache.Add(cacheKey, visibleFrame);
+            return visibleFrame;
+        }
+
+        public static void ClearVisibleFrameCache()
+        {
+            VisibleFrameCache.Clear();
         }
 
         public static Vector2 ApplyFlipToOrigin(

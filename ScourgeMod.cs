@@ -1,3 +1,4 @@
+using ScourgeMod.Helper;
 using Terraria.ModLoader;
 
 namespace ScourgeMod
@@ -16,6 +17,8 @@ namespace ScourgeMod
 
         public override void Unload()
         {
+            TextureHelper.ClearVisibleFrameCache();
+
             base.Unload();
 
             Instance = null;

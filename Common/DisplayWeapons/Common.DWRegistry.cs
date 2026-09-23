@@ -1,6 +1,5 @@
 ﻿using System.Collections.Generic;
 using Terraria;
-using Terraria.DataStructures;
 using Terraria.ID;
 
 namespace ScourgeMod.Common.DisplayWeapons
@@ -22,10 +21,8 @@ namespace ScourgeMod.Common.DisplayWeapons
             ItemID.Flairon, //猪鲨链球
         };
 
-        public static bool IsDW_Mace(PlayerDrawSet drawInfo)
+        public static bool IsDW_Mace(Item item)
         {
-            var (player, item, texture, frame) = DWHelper.GetHeldItemDrawData(drawInfo);
-
             return item.ModItem is IDW_Mace || DWVanillaID_Mace.Contains(item.type);
         }
         #endregion
@@ -37,10 +34,8 @@ namespace ScourgeMod.Common.DisplayWeapons
             ItemID.ChainGuillotines, //铁链血滴子
         };
 
-        public static bool IsDW_ChainKnife(PlayerDrawSet drawInfo)
+        public static bool IsDW_ChainKnife(Item item)
         {
-            var (player, item, texture, frame) = DWHelper.GetHeldItemDrawData(drawInfo);
-
             return item.ModItem is IDW_ChainKnife || DWVanillaID_ChainKnife.Contains(item.type);
         }
         #endregion
@@ -54,10 +49,8 @@ namespace ScourgeMod.Common.DisplayWeapons
             ItemID.GolemFist, //石巨人之拳
         };
 
-        public static bool IsDW_ChainGun(PlayerDrawSet drawInfo)
+        public static bool IsDW_ChainGun(Item item)
         {
-            var (player, item, texture, frame) = DWHelper.GetHeldItemDrawData(drawInfo);
-
             return item.ModItem is IDW_ChainGun || DWVanillaID_ChainGun.Contains(item.type);
         }
         #endregion
@@ -88,10 +81,8 @@ namespace ScourgeMod.Common.DisplayWeapons
             ItemID.Terrarian, //泰拉悠悠球
         };
 
-        public static bool IsDW_Yoyo(PlayerDrawSet drawInfo)
+        public static bool IsDW_Yoyo(Item item)
         {
-            var (player, item, texture, frame) = DWHelper.GetHeldItemDrawData(drawInfo);
-
             return item.ModItem is IDW_Yoyo || DWVanillaID_Yoyo.Contains(item.type);
         }
         #endregion
@@ -143,13 +134,6 @@ namespace ScourgeMod.Common.DisplayWeapons
             ItemID.LightsBane, //魔光剑
             ItemID.EnchantedSword, //附魔剑
         };
-
-        public static bool IsDW_GreatSword(PlayerDrawSet drawInfo)
-        {
-            var (player, item, texture, frame) = DWHelper.GetHeldItemDrawData(drawInfo);
-
-            return item.ModItem is IDW_GreatSword || DWVanillaID_GreatSword.Contains(item.type);
-        }
 
         public static bool IsDW_GreatSword(Item item)
         {

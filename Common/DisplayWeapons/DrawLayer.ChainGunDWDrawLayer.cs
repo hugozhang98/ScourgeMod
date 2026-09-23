@@ -3,6 +3,7 @@ using Microsoft.Xna.Framework.Graphics;
 using ScourgeMod.Helper;
 using Terraria;
 using Terraria.DataStructures;
+using Terraria.GameContent;
 using Terraria.ModLoader;
 
 namespace ScourgeMod.Common.DisplayWeapons
@@ -12,28 +13,36 @@ namespace ScourgeMod.Common.DisplayWeapons
         public override Position GetDefaultPosition() =>
             new BeforeParent(PlayerDrawLayers.MountBack); //rrzz 图层是否正确
 
-        public override bool GetDefaultVisibility(PlayerDrawSet drawInfo) =>
-            DWHelper.GetDefaultVisibility(drawInfo)
-            && DWAdjust_Anchor.TryGetDefaultVisibility(drawInfo)
-            && DWRegistry.IsDW_ChainGun(drawInfo);
+        public override bool GetDefaultVisibility(PlayerDrawSet drawInfo)
+        {
+            Player player = drawInfo.drawPlayer;
+            Item item = player.HeldItem;
+
+            return DWHelper.GetDefaultVisibility(player, item)
+                && DWAdjust_Anchor.GetDefaultVisibility(player, item)
+                && DWRegistry.IsDW_ChainGun(item);
+        }
 
         protected override void Draw(ref PlayerDrawSet drawInfo)
         {
             if (drawInfo.shadow != 0f)
                 return;
 
-            var (player, item, texture, frame) = DWHelper.GetHeldItemDrawData(drawInfo);
+            Player player = drawInfo.drawPlayer;
+            Item item = player.HeldItem;
+            Texture2D texture = TextureAssets.Item[item.type].Value;
+            Rectangle frame = texture.Frame();
 
-            SpriteEffects effects = GetEffects(drawInfo);
-            Vector2 origin = GetOrigin(drawInfo);
-            Vector2 position = GetPosition(drawInfo);
-            float rotation = GetRotation(drawInfo);
+            SpriteEffects effects = GetEffects(player);
+            Vector2 origin = GetOrigin(frame);
+            Vector2 position = GetPosition(drawInfo, player, item);
+            float rotation = GetRotation(player);
             Color lightColor = GetColor(drawInfo);
-            float scale = GetScale(drawInfo);
+            float scale = GetScale();
 
             DrawData drawData = new DrawData(
                 texture,
-                position.Floor(),
+                position,
                 frame,
                 lightColor,
                 rotation,
@@ -45,10 +54,8 @@ namespace ScourgeMod.Common.DisplayWeapons
             drawInfo.DrawDataCache.Add(drawData);
         }
 
-        private SpriteEffects GetEffects(PlayerDrawSet drawInfo)
+        private SpriteEffects GetEffects(Player player)
         {
-            var (player, item, texture, frame) = DWHelper.GetHeldItemDrawData(drawInfo);
-
             SpriteEffects effects = SpriteEffects.None;
 
             if (player.direction == -1)
@@ -60,32 +67,26 @@ namespace ScourgeMod.Common.DisplayWeapons
             return effects;
         }
 
-        private Vector2 GetOrigin(PlayerDrawSet drawInfo)
+        private Vector2 GetOrigin(Rectangle frame)
         {
-            var (player, item, texture, frame) = DWHelper.GetHeldItemDrawData(drawInfo);
-
             return frame.Size() * 0.5f;
         }
 
-        private Vector2 GetPosition(PlayerDrawSet drawInfo)
+        private Vector2 GetPosition(PlayerDrawSet drawInfo, Player player, Item item)
         {
-            var (player, item, texture, frame) = DWHelper.GetHeldItemDrawData(drawInfo);
-
             Vector2 position = drawInfo.Center - Main.screenPosition;
 
             position += new Vector2(player.direction * -9f, player.gravDir * -3f);
 
-            DWAdjust_Anchor.TryAdjustPosition(drawInfo, ref position);
+            DWAdjust_Anchor.TryAdjustPosition(player, item, ref position);
 
             position += DWHelper.GetUpperBodyBobbing(drawInfo);
 
             return position.Floor();
         }
 
-        private float GetRotation(PlayerDrawSet drawInfo)
+        private float GetRotation(Player player)
         {
-            var (player, item, texture, frame) = DWHelper.GetHeldItemDrawData(drawInfo);
-
             float baseRotation = AngleHelper.DegToRad(player.direction * 100f);
 
             baseRotation += DWHelper.GetMoveSway(player, 4f);
@@ -97,7 +98,7 @@ namespace ScourgeMod.Common.DisplayWeapons
 
         private Color GetColor(PlayerDrawSet drawInfo) => DWHelper.GetDefaultColor(drawInfo);
 
-        private float GetScale(PlayerDrawSet drawInfo)
+        private float GetScale()
         {
             float defaultScale = 0.9f;
 
