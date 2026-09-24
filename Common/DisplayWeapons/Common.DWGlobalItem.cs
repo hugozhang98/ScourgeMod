@@ -10,6 +10,9 @@ namespace ScourgeMod.Common.DisplayWeapons
             base.HoldItemFrame(item, player);
 
             DWAdjust_Class_GreatSword.HoldItemFrame(item, player);
+            DWAdjust_Class_Gun.HoldItemFrame(item, player);
+            DWAdjust_Class_MiniGun.HoldItemFrame(item, player);
+
         }
 
         //private void Hold_BackSword_Shoulder(Item item, Player player)

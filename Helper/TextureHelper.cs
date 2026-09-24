@@ -2,6 +2,7 @@
 using System.Collections.Generic;
 using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Graphics;
+using Terraria.ModLoader;
 
 namespace ScourgeMod.Helper
 {
@@ -66,6 +67,16 @@ namespace ScourgeMod.Helper
                 origin.Y = frame.Height - origin.Y;
 
             return origin;
+        }
+    }
+
+    public class TextureHelperSystem : ModSystem
+    {
+        public override void Unload()
+        {
+            base.Unload();
+
+            TextureHelper.ClearVisibleFrameCache();
         }
     }
 }

@@ -17,8 +17,6 @@ namespace ScourgeMod
 
         public override void Unload()
         {
-            TextureHelper.ClearVisibleFrameCache();
-
             base.Unload();
 
             Instance = null;

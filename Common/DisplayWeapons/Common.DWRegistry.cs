@@ -40,7 +40,6 @@ namespace ScourgeMod.Common.DisplayWeapons
         }
         #endregion
 
-
         #region ChainGun ==================================================================================================================================
         public static readonly HashSet<int> DWVanillaID_ChainGun = new()
         {
@@ -86,7 +85,6 @@ namespace ScourgeMod.Common.DisplayWeapons
             return item.ModItem is IDW_Yoyo || DWVanillaID_Yoyo.Contains(item.type);
         }
         #endregion
-
 
         #region GreatSword ==================================================================================================================================
         public static readonly HashSet<int> DWVanillaID_GreatSword = new()
@@ -138,6 +136,83 @@ namespace ScourgeMod.Common.DisplayWeapons
         public static bool IsDW_GreatSword(Item item)
         {
             return item.ModItem is IDW_GreatSword || DWVanillaID_GreatSword.Contains(item.type);
+        }
+        #endregion
+
+        #region Gun ==================================================================================================================================
+        public static readonly HashSet<int> DWVanillaID_Gun = new()
+        {
+               ItemID.Minishark, //迷你鲨
+               ItemID.RedRyder, //红莱德枪
+               ItemID.Musket, //火枪
+               ItemID.Boomstick,//三发猎枪
+               ItemID.QuadBarrelShotgun, //四管霰弹枪
+               ItemID.ClockworkAssaultRifle, //发条式突击步枪
+               ItemID.Gatligator, //鳄鱼机关枪
+               ItemID.Shotgun, //霰弹枪
+               ItemID.OnyxBlaster, //玛瑙爆破枪
+               ItemID.Megashark, //巨兽鲨
+               ItemID.TacticalShotgun, //战术霰弹枪
+               ItemID.SniperRifle,  //狙击步枪
+               ItemID.CandyCornRifle, //玉米糖步枪
+               ItemID.ChainGun, //链式机枪
+               ItemID.Xenopopper,  //外星霰弹枪
+               ItemID.VortexBeater,  //星旋机枪
+               ItemID.SDMG, //太空海豚机枪
+               ItemID.GrenadeLauncher, //榴弹发射器
+               ItemID.ProximityMineLauncher, //感应雷发射器
+               ItemID.RocketLauncher, //火箭发射器
+               ItemID.NailGun,   //钉枪
+               ItemID.Stynger,   //毒刺发射器
+               ItemID.JackOLanternLauncher,  //杰克南瓜灯发射器
+               ItemID.SnowmanCannon, //雪人炮
+               ItemID.FireworksLauncher,//喜庆弹射器
+               ItemID.ElectrosphereLauncher, //电圈发射器
+               ItemID.Celeb2, //喜庆弹射器Mk2
+               ItemID.Blowpipe,  //吹管
+               ItemID.Sandgun,//沙枪
+               ItemID.SnowballCannon,  //雪球炮
+               ItemID.PainterPaintballGun, //彩弹枪
+               ItemID.Harpoon, //鱼叉枪
+               ItemID.StarCannon,    //星星炮
+               ItemID.Blowgun, //吹箭筒
+               //ItemID.DeadCellsBarrelLauncher,   //木桶发射器 rrzz
+               ItemID.Toxikarp, //毒弹枪
+               ItemID.DartPistol,   //飞镖手枪
+               ItemID.DartRifle,  //飞镖步枪
+               ItemID.CoinGun,  //钱币枪
+               ItemID.SuperStarCannon,  //超级星星炮
+               ItemID.Flamethrower,  //火焰喷射器
+               ItemID.PiranhaGun,  //食人鱼枪
+               ItemID.ElfMelter,  //精灵熔枪,
+               ItemID.Uzi, //乌兹冲锋枪
+
+        };
+
+        public static bool IsDW_Gun(Item item)
+        {
+            return item.ModItem is IDW_Gun || DWVanillaID_Gun.Contains(item.type);
+        }
+        #endregion
+
+
+
+        #region MiniGun ==================================================================================================================================
+        public static readonly HashSet<int> DWVanillaID_MiniGun = new()
+        {
+               ItemID.FlintlockPistol, //燧发枪 
+                  ItemID.TheUndertaker, //夺命枪 
+               ItemID.Revolver, //左轮手枪 
+                     ItemID.Handgun, //手枪 
+               ItemID.PhoenixBlaster, //凤凰爆破枪 
+               ItemID.PewMaticHorn, //气喇叭 
+               ItemID.VenusMagnum,//维纳斯万能枪 
+
+        };
+
+        public static bool IsDW_MiniGun(Item item)
+        {
+            return item.ModItem is IDW_MiniGun || DWVanillaID_MiniGun.Contains(item.type);
         }
         #endregion
 
@@ -377,118 +452,7 @@ namespace ScourgeMod.Common.DisplayWeapons
         //        item.ModItem is IBackYoyo || VanillaBackYoyo.Contains(item.type);
         //    #endregion
 
-        //    #region BackGun ==========================================================================================================================
-        //    public static readonly HashSet<int> VanillaBackGun = new()
-        //    {
-        //        //红莱德枪
-        //        ItemID.RedRyder,
-        //        //燧发枪
-        //        ItemID.FlintlockPistol,
-        //        //火枪
-        //        ItemID.Musket,
-        //        //夺命枪
-        //        ItemID.TheUndertaker,
-        //        //左轮手枪
-        //        ItemID.Revolver,
-        //        //迷你鲨
-        //        ItemID.Minishark,
-        //        //三发猎枪
-        //        ItemID.Boomstick,
-        //        //四管霰弹枪
-        //        ItemID.QuadBarrelShotgun,
-        //        //手枪
-        //        ItemID.Handgun,
-        //        //凤凰爆破枪
-        //        ItemID.PhoenixBlaster,
-        //        //气喇叭
-        //        ItemID.PewMaticHorn,
-        //        //发条式突击步枪
-        //        ItemID.ClockworkAssaultRifle,
-        //        //鳄鱼机关枪
-        //        ItemID.Gatligator,
-        //        //霰弹枪
-        //        ItemID.Shotgun,
-        //        //玛瑙爆破枪
-        //        ItemID.OnyxBlaster,
-        //        //乌兹冲锋枪
-        //        ItemID.Uzi,
-        //        //巨兽鲨
-        //        ItemID.Megashark,
-        //        //维纳斯万能枪
-        //        ItemID.VenusMagnum,
-        //        //战术霰弹枪
-        //        ItemID.TacticalShotgun,
-        //        //狙击步枪
-        //        ItemID.SniperRifle,
-        //        //玉米糖步枪
-        //        ItemID.CandyCornRifle,
-        //        //链式机枪
-        //        ItemID.ChainGun,
-        //        //外星霰弹枪
-        //        ItemID.Xenopopper,
-        //        //星旋机枪
-        //        ItemID.VortexBeater,
-        //        //太空海豚机枪
-        //        ItemID.SDMG,
-        //        //榴弹发射器
-        //        ItemID.GrenadeLauncher,
-        //        //感应雷发射器
-        //        ItemID.ProximityMineLauncher,
-        //        //火箭发射器
-        //        ItemID.RocketLauncher,
-        //        //钉枪
-        //        ItemID.NailGun,
-        //        //毒刺发射器
-        //        ItemID.Stynger,
-        //        //杰克南瓜灯发射器
-        //        ItemID.JackOLanternLauncher,
-        //        //雪人炮
-        //        ItemID.SnowmanCannon,
-        //        //喜庆弹射器
-        //        ItemID.FireworksLauncher,
-        //        //电圈发射器
-        //        ItemID.ElectrosphereLauncher,
-        //        //喜庆弹射器Mk2
-        //        ItemID.Celeb2,
-        //        //吹管
-        //        ItemID.Blowpipe,
-        //        //沙枪
-        //        ItemID.Sandgun,
-        //        //雪球炮
-        //        ItemID.SnowballCannon,
-        //        //彩弹枪
-        //        ItemID.PainterPaintballGun,
-        //        //鱼叉枪
-        //        ItemID.Harpoon,
-        //        //星星炮
-        //        ItemID.StarCannon,
-        //        //吹箭筒
-        //        ItemID.Blowgun,
-        //        //木桶发射器
-        //        //ItemID.DeadCellsBarrelLauncher, rrzz
 
-        //        //毒弹枪
-        //        ItemID.Toxikarp,
-        //        //飞镖手枪
-        //        ItemID.DartPistol,
-        //        //飞镖步枪
-        //        ItemID.DartRifle,
-        //        //钱币枪
-        //        ItemID.CoinGun,
-        //        //超级星星炮
-        //        ItemID.SuperStarCannon,
-        //        //火焰喷射器
-        //        ItemID.Flamethrower,
-        //        //食人鱼枪
-        //        ItemID.PiranhaGun,
-        //        //精灵熔枪
-        //        ItemID.ElfMelter,
-        //    };
-
-        //    public static bool IsBackGun(Item item) =>
-        //        item.ModItem is IBackGun || VanillaBackGun.Contains(item.type);
-        //    #endregion
-        //}
     }
 }
 
