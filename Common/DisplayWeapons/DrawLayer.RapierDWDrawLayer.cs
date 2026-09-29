@@ -8,16 +8,16 @@ using Terraria.ModLoader;
 
 namespace ScourgeMod.Common.DisplayWeapons
 {
-    public class GreatSwordDWDrawLayer : PlayerDrawLayer
+    public class RapierDWDrawLayer : PlayerDrawLayer
     {
-        public override Position GetDefaultPosition() => new BeforeParent(PlayerDrawLayers.Torso);
+        public override Position GetDefaultPosition() => new AfterParent(PlayerDrawLayers.Skin);
 
         public override bool GetDefaultVisibility(PlayerDrawSet drawInfo)
         {
             Player player = drawInfo.drawPlayer;
             Item item = player.HeldItem;
 
-            return DWHelper.GetDefaultVisibility(player, item) && DWRegistry.IsDW_GreatSword(item);
+            return DWHelper.GetDefaultVisibility(player, item) && DWRegistry.IsDW_Rapier(item);
         }
 
         protected override void Draw(ref PlayerDrawSet drawInfo)
@@ -82,7 +82,7 @@ namespace ScourgeMod.Common.DisplayWeapons
         {
             Vector2 position = drawInfo.Center - Main.screenPosition;
 
-            position += new Vector2(player.direction * 18f, player.gravDir * 3f);
+            position += new Vector2(player.direction * 20f, player.gravDir * 0f);
 
             position += DWHelper.GetUpperBodyBobbing(drawInfo);
 
@@ -91,7 +91,7 @@ namespace ScourgeMod.Common.DisplayWeapons
 
         private float GetRotation(Player player)
         {
-            float baseRotation = AngleHelper.DegToRad(-player.direction * 100f);
+            float baseRotation = AngleHelper.DegToRad(-player.direction * 155f);
 
             baseRotation += DWHelper.GetMoveSway(player, 2f);
 

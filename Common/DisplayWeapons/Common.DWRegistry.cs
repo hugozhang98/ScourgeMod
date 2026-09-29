@@ -4,9 +4,9 @@ using Terraria.ID;
 
 namespace ScourgeMod.Common.DisplayWeapons
 {
-    public class DWRegistry
+    //Mace
+    public static partial class DWRegistry
     {
-        #region Mace ==================================================================================================================================
         public static readonly HashSet<int> DWVanillaID_Mace = new()
         {
             ItemID.Mace, //链锤
@@ -25,9 +25,11 @@ namespace ScourgeMod.Common.DisplayWeapons
         {
             return item.ModItem is IDW_Mace || DWVanillaID_Mace.Contains(item.type);
         }
-        #endregion
+    }
 
-        #region ChainKnife ==================================================================================================================================
+    //ChainKnife
+    public static partial class DWRegistry
+    {
         public static readonly HashSet<int> DWVanillaID_ChainKnife = new()
         {
             ItemID.ChainKnife, //链刀
@@ -38,9 +40,11 @@ namespace ScourgeMod.Common.DisplayWeapons
         {
             return item.ModItem is IDW_ChainKnife || DWVanillaID_ChainKnife.Contains(item.type);
         }
-        #endregion
+    }
 
-        #region ChainGun ==================================================================================================================================
+    //ChainGun
+    public static partial class DWRegistry
+    {
         public static readonly HashSet<int> DWVanillaID_ChainGun = new()
         {
             ItemID.Anchor, //锚
@@ -52,9 +56,11 @@ namespace ScourgeMod.Common.DisplayWeapons
         {
             return item.ModItem is IDW_ChainGun || DWVanillaID_ChainGun.Contains(item.type);
         }
-        #endregion
+    }
 
-        #region Yoyo ==================================================================================================================================
+    //Yoyo
+    public static partial class DWRegistry
+    {
         public static readonly HashSet<int> DWVanillaID_Yoyo = new()
         {
             ItemID.WoodYoyo, //木悠悠球
@@ -84,9 +90,11 @@ namespace ScourgeMod.Common.DisplayWeapons
         {
             return item.ModItem is IDW_Yoyo || DWVanillaID_Yoyo.Contains(item.type);
         }
-        #endregion
+    }
 
-        #region GreatSword ==================================================================================================================================
+    //GreatSword
+    public static partial class DWRegistry
+    {
         public static readonly HashSet<int> DWVanillaID_GreatSword = new()
         {
             ItemID.BreakerBlade, //毁灭刃
@@ -137,325 +145,323 @@ namespace ScourgeMod.Common.DisplayWeapons
         {
             return item.ModItem is IDW_GreatSword || DWVanillaID_GreatSword.Contains(item.type);
         }
-        #endregion
+    }
 
-        #region Gun ==================================================================================================================================
+    //Gun
+    public static partial class DWRegistry
+    {
         public static readonly HashSet<int> DWVanillaID_Gun = new()
         {
-               ItemID.Minishark, //迷你鲨
-               ItemID.RedRyder, //红莱德枪
-               ItemID.Musket, //火枪
-               ItemID.Boomstick,//三发猎枪
-               ItemID.QuadBarrelShotgun, //四管霰弹枪
-               ItemID.ClockworkAssaultRifle, //发条式突击步枪
-               ItemID.Gatligator, //鳄鱼机关枪
-               ItemID.Shotgun, //霰弹枪
-               ItemID.OnyxBlaster, //玛瑙爆破枪
-               ItemID.Megashark, //巨兽鲨
-               ItemID.TacticalShotgun, //战术霰弹枪
-               ItemID.SniperRifle,  //狙击步枪
-               ItemID.CandyCornRifle, //玉米糖步枪
-               ItemID.ChainGun, //链式机枪
-               ItemID.Xenopopper,  //外星霰弹枪
-               ItemID.VortexBeater,  //星旋机枪
-               ItemID.SDMG, //太空海豚机枪
-               ItemID.GrenadeLauncher, //榴弹发射器
-               ItemID.ProximityMineLauncher, //感应雷发射器
-               ItemID.RocketLauncher, //火箭发射器
-               ItemID.NailGun,   //钉枪
-               ItemID.Stynger,   //毒刺发射器
-               ItemID.JackOLanternLauncher,  //杰克南瓜灯发射器
-               ItemID.SnowmanCannon, //雪人炮
-               ItemID.FireworksLauncher,//喜庆弹射器
-               ItemID.ElectrosphereLauncher, //电圈发射器
-               ItemID.Celeb2, //喜庆弹射器Mk2
-               ItemID.Blowpipe,  //吹管
-               ItemID.Sandgun,//沙枪
-               ItemID.SnowballCannon,  //雪球炮
-               ItemID.PainterPaintballGun, //彩弹枪
-               ItemID.Harpoon, //鱼叉枪
-               ItemID.StarCannon,    //星星炮
-               ItemID.Blowgun, //吹箭筒
-               //ItemID.DeadCellsBarrelLauncher,   //木桶发射器 rrzz
-               ItemID.Toxikarp, //毒弹枪
-               ItemID.DartPistol,   //飞镖手枪
-               ItemID.DartRifle,  //飞镖步枪
-               ItemID.CoinGun,  //钱币枪
-               ItemID.SuperStarCannon,  //超级星星炮
-               ItemID.Flamethrower,  //火焰喷射器
-               ItemID.PiranhaGun,  //食人鱼枪
-               ItemID.ElfMelter,  //精灵熔枪,
-               ItemID.Uzi, //乌兹冲锋枪
-
+            ItemID.Minishark, //迷你鲨
+            ItemID.RedRyder, //红莱德枪
+            ItemID.Musket, //火枪
+            ItemID.Boomstick, //三发猎枪
+            ItemID.QuadBarrelShotgun, //四管霰弹枪
+            ItemID.ClockworkAssaultRifle, //发条式突击步枪
+            ItemID.Gatligator, //鳄鱼机关枪
+            ItemID.Shotgun, //霰弹枪
+            ItemID.OnyxBlaster, //玛瑙爆破枪
+            ItemID.Megashark, //巨兽鲨
+            ItemID.TacticalShotgun, //战术霰弹枪
+            ItemID.SniperRifle, //狙击步枪
+            ItemID.CandyCornRifle, //玉米糖步枪
+            ItemID.ChainGun, //链式机枪
+            ItemID.Xenopopper, //外星霰弹枪
+            ItemID.VortexBeater, //星旋机枪
+            ItemID.SDMG, //太空海豚机枪
+            ItemID.GrenadeLauncher, //榴弹发射器
+            ItemID.ProximityMineLauncher, //感应雷发射器
+            ItemID.RocketLauncher, //火箭发射器
+            ItemID.NailGun, //钉枪
+            ItemID.Stynger, //毒刺发射器
+            ItemID.JackOLanternLauncher, //杰克南瓜灯发射器
+            ItemID.SnowmanCannon, //雪人炮
+            ItemID.FireworksLauncher, //喜庆弹射器
+            ItemID.ElectrosphereLauncher, //电圈发射器
+            ItemID.Celeb2, //喜庆弹射器Mk2
+            ItemID.Blowpipe, //吹管
+            ItemID.Sandgun, //沙枪
+            ItemID.SnowballCannon, //雪球炮
+            ItemID.PainterPaintballGun, //彩弹枪
+            ItemID.Harpoon, //鱼叉枪
+            ItemID.StarCannon, //星星炮
+            ItemID.Blowgun, //吹箭筒
+            //ItemID.DeadCellsBarrelLauncher,   //木桶发射器 rrzz
+            ItemID.Toxikarp, //毒弹枪
+            ItemID.DartPistol, //飞镖手枪
+            ItemID.DartRifle, //飞镖步枪
+            ItemID.CoinGun, //钱币枪
+            ItemID.SuperStarCannon, //超级星星炮
+            ItemID.Flamethrower, //火焰喷射器
+            ItemID.PiranhaGun, //食人鱼枪
+            ItemID.ElfMelter, //精灵熔枪,
+            ItemID.Uzi, //乌兹冲锋枪
         };
 
         public static bool IsDW_Gun(Item item)
         {
             return item.ModItem is IDW_Gun || DWVanillaID_Gun.Contains(item.type);
         }
-        #endregion
+    }
 
-
-
-        #region MiniGun ==================================================================================================================================
+    //MiniGun
+    public static partial class DWRegistry
+    {
         public static readonly HashSet<int> DWVanillaID_MiniGun = new()
         {
-               ItemID.FlintlockPistol, //燧发枪 
-                  ItemID.TheUndertaker, //夺命枪 
-               ItemID.Revolver, //左轮手枪 
-                     ItemID.Handgun, //手枪 
-               ItemID.PhoenixBlaster, //凤凰爆破枪 
-               ItemID.PewMaticHorn, //气喇叭 
-               ItemID.VenusMagnum,//维纳斯万能枪 
-
+            ItemID.FlintlockPistol, //燧发枪
+            ItemID.TheUndertaker, //夺命枪
+            ItemID.Revolver, //左轮手枪
+            ItemID.Handgun, //手枪
+            ItemID.PhoenixBlaster, //凤凰爆破枪
+            ItemID.PewMaticHorn, //气喇叭
+            ItemID.VenusMagnum, //维纳斯万能枪
         };
 
         public static bool IsDW_MiniGun(Item item)
         {
             return item.ModItem is IDW_MiniGun || DWVanillaID_MiniGun.Contains(item.type);
         }
-        #endregion
+    }
 
-        //    #region BackSword ==================================================================================================================================
-        //    public static readonly HashSet<int> VanillaBackSword = new()
-        //    {
-        //        //长矛
-        //        ItemID.Spear,
-        //        //三叉戟
-        //        ItemID.Trident,
-        //        //史莱姆长矛
-        //        //ItemID.SlimeSpear, rrzz
-        //        //风暴长矛
-        //        ItemID.ThunderSpear,
-        //        //腐叉
-        //        ItemID.TheRottedFork,
-        //        //剑鱼
-        //        ItemID.Swordfish,
-        //        //暗黑长枪
-        //        ItemID.DarkLance,
-        //        //钴薙刀
-        //        ItemID.CobaltNaginata,
-        //        //钯金刺矛
-        //        ItemID.PalladiumPike,
-        //        //秘银长戟
-        //        ItemID.MythrilHalberd,
-        //        //山铜长戟
-        //        ItemID.OrichalcumHalberd,
-        //        //精金关刀
-        //        ItemID.AdamantiteGlaive,
-        //        //钛金三叉戟
-        //        ItemID.TitaniumTrident,
-        //        //永恒之枪
-        //        ItemID.Gungnir,
-        //        //恐怖关刀
-        //        ItemID.MonkStaffT2,
-        //        //叶绿镋
-        //        ItemID.ChlorophytePartisan,
-        //        //蘑菇长矛
-        //        ItemID.MushroomSpear,
-        //        //黑曜石剑鱼
-        //        ItemID.ObsidianSwordfish,
-        //        //北极
-        //        ItemID.NorthPole,
-        //        //燧石
-        //        //ItemID.DeadCellsFlint, rrzz
-        //        //瞌睡章鱼
-        //        ItemID.MonkStaffT1,
-        //        //腐化者之戟
-        //        ItemID.ScourgeoftheCorruptor,
-        //        //破晓之光
-        //        ItemID.DayBreak,
-        //        //天顶剑
-        //        ItemID.Zenith,
-        //        //骑枪
-        //        ItemID.JoustingLance,
-        //        //暗影骑枪
-        //        ItemID.ShadowJoustingLance,
-        //        //神圣骑枪
-        //        ItemID.HallowJoustingLance,
-        //        //天龙之怒
-        //        ItemID.MonkStaffT3,
-        //        //瞌睡章鱼
-        //        ItemID.MonkStaffT1,
-        //    };
+    //Bow
+    public static partial class DWRegistry
+    {
+        public static readonly HashSet<int> DWVanillaID_Bow = new()
+        {
+            ItemID.WoodenBow, //木弓
+            ItemID.BorealWoodBow, //针叶木弓
+            ItemID.CopperBow, //铜弓
+            ItemID.PalmWoodBow, //棕榈木弓
+            ItemID.RichMahoganyBow, //红木弓
+            ItemID.TinBow, //锡弓
+            ItemID.EbonwoodBow, //乌木弓
+            ItemID.IronBow, //铁弓
+            ItemID.ShadewoodBow, //暗影木弓
+            ItemID.LeadBow, //铅弓
+            ItemID.SilverBow, //银弓
+            ItemID.TungstenBow, //钨弓
+            ItemID.AshWoodBow, //灰烬木弓
+            ItemID.GoldBow, //金弓
+            ItemID.PlatinumBow, //铂金弓
+            ItemID.DemonBow, //恶魔弓
+            ItemID.TendonBow, //肌腱弓
+            ItemID.BloodRainBow, //血雨弓
+            ItemID.BeesKnees, //蜂膝弓
+            ItemID.HellwingBow, //地狱之翼弓
+            ItemID.MoltenFury, //熔火之怒
+            ItemID.PearlwoodBow, //珍珠木弓
+            ItemID.Marrow, //骸骨弓
+            ItemID.IceBow, //冰雪弓
+            ItemID.DaedalusStormbow, //代达罗斯风暴弓
+            ItemID.ShadowFlameBow, //暗影焰弓
+            ItemID.PulseBow, //脉冲弓
+            ItemID.DD2BetsyBow, //空中祸害
+            ItemID.Tsunami, //海啸
+            ItemID.FairyQueenRangedItem, //日暮
+            ItemID.Phantasm, //幻影弓
+            ItemID.DD2PhoenixBow, //幽灵凤凰
+        };
 
-        //    public static bool IsBackSword(Item item) =>
-        //        item.ModItem is IBackSword || VanillaBackSword.Contains(item.type);
-        //    #endregion
+        public static bool IsDW_Bow(Item item)
+        {
+            return item.ModItem is IDW_Bow || DWVanillaID_Bow.Contains(item.type);
+        }
+    }
 
-        //    #region BackSword_Shoulder ==========================================================================================================================
-        //    public static readonly HashSet<int> VanillaBackSword_Shoulder = new()
-        //    {
+    //Crossbow
+    public static partial class DWRegistry
+    {
+        public static readonly HashSet<int> DWVanillaID_Crossbow = new()
+        {
+            ItemID.CobaltRepeater, //钴连弩
+            ItemID.PalladiumRepeater, //钯金连弩
+            ItemID.MythrilRepeater, //秘银连弩
+            ItemID.OrichalcumRepeater, //山铜连弩
+            ItemID.AdamantiteRepeater, //精金连弩
+            ItemID.StakeLauncher, //尖桩发射器
+            ItemID.TitaniumRepeater, //钛金连弩
+            ItemID.HallowedRepeater, //神圣连弩
+            ItemID.ChlorophyteShotbow, //叶绿连弩
+        };
 
-        //        //针叶木剑
-        //        ItemID.BorealWoodSword,
-        //        //木剑
-        //        ItemID.WoodenSword,
-        //        //铜阔剑
-        //        ItemID.CopperBroadsword,
-        //        //棕榈木剑
-        //        ItemID.PalmWoodSword,
-        //        //红木剑
-        //        ItemID.RichMahoganySword,
-        //        //仙人掌剑
-        //        ItemID.CactusSword,
-        //        //锡宽剑
-        //        ItemID.TinBroadsword,
-        //        //暗影木剑
-        //        ItemID.ShadewoodSword,
-        //        //灰烬木剑
-        //        ItemID.AshWoodSword,
-        //        //芦苇呼吸管
-        //        ItemID.BreathingReed,
-        // ItemID.TentacleSpike, //触手钉锤
+        public static bool IsDW_Crossbow(Item item)
+        {
+            return item.ModItem is IDW_Crossbow || DWVanillaID_Crossbow.Contains(item.type);
+        }
+    }
 
-        //        //乌木剑
-        //        ItemID.EbonwoodSword,
-        //        //铅宽剑
-        //        ItemID.LeadBroadsword,
-        //        //钨宽剑
-        //        ItemID.TungstenBroadsword,
-        //        //金阔剑
-        //        ItemID.GoldBroadsword,
+    //Rapier
+    public static partial class DWRegistry
+    {
+        public static readonly HashSet<int> DWVanillaID_Rapier = new()
+        {
+            ItemID.BluePhaseblade, //蓝色陨石光剑
+            ItemID.RedPhaseblade, //红色陨石光剑
+            ItemID.GreenPhaseblade, //绿色陨石光剑
+            ItemID.PurplePhaseblade, //紫色陨石光剑
+            ItemID.WhitePhaseblade, //白色陨石光剑
+            ItemID.YellowPhaseblade, //黄色陨石光剑
+            ItemID.OrangePhaseblade, //橙色陨石光剑
+            ItemID.BluePhasesaber, //蓝色晶光刃
+            ItemID.RedPhasesaber, //红色晶光刃
+            ItemID.GreenPhasesaber, //绿色晶光刃
+            ItemID.PurplePhasesaber, //紫色晶光刃
+            ItemID.WhitePhasesaber, //白色晶光刃
+            ItemID.YellowPhasesaber, //黄色晶光刃
+            ItemID.OrangePhasesaber, //橙色晶光刃
+            ItemID.Katana, //武士刀
+            ItemID.Muramasa, //村正
+            ItemID.TaxCollectorsStickOfDoom, //精致手杖
+            ItemID.CopperShortsword, //铜短剑
+            ItemID.TinShortsword, //锡短剑
+            ItemID.IronShortsword, //铁短剑
+            ItemID.LeadShortsword, //铅短剑
+            ItemID.SilverShortsword, //银短剑
+            ItemID.TungstenShortsword, //钨短剑
+            ItemID.GoldShortsword, //金短剑
+            ItemID.PlatinumShortsword, //铂金短剑
+            ItemID.Ruler, //标尺
+            ItemID.Gladius, //罗马短剑
+            ItemID.Terragrim, //泰拉魔刃
+            ItemID.Arkhalis, //Arkhalis剑
+            ItemID.PiercingStarlight, //星光
+            ItemID.SolarEruption, //日耀喷发剑
+        };
 
-        //        //猎鹰刃
-        //        ItemID.FalconBlade,
+        public static bool IsDW_Rapier(Item item)
+        {
+            return item.ModItem is IDW_Rapier || DWVanillaID_Rapier.Contains(item.type);
+        }
+    }
 
-        //        //铁阔剑
-        //        ItemID.IronBroadsword,
-        //        //银阔剑
-        //        ItemID.SilverBroadsword,
-        //
+    //Stick
+    public static partial class DWRegistry
+    {
+        public static readonly HashSet<int> DWVanillaID_Stick = new()
+        {
+            ItemID.Keybrand, //钥匙剑
+            ItemID.SlapHand, //拍拍手
+            ItemID.ZombieArm, //僵尸臂
+            ItemID.HamBat, //火腿棍
+            ItemID.PurpleClubberfish, //紫挥棒鱼
+            ItemID.TentacleSpike, //触手钉锤
+            ItemID.StylistKilLaKillScissorsIWish, //时尚剪刀
+            ItemID.BatBat, //蝙蝠棍
+            ItemID.AntlionClaw, //颌骨剑
+            //燧石
+            //ItemID.DeadCellsFlint, rrzz
+        };
 
-        //        //铂金宽剑
-        //        ItemID.PlatinumBroadsword,
-        //        //蝙蝠棍
-        //        ItemID.BatBat,
-        //        //武士刀
-        //        ItemID.Katana,
-        //        //村正
-        //        ItemID.Muramasa,
+        public static bool IsDW_Stick(Item item)
+        {
+            return item.ModItem is IDW_Stick || DWVanillaID_Stick.Contains(item.type);
+        }
+    }
 
-        //        //颌骨剑
-        //        ItemID.AntlionClaw,
-        //        //珍珠木剑
-        //        ItemID.PearlwoodSword,
-        //        //时尚剪刀
-        //        ItemID.StylistKilLaKillScissorsIWish,
+    //Spear
+    public static partial class DWRegistry
+    {
+        public static readonly HashSet<int> DWVanillaID_Spear = new()
+        {
+            //史莱姆长矛
+            //ItemID.SlimeSpear, rrzz
 
-        //变态人的刀
-        //        ItemID.PsychoKnife,
+            ItemID.Spear, //长矛
+            ItemID.Trident, //三叉戟
+            ItemID.ThunderSpear, //风暴长矛
+            ItemID.TheRottedFork, //腐叉
+            ItemID.Swordfish, //剑鱼
+            ItemID.ObsidianSwordfish, //黑曜石剑鱼
+            ItemID.DarkLance, //暗黑长枪
+            ItemID.CobaltNaginata, //钴薙刀
+            ItemID.PalladiumPike, //钯金刺矛
+            ItemID.MythrilHalberd, //秘银长戟
+            ItemID.OrichalcumHalberd, //山铜长戟
+            ItemID.AdamantiteGlaive, //精金关刀
+            ItemID.TitaniumTrident, //钛金三叉戟
+            ItemID.Gungnir, //永恒之枪
+            ItemID.MonkStaffT1, //瞌睡章鱼
+            ItemID.MonkStaffT2, //恐怖关刀
+            ItemID.ChlorophytePartisan, //叶绿镋
+            ItemID.MushroomSpear, //蘑菇长矛
+            ItemID.NorthPole, //北极
+            ItemID.ScourgeoftheCorruptor, //腐化者之戟
+            ItemID.DayBreak, //破晓之光
+            ItemID.MonkStaffT3, //天龙之怒
+        };
 
-        //钥匙剑
-        //        ItemID.Keybrand,
-        //        //精致手杖
-        //        ItemID.TaxCollectorsStickOfDoom,
-        //ItemID.SlapHand, //拍拍手
-        //    ItemID.ZombieArm, //僵尸臂
+        public static bool IsDW_Spear(Item item)
+        {
+            return item.ModItem is IDW_Spear || DWVanillaID_Spear.Contains(item.type);
+        }
+    }
 
-        //ItemID.HamBat, //火腿棍
-        //ItemID.PurpleClubberfish, //紫挥棒鱼
-        //
+    //Lance
+    public static partial class DWRegistry
+    {
+        public static readonly HashSet<int> DWVanillaID_Lance = new()
+        {
+            ItemID.JoustingLance, //骑枪
+            ItemID.ShadowJoustingLance, //暗影骑枪
+            ItemID.HallowJoustingLance, //神圣骑枪
+        };
 
-        //        //蓝色陨石光剑
-        //        ItemID.BluePhaseblade,
-        //        //红色陨石光剑
-        //        ItemID.RedPhaseblade,
-        //        //绿色陨石光剑
-        //        ItemID.GreenPhaseblade,
-        //        //紫色陨石光剑
-        //        ItemID.PurplePhaseblade,
-        //        //白色陨石光剑
-        //        ItemID.WhitePhaseblade,
-        //        //黄色陨石光剑
-        //        ItemID.YellowPhaseblade,
-        //        //橙色陨石光剑
-        //        ItemID.OrangePhaseblade,
-        //        //蓝色晶光刃
-        //        ItemID.BluePhasesaber,
-        //        //红色晶光刃
-        //        ItemID.RedPhasesaber,
-        //        //绿色晶光刃
-        //        ItemID.GreenPhasesaber,
-        //        //紫色晶光刃
-        //        ItemID.PurplePhasesaber,
-        //        //白色晶光刃
-        //        ItemID.WhitePhasesaber,
-        //        //黄色晶光刃
-        //        ItemID.YellowPhasesaber,
-        //        //橙色晶光刃
-        //        ItemID.OrangePhasesaber,
-        //    };
+        public static bool IsDW_Lance(Item item)
+        {
+            return item.ModItem is IDW_Lance || DWVanillaID_Lance.Contains(item.type);
+        }
+    }
 
-        //    public static bool IsBackSword_Shoulder(Item item) =>
-        //        item.ModItem is IBackSword_Shoulder || VanillaBackSword_Shoulder.Contains(item.type);
-        //    #endregion
+    //Sword
+    public static partial class DWRegistry
+    {
+        public static readonly HashSet<int> DWVanillaID_Sword = new()
+        {
+            ItemID.Zenith, //天顶剑
+            ItemID.BorealWoodSword, //针叶木剑
+            ItemID.WoodenSword, //木剑
+            ItemID.CopperBroadsword, //铜阔剑
+            ItemID.PalmWoodSword, //棕榈木剑
+            ItemID.RichMahoganySword, //红木剑
+            ItemID.CactusSword, //仙人掌剑
+            ItemID.TinBroadsword, //锡宽剑
+            ItemID.ShadewoodSword, //暗影木剑
+            ItemID.AshWoodSword, //灰烬木剑
+            ItemID.BreathingReed, //芦苇呼吸管
+            ItemID.EbonwoodSword, //乌木剑
+            ItemID.LeadBroadsword, //铅宽剑
+            ItemID.TungstenBroadsword, //钨宽剑
+            ItemID.GoldBroadsword, //金阔剑
+            ItemID.FalconBlade, //猎鹰刃
+            ItemID.IronBroadsword, //铁阔剑
+            ItemID.SilverBroadsword, //银阔剑
+            ItemID.PlatinumBroadsword, //铂金宽剑
+            ItemID.PearlwoodSword, //珍珠木剑
+            ItemID.PsychoKnife, //变态人的刀
+        };
 
-        //    #region BackSword_Waist ==========================================================================================================================
-        //    public static readonly HashSet<int> VanillaBackSword_Waist = new()
-        //    {
-        //        //铜短剑
-        //        ItemID.CopperShortsword,
-        //        //锡短剑
-        //        ItemID.TinShortsword,
-        //        //铁短剑
-        //        ItemID.IronShortsword,
-        //        //铅短剑
-        //        ItemID.LeadShortsword,
-        //        //银短剑
-        //        ItemID.SilverShortsword,
-        //        //钨短剑
-        //        ItemID.TungstenShortsword,
-        //        //金短剑
-        //        ItemID.GoldShortsword,
-        //        //铂金短剑
-        //        ItemID.PlatinumShortsword,
-        //        //标尺
-        //        ItemID.Ruler,
-        //        //罗马短剑
-        //        ItemID.Gladius,
-        //        //泰拉魔刃
-        //        ItemID.Terragrim,
-        //        //Arkhalis剑
-        //        ItemID.Arkhalis,
-        //        //星光
-        //        ItemID.PiercingStarlight,
-        //        //日耀喷发剑
-        //        ItemID.SolarEruption,
-        //    };
-
-        //    public static bool IsBackSword_Waist(Item item) =>
-        //        item.ModItem is IBackSword_Waist || VanillaBackSword_Waist.Contains(item.type);
-        //    #endregion
-
-        //    #region BackMace ==========================================================================================================================
-        //    public static readonly HashSet<int> VanillaBackMace = new()
-        //    {
-
-        //    };
-
-        //    public static bool IsBackMace(Item item) =>
-        //        item.ModItem is IBackMace || VanillaBackMace.Contains(item.type);
-        //    #endregion
-
-        //    #region BackYoyo ==========================================================================================================================
-        //    public static readonly HashSet<int> VanillaBackYoyo = new()
-        //    {
-        //        //利刃手套
-        //        ItemID.BladedGlove,
-        //        //臭虎爪
-        //        ItemID.FetidBaghnakhs,
-
-        //    };
-
-        //    public static bool IsBackYoyo(Item item) =>
-        //        item.ModItem is IBackYoyo || VanillaBackYoyo.Contains(item.type);
-        //    #endregion
-
-
+        public static bool IsDW_Sword(Item item)
+        {
+            return item.ModItem is IDW_Sword || DWVanillaID_Sword.Contains(item.type);
+        }
     }
 }
 
+
+//    #region BackYoyo ==========================================================================================================================
+//    public static readonly HashSet<int> VanillaBackYoyo = new()
+//    {
+//        //利刃手套
+//        ItemID.BladedGlove,
+//        //臭虎爪
+//        ItemID.FetidBaghnakhs,
+
+//    };
+
+//    public static bool IsBackYoyo(Item item) =>
+//        item.ModItem is IBackYoyo || VanillaBackYoyo.Contains(item.type);
+//    #endregion
 
 ////悲剧雨伞
 //ItemID.TragicUmbrella, rrzz

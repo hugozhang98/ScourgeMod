@@ -41,6 +41,10 @@ namespace ScourgeMod.Common.DisplayWeapons
             if (player.itemAnimation > 0)
                 return false;
 
+            //原版通用隐身状态（例如隐身药水）下，展示武器也应一并隐藏
+            if (player.invis)
+                return false;
+
             return true;
         }
 
@@ -91,7 +95,11 @@ namespace ScourgeMod.Common.DisplayWeapons
             if (drawInfo.drawPlayer.isDisplayDollOrInanimate || Main.gameMenu)
                 return Color.White;
 
-            return Lighting.GetColor(drawInfo.drawPlayer.Center.ToTileCoordinates());
+            Color color = Lighting.GetColor(drawInfo.drawPlayer.Center.ToTileCoordinates());
+
+            // 使用 PlayerDrawSet 准备好的最终身体透明度，自动兼容变态人的刀、蘑菇矿隐身等效果。
+            float opacity = drawInfo.colorArmorBody.A / 255f;
+            return color * opacity;
         }
     }
 }

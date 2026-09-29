@@ -14,4 +14,17 @@
 
     public interface IDW_MiniGun { }
 
+    public interface IDW_Bow { }
+
+    public interface IDW_Crossbow { }
+
+    public interface IDW_Rapier { }
+
+    public interface IDW_Stick { }
+
+    public interface IDW_Spear { }
+
+    public interface IDW_Lance { }
+
+    public interface IDW_Sword { }
 }

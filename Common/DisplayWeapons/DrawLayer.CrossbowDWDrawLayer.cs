@@ -8,16 +8,18 @@ using Terraria.ModLoader;
 
 namespace ScourgeMod.Common.DisplayWeapons
 {
-    public class GreatSwordDWDrawLayer : PlayerDrawLayer
+    public class CrossbowDWDrawLayer : PlayerDrawLayer
     {
-        public override Position GetDefaultPosition() => new BeforeParent(PlayerDrawLayers.Torso);
+        public override Position GetDefaultPosition() => new AfterParent(PlayerDrawLayers.WaistAcc); //rrzz 图层是否正确
 
         public override bool GetDefaultVisibility(PlayerDrawSet drawInfo)
         {
             Player player = drawInfo.drawPlayer;
             Item item = player.HeldItem;
 
-            return DWHelper.GetDefaultVisibility(player, item) && DWRegistry.IsDW_GreatSword(item);
+            return DWHelper.GetDefaultVisibility(player, item)
+                && DWAdjust_Anchor.GetDefaultVisibility(player, item)
+                && DWRegistry.IsDW_Crossbow(item);
         }
 
         protected override void Draw(ref PlayerDrawSet drawInfo)
@@ -26,12 +28,13 @@ namespace ScourgeMod.Common.DisplayWeapons
                 return;
 
             Player player = drawInfo.drawPlayer;
-            Texture2D texture = TextureAssets.Item[player.HeldItem.type].Value;
+            Item item = player.HeldItem;
+            Texture2D texture = TextureAssets.Item[item.type].Value;
             Rectangle frame = texture.Frame();
 
             SpriteEffects effects = GetEffects(player);
-            Vector2 origin = GetOrigin(texture, frame, effects);
-            Vector2 position = GetPosition(drawInfo, player);
+            Vector2 origin = GetOrigin(texture, frame, effects, item);
+            Vector2 position = GetPosition(drawInfo, player, item);
             float rotation = GetRotation(player);
             Color lightColor = GetColor(drawInfo);
             float scale = GetScale();
@@ -63,7 +66,12 @@ namespace ScourgeMod.Common.DisplayWeapons
             return effects;
         }
 
-        private Vector2 GetOrigin(Texture2D texture, Rectangle frame, SpriteEffects effects)
+        private Vector2 GetOrigin(
+            Texture2D texture,
+            Rectangle frame,
+            SpriteEffects effects,
+            Item item
+        )
         {
             Rectangle visibleFrame = TextureHelper.GetVisibleFrame(texture);
 
@@ -73,16 +81,16 @@ namespace ScourgeMod.Common.DisplayWeapons
             // 原点在完整贴图中的位置
             Vector2 origin =
                 visibleFrame.Location.ToVector2()
-                + new Vector2(visibleFrame.Width * 0f, visibleFrame.Height * 1f);
+                + new Vector2(visibleFrame.Width * 0.33f, visibleFrame.Height * 0.3f);
 
             return TextureHelper.ApplyFlipToOrigin(origin, frame, effects);
         }
 
-        private Vector2 GetPosition(PlayerDrawSet drawInfo, Player player)
+        private Vector2 GetPosition(PlayerDrawSet drawInfo, Player player, Item item)
         {
             Vector2 position = drawInfo.Center - Main.screenPosition;
 
-            position += new Vector2(player.direction * 18f, player.gravDir * 3f);
+            position += new Vector2(player.direction * -0f, player.gravDir * -0f);
 
             position += DWHelper.GetUpperBodyBobbing(drawInfo);
 
@@ -91,9 +99,9 @@ namespace ScourgeMod.Common.DisplayWeapons
 
         private float GetRotation(Player player)
         {
-            float baseRotation = AngleHelper.DegToRad(-player.direction * 100f);
+            float baseRotation = AngleHelper.DegToRad(player.direction * 10f);
 
-            baseRotation += DWHelper.GetMoveSway(player, 2f);
+            baseRotation += DWHelper.GetMoveSway(player, 4f);
 
             baseRotation *= player.gravDir;
 
@@ -104,9 +112,9 @@ namespace ScourgeMod.Common.DisplayWeapons
 
         private float GetScale()
         {
-            float scale = 1f;
+            float defaultScale = 1f;
 
-            return scale;
+            return defaultScale;
         }
     }
 }

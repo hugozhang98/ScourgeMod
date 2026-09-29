@@ -8,7 +8,7 @@ using Terraria.ModLoader;
 
 namespace ScourgeMod.Common.DisplayWeapons
 {
-    public class GreatSwordDWDrawLayer : PlayerDrawLayer
+    public class LanceDWDrawLayer : PlayerDrawLayer
     {
         public override Position GetDefaultPosition() => new BeforeParent(PlayerDrawLayers.Torso);
 
@@ -17,7 +17,7 @@ namespace ScourgeMod.Common.DisplayWeapons
             Player player = drawInfo.drawPlayer;
             Item item = player.HeldItem;
 
-            return DWHelper.GetDefaultVisibility(player, item) && DWRegistry.IsDW_GreatSword(item);
+            return DWHelper.GetDefaultVisibility(player, item) && DWRegistry.IsDW_Lance(item);
         }
 
         protected override void Draw(ref PlayerDrawSet drawInfo)
@@ -82,7 +82,7 @@ namespace ScourgeMod.Common.DisplayWeapons
         {
             Vector2 position = drawInfo.Center - Main.screenPosition;
 
-            position += new Vector2(player.direction * 18f, player.gravDir * 3f);
+            position += new Vector2(player.direction * 10f, player.gravDir * 27f);
 
             position += DWHelper.GetUpperBodyBobbing(drawInfo);
 
@@ -91,9 +91,9 @@ namespace ScourgeMod.Common.DisplayWeapons
 
         private float GetRotation(Player player)
         {
-            float baseRotation = AngleHelper.DegToRad(-player.direction * 100f);
+            float baseRotation = AngleHelper.DegToRad(-player.direction * 47f);
 
-            baseRotation += DWHelper.GetMoveSway(player, 2f);
+            baseRotation += DWHelper.GetMoveSway(player, 1f);
 
             baseRotation *= player.gravDir;
 
@@ -102,11 +102,6 @@ namespace ScourgeMod.Common.DisplayWeapons
 
         private Color GetColor(PlayerDrawSet drawInfo) => DWHelper.GetDefaultColor(drawInfo);
 
-        private float GetScale()
-        {
-            float scale = 1f;
-
-            return scale;
-        }
+        private float GetScale() => 1.2f;
     }
 }

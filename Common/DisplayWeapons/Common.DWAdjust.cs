@@ -57,7 +57,6 @@ namespace ScourgeMod.Common.DisplayWeapons
     {
         public static bool AppliesTo(Item item) => item.type == ItemID.Megashark;
 
-        // GetOrigin
         public static bool TryAdjustOrigin(Item item, ref Vector2 origin)
         {
             if (AppliesTo(item))
@@ -68,7 +67,23 @@ namespace ScourgeMod.Common.DisplayWeapons
 
             return false;
         }
+    }
 
+    public static class DWAdjust_TheRottedFork
+    {
+        public static bool AppliesTo(Item item) => item.type == ItemID.TheRottedFork;
+
+        //
+        public static bool TryAdjustPosition(Player player, ref Vector2 position)
+        {
+            if (AppliesTo(player.HeldItem))
+            {
+                position += new Vector2(player.direction * -4f, 0f);
+                return true;
+            }
+
+            return false;
+        }
     }
 
     public static class DWAdjust_Class_GreatSword
@@ -90,8 +105,6 @@ namespace ScourgeMod.Common.DisplayWeapons
     {
         public static void HoldItemFrame(Item item, Player player)
         {
-
-
             if (DWRegistry.IsDW_Gun(item))
             {
                 float backArmRad = 45f;
@@ -106,10 +119,10 @@ namespace ScourgeMod.Common.DisplayWeapons
                     .ThreeQuarters;
 
                 player.SetCompositeArmBack(
-             enabled: true,
-             backArmStretchAmount,
-             AngleHelper.DegToRad(player.direction * -backArmRad)
-         );
+                    enabled: true,
+                    backArmStretchAmount,
+                    AngleHelper.DegToRad(player.direction * -backArmRad)
+                );
 
                 player.SetCompositeArmFront(
                     enabled: true,
@@ -124,8 +137,6 @@ namespace ScourgeMod.Common.DisplayWeapons
     {
         public static void HoldItemFrame(Item item, Player player)
         {
-
-
             if (DWRegistry.IsDW_MiniGun(item))
             {
                 float backArmRad = 45f;
@@ -140,15 +151,174 @@ namespace ScourgeMod.Common.DisplayWeapons
                     .Full;
 
                 player.SetCompositeArmBack(
-             enabled: true,
-             backArmStretchAmount,
-             AngleHelper.DegToRad(player.direction * -backArmRad)
-         );
+                    enabled: true,
+                    backArmStretchAmount,
+                    AngleHelper.DegToRad(player.direction * -backArmRad)
+                );
 
                 player.SetCompositeArmFront(
                     enabled: true,
                     frontArmStretchAmount,
                     AngleHelper.DegToRad(player.direction * -frontArmRad)
+                );
+            }
+        }
+    }
+
+    public static class DWAdjust_Class_Bow
+    {
+        public static void HoldItemFrame(Item item, Player player)
+        {
+            if (DWRegistry.IsDW_Bow(item))
+            {
+                float backArmRad = 45f;
+                float frontArmRad = 70f;
+
+                Player.CompositeArmStretchAmount backArmStretchAmount = Player
+                    .CompositeArmStretchAmount
+                    .Full;
+
+                Player.CompositeArmStretchAmount frontArmStretchAmount = Player
+                    .CompositeArmStretchAmount
+                    .Quarter;
+
+                player.SetCompositeArmBack(
+                    enabled: true,
+                    backArmStretchAmount,
+                    AngleHelper.DegToRad(player.direction * -backArmRad)
+                );
+
+                player.SetCompositeArmFront(
+                    enabled: true,
+                    frontArmStretchAmount,
+                    AngleHelper.DegToRad(player.direction * -frontArmRad)
+                );
+            }
+        }
+    }
+
+    public static class DWAdjust_Class_Crossbow
+    {
+        public static void HoldItemFrame(Item item, Player player)
+        {
+            if (DWRegistry.IsDW_Crossbow(item))
+            {
+                float backArmRad = 45f;
+                float frontArmRad = 45f;
+
+                Player.CompositeArmStretchAmount backArmStretchAmount = Player
+                    .CompositeArmStretchAmount
+                    .Full;
+
+                Player.CompositeArmStretchAmount frontArmStretchAmount = Player
+                    .CompositeArmStretchAmount
+                    .ThreeQuarters;
+
+                player.SetCompositeArmBack(
+                    enabled: true,
+                    backArmStretchAmount,
+                    AngleHelper.DegToRad(player.direction * -backArmRad)
+                );
+
+                player.SetCompositeArmFront(
+                    enabled: true,
+                    frontArmStretchAmount,
+                    AngleHelper.DegToRad(player.direction * -frontArmRad)
+                );
+            }
+        }
+    }
+
+    public static class DWAdjust_Class_Rapier
+    {
+        public static void HoldItemFrame(Item item, Player player)
+        {
+            if (DWRegistry.IsDW_Rapier(item))
+            {
+                float backArmRad = 55f;
+
+                Player.CompositeArmStretchAmount backArmStretchAmount = Player
+                    .CompositeArmStretchAmount
+                    .Full;
+
+                player.SetCompositeArmBack(
+                    enabled: true,
+                    backArmStretchAmount,
+                    AngleHelper.DegToRad(player.direction * -backArmRad)
+                );
+            }
+        }
+    }
+
+    public static class DWAdjust_Class_Stick
+    {
+        public static void HoldItemFrame(Item item, Player player)
+        {
+            if (DWRegistry.IsDW_Stick(item))
+            {
+                float frontArmRad = -30f;
+
+                Player.CompositeArmStretchAmount frontArmStretchAmount = Player
+                    .CompositeArmStretchAmount
+                    .Full;
+
+                player.SetCompositeArmFront(
+                    enabled: true,
+                    frontArmStretchAmount,
+                    AngleHelper.DegToRad(player.direction * -frontArmRad)
+                );
+            }
+        }
+    }
+
+    public static class DWAdjust_Class_Spear
+    {
+        public static void HoldItemFrame(Item item, Player player)
+        {
+            if (DWRegistry.IsDW_Spear(item))
+            {
+                float backArmRad = 50f;
+                float frontArmRad = 40f;
+
+                Player.CompositeArmStretchAmount backArmStretchAmount = Player
+                    .CompositeArmStretchAmount
+                    .ThreeQuarters;
+
+                Player.CompositeArmStretchAmount frontArmStretchAmount = Player
+                    .CompositeArmStretchAmount
+                    .Full;
+
+                player.SetCompositeArmBack(
+                    enabled: true,
+                    backArmStretchAmount,
+                    AngleHelper.DegToRad(player.direction * -backArmRad)
+                );
+
+                player.SetCompositeArmFront(
+                    enabled: true,
+                    frontArmStretchAmount,
+                    AngleHelper.DegToRad(player.direction * -frontArmRad)
+                );
+            }
+        }
+    }
+
+    public static class DWAdjust_Class_Lance
+    {
+        public static void HoldItemFrame(Item item, Player player)
+        {
+            if (DWRegistry.IsDW_Lance(item))
+            {
+                float backArmRad = 50f;
+
+                Player.CompositeArmStretchAmount backArmStretchAmount = Player
+                    .CompositeArmStretchAmount
+                    .Full;
+
+                player.SetCompositeArmBack(
+                    enabled: true,
+                    backArmStretchAmount,
+                    AngleHelper.DegToRad(player.direction * -backArmRad)
                 );
             }
         }
