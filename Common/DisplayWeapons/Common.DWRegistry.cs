@@ -439,11 +439,29 @@ namespace ScourgeMod.Common.DisplayWeapons
             ItemID.PlatinumBroadsword, //铂金宽剑
             ItemID.PearlwoodSword, //珍珠木剑
             ItemID.PsychoKnife, //变态人的刀
+            //真铜短剑
+            // ItemID.TrueCopperShortsword,
         };
 
         public static bool IsDW_Sword(Item item)
         {
             return item.ModItem is IDW_Sword || DWVanillaID_Sword.Contains(item.type);
+        }
+    }
+
+    //Glove
+    public static partial class DWRegistry
+    {
+        public static readonly HashSet<int> DWVanillaID_Glove = new()
+        {
+            ItemID.BladedGlove, //利刃手套
+            ItemID.FetidBaghnakhs, //臭虎爪
+            ItemID.AleThrowingGlove, //麦芽酒投掷器
+        };
+
+        public static bool IsDW_Glove(Item item)
+        {
+            return item.ModItem is IDW_Glove || DWVanillaID_Glove.Contains(item.type);
         }
     }
 }
@@ -452,10 +470,6 @@ namespace ScourgeMod.Common.DisplayWeapons
 //    #region BackYoyo ==========================================================================================================================
 //    public static readonly HashSet<int> VanillaBackYoyo = new()
 //    {
-//        //利刃手套
-//        ItemID.BladedGlove,
-//        //臭虎爪
-//        ItemID.FetidBaghnakhs,
 
 //    };
 
@@ -469,12 +483,6 @@ namespace ScourgeMod.Common.DisplayWeapons
 //ItemID.Umbrella,
 ////吸血鬼刀
 //ItemID.VampireKnives,
-
-////麦芽酒投掷器
-//ItemID.AleThrowingGlove,
-
-////真铜短剑
-//ItemID.TrueCopperShortsword,
 
 ////木回旋镖
 //ItemID.WoodenBoomerang,

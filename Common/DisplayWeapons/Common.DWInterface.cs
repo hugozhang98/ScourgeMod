@@ -27,4 +27,6 @@
     public interface IDW_Lance { }
 
     public interface IDW_Sword { }
+
+    public interface IDW_Glove { }
 }
