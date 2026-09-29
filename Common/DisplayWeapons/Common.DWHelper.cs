@@ -9,23 +9,10 @@ namespace ScourgeMod.Common.DisplayWeapons
 {
     public static class DWHelper
     {
-        //public static Item GetDisplayItem(Player player)
-        //{
-        //    Item heldItem = player.HeldItem;
-
-        //    if (!Main.gameMenu)
-        //        return heldItem;
-
-        //    // 人物选择页不会可靠保留玩家退出前选中的快捷栏槽位。
-        //    // 预览时回退到背包中第一件可以展示的武器。
-        //    foreach (Item item in player.inventory)
-        //    {
-        //        if (!item.IsAir)
-        //            return item;
-        //    }
-
-        //    return heldItem;
-        //}
+        public static Item GetDisplayItem(Player player)
+        {
+            return MenuPreviewItemSystem.GetDisplayItem(player);
+        }
 
         public static bool GetDefaultVisibility(Player player, Item item)
         {

@@ -15,7 +15,7 @@ namespace ScourgeMod.Common.DisplayWeapons
         public override bool GetDefaultVisibility(PlayerDrawSet drawInfo)
         {
             Player player = drawInfo.drawPlayer;
-            Item item = player.HeldItem;
+            Item item = DWHelper.GetDisplayItem(player);
 
             return DWHelper.GetDefaultVisibility(player, item) && DWRegistry.IsDW_ChainKnife(item);
         }
@@ -26,7 +26,7 @@ namespace ScourgeMod.Common.DisplayWeapons
                 return;
 
             Player player = drawInfo.drawPlayer;
-            Item item = player.HeldItem;
+            Item item = DWHelper.GetDisplayItem(player);
             Texture2D texture = TextureAssets.Item[item.type].Value;
             Rectangle frame = texture.Frame();
 

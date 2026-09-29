@@ -10,13 +10,12 @@ namespace ScourgeMod.Common.DisplayWeapons
 {
     public class GunDWDrawLayer : PlayerDrawLayer
     {
-        public override Position GetDefaultPosition() =>
-            new AfterParent(PlayerDrawLayers.WaistAcc); //rrzz 图层是否正确
+        public override Position GetDefaultPosition() => new AfterParent(PlayerDrawLayers.WaistAcc); //rrzz 图层是否正确
 
         public override bool GetDefaultVisibility(PlayerDrawSet drawInfo)
         {
             Player player = drawInfo.drawPlayer;
-            Item item = player.HeldItem;
+            Item item = DWHelper.GetDisplayItem(player);
 
             return DWHelper.GetDefaultVisibility(player, item)
                 && DWAdjust_Anchor.GetDefaultVisibility(player, item)
@@ -29,7 +28,7 @@ namespace ScourgeMod.Common.DisplayWeapons
                 return;
 
             Player player = drawInfo.drawPlayer;
-            Item item = player.HeldItem;
+            Item item = DWHelper.GetDisplayItem(player);
             Texture2D texture = TextureAssets.Item[item.type].Value;
             Rectangle frame = texture.Frame();
 
@@ -67,7 +66,12 @@ namespace ScourgeMod.Common.DisplayWeapons
             return effects;
         }
 
-        private Vector2 GetOrigin(Texture2D texture, Rectangle frame, SpriteEffects effects, Item item)
+        private Vector2 GetOrigin(
+            Texture2D texture,
+            Rectangle frame,
+            SpriteEffects effects,
+            Item item
+        )
         {
             Rectangle visibleFrame = TextureHelper.GetVisibleFrame(texture);
 
@@ -76,7 +80,8 @@ namespace ScourgeMod.Common.DisplayWeapons
 
             // 原点在完整贴图中的位置
             Vector2 origin =
-                visibleFrame.Location.ToVector2() + new Vector2(visibleFrame.Width * 0.33f, visibleFrame.Height * 0.3f);
+                visibleFrame.Location.ToVector2()
+                + new Vector2(visibleFrame.Width * 0.33f, visibleFrame.Height * 0.3f);
 
             DWAdjust_Megashark.TryAdjustOrigin(item, ref origin);
 

@@ -76,7 +76,7 @@ namespace ScourgeMod.Common.DisplayWeapons
         //
         public static bool TryAdjustPosition(Player player, ref Vector2 position)
         {
-            if (AppliesTo(player.HeldItem))
+            if (AppliesTo(DWHelper.GetDisplayItem(player)))
             {
                 position += new Vector2(player.direction * -4f, 0f);
                 return true;

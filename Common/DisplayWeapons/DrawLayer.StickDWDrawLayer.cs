@@ -15,7 +15,7 @@ namespace ScourgeMod.Common.DisplayWeapons
         public override bool GetDefaultVisibility(PlayerDrawSet drawInfo)
         {
             Player player = drawInfo.drawPlayer;
-            Item item = player.HeldItem;
+            Item item = DWHelper.GetDisplayItem(player);
 
             return DWHelper.GetDefaultVisibility(player, item) && DWRegistry.IsDW_Stick(item);
         }
@@ -26,11 +26,12 @@ namespace ScourgeMod.Common.DisplayWeapons
                 return;
 
             Player player = drawInfo.drawPlayer;
-            Texture2D texture = TextureAssets.Item[player.HeldItem.type].Value;
+            Item item = DWHelper.GetDisplayItem(player);
+            Texture2D texture = TextureAssets.Item[item.type].Value;
             Rectangle frame = texture.Frame();
 
             SpriteEffects effects = GetEffects(player);
-            Vector2 origin = GetOrigin(texture, frame, effects, player.HeldItem);
+            Vector2 origin = GetOrigin(texture, frame, effects);
             Vector2 position = GetPosition(drawInfo, player);
             float rotation = GetRotation(player);
             Color lightColor = GetColor(drawInfo);
@@ -63,12 +64,7 @@ namespace ScourgeMod.Common.DisplayWeapons
             return effects;
         }
 
-        private Vector2 GetOrigin(
-            Texture2D texture,
-            Rectangle frame,
-            SpriteEffects effects,
-            Item item
-        )
+        private Vector2 GetOrigin(Texture2D texture, Rectangle frame, SpriteEffects effects)
         {
             Rectangle visibleFrame = TextureHelper.GetVisibleFrame(texture);
 
