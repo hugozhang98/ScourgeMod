@@ -10,7 +10,7 @@ namespace ScourgeMod.Common.DisplayWeapons
 {
     public class GunDWDrawLayer : PlayerDrawLayer
     {
-        public override Position GetDefaultPosition() => new AfterParent(PlayerDrawLayers.WaistAcc); //rrzz 图层是否正确
+        public override Position GetDefaultPosition() => new BeforeParent(PlayerDrawLayers.Head);
 
         public override bool GetDefaultVisibility(PlayerDrawSet drawInfo)
         {

@@ -10,7 +10,7 @@ namespace ScourgeMod.Common.DisplayWeapons
 {
     public class GloveDWDrawLayer : PlayerDrawLayer
     {
-        public override Position GetDefaultPosition() => new AfterParent(PlayerDrawLayers.Skin);
+        public override Position GetDefaultPosition() => new AfterParent(PlayerDrawLayers.Skin); //rrzz 图层是否正确
 
         public override bool GetDefaultVisibility(PlayerDrawSet drawInfo)
         {

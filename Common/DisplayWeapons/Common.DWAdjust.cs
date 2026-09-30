@@ -90,7 +90,7 @@ namespace ScourgeMod.Common.DisplayWeapons
     {
         public static void HoldItemFrame(Item item, Player player)
         {
-            if (DWRegistry.IsDW_GreatSword(item))
+            if (DWHelper.GetDefaultVisibility(player, item) && DWRegistry.IsDW_GreatSword(item))
             {
                 player.SetCompositeArmBack(
                     enabled: true,
@@ -105,7 +105,7 @@ namespace ScourgeMod.Common.DisplayWeapons
     {
         public static void HoldItemFrame(Item item, Player player)
         {
-            if (DWRegistry.IsDW_Gun(item))
+            if (DWHelper.GetDefaultVisibility(player, item) && DWRegistry.IsDW_Gun(item))
             {
                 float backArmRad = 45f;
                 float frontArmRad = 45f;
@@ -137,7 +137,7 @@ namespace ScourgeMod.Common.DisplayWeapons
     {
         public static void HoldItemFrame(Item item, Player player)
         {
-            if (DWRegistry.IsDW_MiniGun(item))
+            if (DWHelper.GetDefaultVisibility(player, item) && DWRegistry.IsDW_MiniGun(item))
             {
                 float backArmRad = 45f;
                 float frontArmRad = 70f;
@@ -169,7 +169,7 @@ namespace ScourgeMod.Common.DisplayWeapons
     {
         public static void HoldItemFrame(Item item, Player player)
         {
-            if (DWRegistry.IsDW_Bow(item))
+            if (DWHelper.GetDefaultVisibility(player, item) && DWRegistry.IsDW_Bow(item))
             {
                 float backArmRad = 45f;
                 float frontArmRad = 70f;
@@ -201,7 +201,7 @@ namespace ScourgeMod.Common.DisplayWeapons
     {
         public static void HoldItemFrame(Item item, Player player)
         {
-            if (DWRegistry.IsDW_Crossbow(item))
+            if (DWHelper.GetDefaultVisibility(player, item) && DWRegistry.IsDW_Crossbow(item))
             {
                 float backArmRad = 45f;
                 float frontArmRad = 45f;
@@ -233,7 +233,7 @@ namespace ScourgeMod.Common.DisplayWeapons
     {
         public static void HoldItemFrame(Item item, Player player)
         {
-            if (DWRegistry.IsDW_Rapier(item))
+            if (DWHelper.GetDefaultVisibility(player, item) && DWRegistry.IsDW_Rapier(item))
             {
                 float backArmRad = 55f;
 
@@ -254,7 +254,7 @@ namespace ScourgeMod.Common.DisplayWeapons
     {
         public static void HoldItemFrame(Item item, Player player)
         {
-            if (DWRegistry.IsDW_Stick(item))
+            if (DWHelper.GetDefaultVisibility(player, item) && DWRegistry.IsDW_Stick(item))
             {
                 float frontArmRad = -30f;
 
@@ -275,7 +275,7 @@ namespace ScourgeMod.Common.DisplayWeapons
     {
         public static void HoldItemFrame(Item item, Player player)
         {
-            if (DWRegistry.IsDW_Spear(item))
+            if (DWHelper.GetDefaultVisibility(player, item) && DWRegistry.IsDW_Spear(item))
             {
                 float backArmRad = 50f;
                 float frontArmRad = 40f;
@@ -307,7 +307,7 @@ namespace ScourgeMod.Common.DisplayWeapons
     {
         public static void HoldItemFrame(Item item, Player player)
         {
-            if (DWRegistry.IsDW_Lance(item))
+            if (DWHelper.GetDefaultVisibility(player, item) && DWRegistry.IsDW_Lance(item))
             {
                 float backArmRad = 50f;
 

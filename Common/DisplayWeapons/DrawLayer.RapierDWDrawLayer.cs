@@ -10,7 +10,7 @@ namespace ScourgeMod.Common.DisplayWeapons
 {
     public class RapierDWDrawLayer : PlayerDrawLayer
     {
-        public override Position GetDefaultPosition() => new AfterParent(PlayerDrawLayers.Skin);
+        public override Position GetDefaultPosition() => new BeforeParent(PlayerDrawLayers.Torso);
 
         public override bool GetDefaultVisibility(PlayerDrawSet drawInfo)
         {

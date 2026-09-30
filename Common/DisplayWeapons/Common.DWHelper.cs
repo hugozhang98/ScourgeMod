@@ -32,6 +32,10 @@ namespace ScourgeMod.Common.DisplayWeapons
             if (player.invis)
                 return false;
 
+            // 乘骑时不绘制
+            if (player.mount.Active)
+                return false;
+
             return true;
         }
 

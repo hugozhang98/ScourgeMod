@@ -10,8 +10,7 @@ namespace ScourgeMod.Common.DisplayWeapons
 {
     public class SwordDWDrawLayer : PlayerDrawLayer
     {
-        public override Position GetDefaultPosition() =>
-            new Between(PlayerDrawLayers.Wings, PlayerDrawLayers.BackAcc); //rrzz 图层是否正确
+        public override Position GetDefaultPosition() => new AfterParent(PlayerDrawLayers.Wings);
 
         public override bool GetDefaultVisibility(PlayerDrawSet drawInfo)
         {

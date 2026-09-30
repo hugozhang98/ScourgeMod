@@ -10,7 +10,7 @@ namespace ScourgeMod.Common.DisplayWeapons
 {
     public class ChainKnifeDWDrawLayer : PlayerDrawLayer
     {
-        public override Position GetDefaultPosition() => new AfterParent(PlayerDrawLayers.Skin); //rrzz 图层是否正确
+        public override Position GetDefaultPosition() => new BeforeParent(PlayerDrawLayers.Torso);
 
         public override bool GetDefaultVisibility(PlayerDrawSet drawInfo)
         {
