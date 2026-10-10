@@ -31,7 +31,7 @@ namespace ScourgeMod.Common.DisplayWeapons
             Rectangle frame = texture.Frame();
 
             SpriteEffects effects = GetEffects(player);
-            Vector2 origin = GetOrigin(frame);
+            Vector2 origin = GetOrigin(texture, frame, effects, item);
             Vector2 position = GetPosition(drawInfo, player, item);
             float rotation = GetRotation(player);
             Color lightColor = GetColor(drawInfo);
@@ -64,16 +64,31 @@ namespace ScourgeMod.Common.DisplayWeapons
             return effects;
         }
 
-        private Vector2 GetOrigin(Rectangle frame)
+        private Vector2 GetOrigin(
+            Texture2D texture,
+            Rectangle frame,
+            SpriteEffects effects,
+            Item item
+        )
         {
-            return frame.Size() * 0.5f;
+            Rectangle visibleFrame = TextureHelper.GetVisibleFrame(texture);
+
+            if (visibleFrame == Rectangle.Empty)
+                return frame.Size() * 0.5f;
+
+            // 原点在完整贴图中的位置
+            Vector2 origin =
+                visibleFrame.Location.ToVector2()
+                + new Vector2(visibleFrame.Width * 0.5f, visibleFrame.Height * 1f);
+
+            return TextureHelper.ApplyFlipToOrigin(origin, frame, effects);
         }
 
         private Vector2 GetPosition(PlayerDrawSet drawInfo, Player player, Item item)
         {
             Vector2 position = drawInfo.Center - Main.screenPosition;
 
-            position += new Vector2(player.direction * 1f, player.gravDir * 7f);
+            position += new Vector2(player.direction * 0f, player.gravDir * 18f);
 
             DWAdjust_ChainGuillotines.TryAdjustPosition(player, item, ref position);
 
@@ -84,9 +99,9 @@ namespace ScourgeMod.Common.DisplayWeapons
 
         private float GetRotation(Player player)
         {
-            float baseRotation = AngleHelper.DegToRad(-player.direction * -120f);
+            float baseRotation = AngleHelper.DegToRad(player.direction * 0f);
 
-            baseRotation += DWHelper.GetMoveSway(player, 8f);
+            baseRotation += DWHelper.GetMoveSway(player, 3f);
 
             baseRotation *= player.gravDir;
 

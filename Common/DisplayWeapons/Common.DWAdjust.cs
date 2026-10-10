@@ -24,7 +24,7 @@ namespace ScourgeMod.Common.DisplayWeapons
         {
             if (AppliesTo(item))
             {
-                position += new Vector2(player.direction * 1f, player.gravDir * -3f);
+                position += new Vector2(player.direction * -3f, player.gravDir * 0f);
                 return true;
             }
 
