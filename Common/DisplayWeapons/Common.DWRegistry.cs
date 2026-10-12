@@ -428,7 +428,6 @@ namespace ScourgeMod.Common.DisplayWeapons
             ItemID.TinBroadsword, //锡宽剑
             ItemID.ShadewoodSword, //暗影木剑
             ItemID.AshWoodSword, //灰烬木剑
-            // ItemID.BreathingReed, //芦苇呼吸管 //rrzz自带待机动画，不需要显示
             ItemID.EbonwoodSword, //乌木剑
             ItemID.LeadBroadsword, //铅宽剑
             ItemID.TungstenBroadsword, //钨宽剑
@@ -466,21 +465,14 @@ namespace ScourgeMod.Common.DisplayWeapons
     }
 }
 
-
-//    #region BackYoyo ==========================================================================================================================
-//    public static readonly HashSet<int> VanillaBackYoyo = new()
-//    {
-
-//    };
-
-//    public static bool IsBackYoyo(Item item) =>
-//        item.ModItem is IBackYoyo || VanillaBackYoyo.Contains(item.type);
-//    #endregion
-
+//------自带待机动画，不需要显示
+//芦苇呼吸管
+// ItemID.BreathingReed,
 ////悲剧雨伞
-//ItemID.TragicUmbrella, rrzz
+//ItemID.TragicUmbrella,
 //    //伞
 //ItemID.Umbrella,
+
 ////吸血鬼刀
 //ItemID.VampireKnives,
 
