@@ -92,7 +92,7 @@ namespace ScourgeMod.Common.DisplayWeapons
         {
             Vector2 position = drawInfo.Center - Main.screenPosition;
 
-            position += new Vector2(player.direction * 10f, player.gravDir * 5f);
+            position += new Vector2(player.direction * 8f, player.gravDir * 5f);
 
             position += DWHelper.GetUpperBodyBobbing(drawInfo);
 
@@ -101,7 +101,7 @@ namespace ScourgeMod.Common.DisplayWeapons
 
         private float GetRotation(Player player)
         {
-            float baseRotation = AngleHelper.DegToRad(player.direction * 15f);
+            float baseRotation = AngleHelper.DegToRad(player.direction * 30f);
 
             baseRotation += DWHelper.GetMoveSway(player, 1f);
 

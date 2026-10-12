@@ -428,7 +428,7 @@ namespace ScourgeMod.Common.DisplayWeapons
             ItemID.TinBroadsword, //锡宽剑
             ItemID.ShadewoodSword, //暗影木剑
             ItemID.AshWoodSword, //灰烬木剑
-            ItemID.BreathingReed, //芦苇呼吸管
+            // ItemID.BreathingReed, //芦苇呼吸管 //rrzz自带待机动画，不需要显示
             ItemID.EbonwoodSword, //乌木剑
             ItemID.LeadBroadsword, //铅宽剑
             ItemID.TungstenBroadsword, //钨宽剑

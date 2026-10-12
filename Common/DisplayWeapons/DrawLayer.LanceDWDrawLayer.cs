@@ -53,10 +53,10 @@ namespace ScourgeMod.Common.DisplayWeapons
 
         private SpriteEffects GetEffects(Player player)
         {
-            SpriteEffects effects = SpriteEffects.None;
+            SpriteEffects effects = SpriteEffects.FlipHorizontally;
 
             if (player.direction == -1)
-                effects |= SpriteEffects.FlipHorizontally;
+                effects ^= SpriteEffects.FlipHorizontally;
 
             if (player.gravDir == -1f)
                 effects |= SpriteEffects.FlipVertically;
@@ -92,7 +92,7 @@ namespace ScourgeMod.Common.DisplayWeapons
 
         private float GetRotation(Player player)
         {
-            float baseRotation = AngleHelper.DegToRad(-player.direction * 47f);
+            float baseRotation = AngleHelper.DegToRad(-player.direction * -43f);
 
             baseRotation += DWHelper.GetMoveSway(player, 1f);
 

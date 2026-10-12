@@ -10,7 +10,7 @@ namespace ScourgeMod.Common.DisplayWeapons
 {
     public class GloveDWDrawLayer : PlayerDrawLayer
     {
-        public override Position GetDefaultPosition() => new AfterParent(PlayerDrawLayers.Skin); //rrzz 图层是否正确
+        public override Position GetDefaultPosition() => new AfterParent(PlayerDrawLayers.Skin);
 
         public override bool GetDefaultVisibility(PlayerDrawSet drawInfo)
         {
@@ -73,7 +73,7 @@ namespace ScourgeMod.Common.DisplayWeapons
         {
             Vector2 position = drawInfo.Center - Main.screenPosition;
 
-            position += new Vector2(-player.direction * -7f, player.gravDir * 6f);
+            position += new Vector2(player.direction * 7f, player.gravDir * 8f);
 
             position += DWHelper.GetUpperBodyBobbing(drawInfo);
 
