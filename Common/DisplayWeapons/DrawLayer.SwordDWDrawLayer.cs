@@ -24,9 +24,6 @@ namespace ScourgeMod.Common.DisplayWeapons
 
         protected override void Draw(ref PlayerDrawSet drawInfo)
         {
-            if (drawInfo.shadow != 0f)
-                return;
-
             Player player = drawInfo.drawPlayer;
             Item item = DWHelper.GetDisplayItem(player);
             Texture2D texture = TextureAssets.Item[item.type].Value;

@@ -483,7 +483,6 @@ namespace ScourgeMod.Common.DisplayWeapons
             ItemID.PossessedHatchet, //疯狂飞斧
             ItemID.LightDisc, //光辉飞盘
             ItemID.PaladinsHammer, //圣骑士锤
-            ItemID.BouncingShield, //中士联盾
         };
 
         public static bool IsDW_Sidearm(Item item)
@@ -502,5 +501,189 @@ namespace ScourgeMod.Common.DisplayWeapons
 //ItemID.Umbrella,
 // ItemID.CombatWrench, //战斗扳手
 
+// ItemID.BouncingShield, //中士联盾
 // ItemID.VampireKnives, //吸血鬼刀
+
+// 手榴弹与投掷物
 // ItemID.FlyingKnife, //飞刀
+// ItemID.Grenade, // 手榴弹
+// ItemID.StickyGrenade, // 粘性手榴弹
+// ItemID.BouncyGrenade, // 弹力手榴弹
+// ItemID.Beenade, // 蜜蜂手榴弹
+// ItemID.PartyGirlGrenade, // 快乐手榴弹
+// ItemID.PaperAirplaneA, // 纸飞机
+// ItemID.PaperAirplaneB, // 白纸飞机
+// ItemID.Shuriken, // 手里剑
+// ItemID.ThrowingKnife, // 投刀
+// ItemID.PoisonedKnife, // 毒刀
+// ItemID.Snowball, // 雪球
+// ItemID.SpikyBall, // 尖球
+// ItemID.Bone, // 骨头
+// ItemID.RottenEgg, // 臭蛋
+// ItemID.StarAnise, // 星形茴香
+// ItemID.MolotovCocktail, // 莫洛托夫鸡尾酒
+// ItemID.FrostDaggerfish, // 寒霜飞鱼
+// ItemID.Javelin, // 标枪
+// ItemID.BoneJavelin, // 骨头标枪
+// ItemID.BoneDagger, // 骨投刀
+
+// // 困难模式前：魔棒
+// ItemID.WandofSparking, // 火花魔棒
+// ItemID.WandofFrosting, // 结霜魔棒
+// ItemID.DaybloomStaff, // 太阳花法杖
+// ItemID.GlacierFang, // 冰川之牙
+// ItemID.ThunderStaff, // 雷霆法杖
+// ItemID.AmethystStaff, // 紫晶法杖
+// ItemID.TopazStaff, // 黄玉法杖
+// ItemID.SapphireStaff, // 蓝玉法杖
+// ItemID.EmeraldStaff, // 翡翠法杖
+// ItemID.RubyStaff, // 红玉法杖
+// ItemID.DiamondStaff, // 钻石法杖
+// ItemID.AmberStaff, // 琥珀法杖
+// ItemID.Vilethorn, // 魔刺
+// ItemID.WeatherPain, // 天候棒
+// ItemID.MagicMissile, // 魔法飞弹
+// ItemID.AquaScepter, // 海蓝权杖
+// ItemID.FlowerofFire, // 火之花
+// ItemID.Flamelash, // 烈焰火鞭
+
+// // 困难模式：魔棒
+// ItemID.SkyFracture, // 裂天剑
+// ItemID.CrystalSerpent, // 水晶蛇
+// ItemID.FlowerofFrost, // 寒霜之花
+// ItemID.FrostStaff, // 寒霜法杖
+// ItemID.CrystalVileShard, // 魔晶碎块
+// ItemID.SoulDrain, // 夺命杖
+// ItemID.LightningStrike, // 闪电之击
+// ItemID.MeteorStaff, // 流星法杖
+// ItemID.PoisonStaff, // 剧毒法杖
+// ItemID.RainbowRod, // 彩虹魔杖
+// ItemID.UnholyTrident, // 邪恶三叉戟
+// ItemID.BookStaff, // 无限智慧巨著
+// ItemID.VenomStaff, // 毒液法杖
+// ItemID.NettleBurst, // 爆裂藤蔓
+// ItemID.BatScepter, // 蝙蝠权杖
+// ItemID.BlizzardStaff, // 暴雪法杖
+// ItemID.InfernoFork, // 狱火叉
+// ItemID.ShadowbeamStaff, // 暗影束法杖
+// ItemID.SpectreStaff, // 幽灵法杖
+// ItemID.PrincessWeapon, // 共鸣权杖
+// ItemID.Razorpine, // 剃刀松
+// ItemID.StaffofEarth, // 大地法杖
+// ItemID.ApprenticeStaffT3, // 双足翼龙怒气
+
+// // 其他魔法武器
+// ItemID.CrimsonRod, // 猩红魔杖
+// ItemID.Petalstorm, // 神秘绽放
+// ItemID.IceRod, // 冰雪魔杖
+// ItemID.DeadCellsKillingDeck, // 致命牌组
+// ItemID.ClingerStaff, // 爬藤怪法杖
+// ItemID.NimbusRod, // 雨云魔杖
+// ItemID.MagicDagger, // 魔法飞刀
+// ItemID.MedusaHead, // 蛇发女妖头
+// ItemID.SpiritFlame, // 神灯烈焰
+// ItemID.ShadowFlameHexDoll, // 暗影焰妖娃
+// ItemID.SharpTears, // 血荆棘
+// ItemID.MagicalHarp, // 魔法竖琴
+// ItemID.ToxicFlask, // 毒气瓶
+// ItemID.FairyQueenMagicItem, // 夜光
+// ItemID.SparkleGuitar, // 星星吉他
+// ItemID.ArcSurge, // 电弧涌动
+// ItemID.NebulaArcanum, // 星云奥秘
+// ItemID.NebulaBlaze, // 星云烈焰
+// ItemID.LastPrism, // 终极棱镜
+
+// // 魔法枪
+// ItemID.ZapinatorGray, // 灰冲击枪
+// ItemID.SpaceGun, // 太空枪
+// ItemID.BeeGun, // 蜜蜂枪
+// ItemID.LaserRifle, // 激光步枪
+// ItemID.ZapinatorOrange, // 橙冲击枪
+// ItemID.WaspGun, // 胡蜂枪
+// ItemID.LeafBlower, // 吹叶机
+// ItemID.RainbowGun, // 彩虹枪
+// ItemID.HeatRay, // 高温射线枪
+// ItemID.LaserMachinegun, // 激光机枪
+// ItemID.ChargedBlasterCannon, // 充能爆破炮
+// ItemID.BubbleGun, // 泡泡枪
+
+// // 法术书
+// ItemID.WaterBolt, // 水矢
+// ItemID.BookofSkulls, // 骷髅头法书
+// ItemID.DemonScythe, // 恶魔之镰
+// ItemID.CursedFlames, // 诅咒焰
+// ItemID.GoldenShower, // 黄金雨
+// ItemID.CrystalStorm, // 水晶风暴
+// ItemID.MagnetSphere, // 磁球
+// ItemID.RazorbladeTyphoon, // 利刃台风
+// ItemID.LunarFlareBook, // 月耀
+
+// // 仆从召唤武器
+// ItemID.ClayPotMinion, // 黏土蓓蕾法杖
+// ItemID.BabyBirdStaff, // 雀杖
+// ItemID.SlimeStaff, // 史莱姆法杖
+// ItemID.FlinxStaff, // 小雪怪法杖
+// ItemID.AbigailsFlower, // 阿比盖尔之花
+// ItemID.PalworldMinionCattiva, // 捣蛋猫
+// ItemID.PalworldMinionFoxsparks, // 火绒狐
+// ItemID.DeadCellsMushroomBoiSummonItem, // 蘑菇法杖
+// ItemID.HornetStaff, // 黄蜂法杖
+// ItemID.VampireFrogStaff, // 吸血鬼青蛙法杖
+// ItemID.ImpStaff, // 小鬼法杖
+// ItemID.ForbiddenMinion, // 毁灭法杖
+// ItemID.Smolstar, // 刃杖
+// ItemID.SpiderStaff, // 蜘蛛法杖
+// ItemID.PirateStaff, // 海盗法杖
+// ItemID.SanguineStaff, // 血红法杖
+// ItemID.OpticStaff, // 魔眼法杖
+// ItemID.PalworldMinionTrustyCattiva, // 可靠的捣蛋猫
+// ItemID.PalworldMinionTrustyFoxsparks, // 可靠的火绒狐
+// ItemID.DeadlySphereStaff, // 致命球法杖
+// ItemID.PygmyStaff, // 矮人法杖
+// ItemID.RavenStaff, // 乌鸦法杖
+// ItemID.StormTigerStaff, // 沙漠虎杖
+// ItemID.TempestStaff, // 暴风雨法杖
+// ItemID.EmpressBlade, // 泰拉棱镜
+// ItemID.XenoStaff, // 外星法杖
+// ItemID.StardustCellStaff, // 星尘细胞法杖
+// ItemID.StardustDragonStaff, // 星尘之龙法杖
+
+// // 哨兵召唤武器
+// ItemID.HoundiusShootius, // 眼球激光塔
+// ItemID.DD2LightningAuraT1Popper, // 闪电光环魔杖
+// ItemID.DD2FlameburstTowerT1Popper, // 爆炸烈焰魔杖
+// ItemID.DD2ExplosiveTrapT1Popper, // 爆炸陷阱魔杖
+// ItemID.DD2BallistraTowerT1Popper, // 弩车魔杖
+// ItemID.DeadCellsBarnacleSummonItem, // 藤壶法杖
+// ItemID.QueenSpiderStaff, // 蜘蛛女王法杖
+// ItemID.StaffoftheFrostHydra, // 寒霜九头蛇法杖
+// ItemID.MoonlordTurretStaff, // 月亮传送门法杖
+// ItemID.RainbowCrystalStaff, // 七彩水晶法杖
+// ItemID.DD2LightningAuraT2Popper, // 闪电光环手杖
+// ItemID.DD2LightningAuraT3Popper, // 闪电光环法杖
+// ItemID.DD2FlameburstTowerT2Popper, // 爆炸烈焰手杖
+// ItemID.DD2FlameburstTowerT3Popper, // 爆炸烈焰法杖
+// ItemID.DD2ExplosiveTrapT2Popper, // 爆炸陷阱手杖
+// ItemID.DD2ExplosiveTrapT3Popper, // 爆炸陷阱法杖
+// ItemID.DD2BallistraTowerT2Popper, // 弩车手杖
+// ItemID.DD2BallistraTowerT3Popper, // 弩车法杖
+
+// // 鞭
+// ItemID.CobWhip, // 蛛网鞭
+// ItemID.SlimeWhip, // 史莱姆鞭
+// ItemID.BlandWhip, // 皮鞭
+// ItemID.CorruptWhip, // 魂笞
+// ItemID.CrimsonWhip, // 脉鞭
+// ItemID.MeteorWhip, // 星坠
+// ItemID.ThornWhip, // 荆鞭
+// ItemID.BoneWhip, // 脊柱骨鞭
+// ItemID.FireWhip, // 鞭炮
+// ItemID.CoolWhip, // 冷鞭
+// ItemID.SwordWhip, // 迪朗达尔
+// ItemID.FlowerWhip, // 花儿的粗鄙展示
+// ItemID.ScytheWhip, // 暗黑收割
+// ItemID.MaceWhip, // 晨星
+// ItemID.EelWhip, // 电鳗
+// ItemID.ConstellationWhip, // 星座
+// ItemID.RainbowWhip, // 万花筒
+// ItemID.MoonLordWhip, // 艾瑞之鞭
