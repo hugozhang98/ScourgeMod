@@ -29,4 +29,6 @@
     public interface IDW_Sword { }
 
     public interface IDW_Glove { }
+
+    public interface IDW_Sidearm { }
 }

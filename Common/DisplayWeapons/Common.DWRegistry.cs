@@ -463,6 +463,34 @@ namespace ScourgeMod.Common.DisplayWeapons
             return item.ModItem is IDW_Glove || DWVanillaID_Glove.Contains(item.type);
         }
     }
+
+    //Sidearm
+    public static partial class DWRegistry
+    {
+        public static readonly HashSet<int> DWVanillaID_Sidearm = new()
+        {
+            ItemID.WoodenBoomerang, //木回旋镖
+            ItemID.EnchantedBoomerang, //附魔回旋镖
+            ItemID.FruitcakeChakram, //水果蛋糕旋刃
+            ItemID.BloodyMachete, //血腥砍刀
+            ItemID.Shroomerang, //蘑菇回旋镖
+            ItemID.IceBoomerang, //冰雪回旋镖
+            ItemID.ThornChakram, //荆棘旋刃
+            // ItemID.Axearang, //斧头回旋镖 rrzz
+            ItemID.Trimarang, //三尖回旋镖
+            ItemID.Flamarang, //烈焰回旋镖
+            ItemID.Bananarang, //香蕉回旋镖
+            ItemID.PossessedHatchet, //疯狂飞斧
+            ItemID.LightDisc, //光辉飞盘
+            ItemID.PaladinsHammer, //圣骑士锤
+            ItemID.BouncingShield, //中士联盾
+        };
+
+        public static bool IsDW_Sidearm(Item item)
+        {
+            return item.ModItem is IDW_Sidearm || DWVanillaID_Sidearm.Contains(item.type);
+        }
+    }
 }
 
 //------自带待机动画，不需要显示
@@ -472,57 +500,7 @@ namespace ScourgeMod.Common.DisplayWeapons
 //ItemID.TragicUmbrella,
 //    //伞
 //ItemID.Umbrella,
+// ItemID.CombatWrench, //战斗扳手
 
-////吸血鬼刀
-//ItemID.VampireKnives,
-
-////木回旋镖
-//ItemID.WoodenBoomerang,
-
-////附魔回旋镖
-//ItemID.EnchantedBoomerang,
-
-////水果蛋糕旋刃
-//ItemID.FruitcakeChakram,
-
-////血腥砍刀
-//ItemID.BloodyMachete,
-
-////蘑菇回旋镖
-//ItemID.Shroomerang,
-
-////冰雪回旋镖
-//ItemID.IceBoomerang,
-
-////荆棘旋刃
-//ItemID.ThornChakram,
-
-////斧头回旋镖
-//ItemID.Axearang,
-
-////三尖回旋镖
-//ItemID.Trimarang,
-
-////战斗扳手
-//ItemID.CombatWrench,
-
-////烈焰回旋镖
-//ItemID.Flamarang,
-
-////飞刀
-//ItemID.FlyingKnife,
-
-////中士联盾
-//ItemID.BouncingShield,
-
-////光辉飞盘
-//ItemID.LightDisc,
-
-////香蕉回旋镖
-//ItemID.Bananarang,
-
-////圣骑士锤
-//ItemID.PaladinsHammer,
-
-////疯狂飞斧
-//ItemID.PossessedHatchet,
+// ItemID.VampireKnives, //吸血鬼刀
+// ItemID.FlyingKnife, //飞刀

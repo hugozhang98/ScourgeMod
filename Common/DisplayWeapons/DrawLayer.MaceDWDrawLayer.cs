@@ -10,7 +10,7 @@ namespace ScourgeMod.Common.DisplayWeapons
 {
     public class MaceDWDrawLayer : PlayerDrawLayer
     {
-        public override Position GetDefaultPosition() => new AfterParent(PlayerDrawLayers.Skin);
+        public override Position GetDefaultPosition() => new AfterParent(PlayerDrawLayers.Wings);
 
         public override bool GetDefaultVisibility(PlayerDrawSet drawInfo)
         {

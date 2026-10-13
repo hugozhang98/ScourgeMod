@@ -86,6 +86,22 @@ namespace ScourgeMod.Common.DisplayWeapons
         }
     }
 
+    public static class DWAdjust_Trimarang
+    {
+        public static bool AppliesTo(Item item) => item.type == ItemID.Trimarang;
+
+        public static bool TryAdjustRotation(Player player, Item item, ref float rotation)
+        {
+            if (AppliesTo(item))
+            {
+                rotation += AngleHelper.DegToRad(player.direction * 10f);
+                return true;
+            }
+
+            return false;
+        }
+    }
+
     public static class DWAdjust_Class_GreatSword
     {
         public static void HoldItemFrame(Item item, Player player)
@@ -321,6 +337,14 @@ namespace ScourgeMod.Common.DisplayWeapons
                     AngleHelper.DegToRad(player.direction * -backArmRad)
                 );
             }
+        }
+    }
+
+    public static class DWAdjust_Class_Sidearm
+    {
+        public static bool GetDefaultVisibility(Player player, Item item)
+        {
+            return !(DWRegistry.IsDW_Sidearm(item) && player.ownedProjectileCounts[item.shoot] > 0);
         }
     }
 }
