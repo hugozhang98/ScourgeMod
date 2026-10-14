@@ -5,6 +5,38 @@ using Terraria.ID;
 
 namespace ScourgeMod.Common.DisplayWeapons
 {
+    public static class DWAdjust_FlyingKnife
+    {
+        public static bool AppliesTo(Item item) => item.type == ItemID.FlyingKnife;
+
+        public static bool TryAdjustScale(Item item, ref float scale)
+        {
+            if (AppliesTo(item))
+            {
+                scale = 0.8f;
+                return true;
+            }
+
+            return false;
+        }
+    }
+
+    public static class DWAdjust_RottenEgg
+    {
+        public static bool AppliesTo(Item item) => item.type == ItemID.RottenEgg;
+
+        public static bool TryAdjustScale(Item item, ref float scale)
+        {
+            if (AppliesTo(item))
+            {
+                scale = 0.8f;
+                return true;
+            }
+
+            return false;
+        }
+    }
+
     public static class DWAdjust_ChainGuillotines
     {
         public static bool AppliesTo(Item item) => item.type == ItemID.ChainGuillotines;

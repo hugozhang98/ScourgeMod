@@ -31,4 +31,6 @@
     public interface IDW_Glove { }
 
     public interface IDW_Sidearm { }
+
+    public interface IDW_Grenade { }
 }

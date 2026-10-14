@@ -490,7 +490,37 @@ namespace ScourgeMod.Common.DisplayWeapons
             return item.ModItem is IDW_Sidearm || DWVanillaID_Sidearm.Contains(item.type);
         }
     }
+
+    //Grenade
+    public static partial class DWRegistry
+    {
+        public static readonly HashSet<int> DWVanillaID_Grenade = new()
+        {
+            ItemID.MagicDagger, // 魔法飞刀
+            ItemID.FlyingKnife, //飞刀
+            ItemID.Grenade, // 手榴弹
+            ItemID.StickyGrenade, // 粘性手榴弹
+            ItemID.BouncyGrenade, // 弹力手榴弹
+            ItemID.Beenade, // 蜜蜂手榴弹
+            ItemID.PartyGirlGrenade, // 快乐手榴弹
+            ItemID.Shuriken, // 手里剑
+            ItemID.ThrowingKnife, // 投刀
+            ItemID.PoisonedKnife, // 毒刀
+            ItemID.Snowball, // 雪球
+            ItemID.SpikyBall, // 尖球
+            ItemID.Bone, // 骨头
+            ItemID.RottenEgg, // 臭蛋
+            ItemID.StarAnise, // 星形茴香
+            ItemID.BoneDagger, // 骨投刀
+        };
+
+        public static bool IsDW_Grenade(Item item)
+        {
+            return item.ModItem is IDW_Grenade || DWVanillaID_Grenade.Contains(item.type);
+        }
+    }
 }
+
 
 //------自带待机动画，不需要显示
 //芦苇呼吸管
@@ -500,32 +530,16 @@ namespace ScourgeMod.Common.DisplayWeapons
 //    //伞
 //ItemID.Umbrella,
 // ItemID.CombatWrench, //战斗扳手
-
 // ItemID.BouncingShield, //中士联盾
 // ItemID.VampireKnives, //吸血鬼刀
 
 // 手榴弹与投掷物
-// ItemID.FlyingKnife, //飞刀
-// ItemID.Grenade, // 手榴弹
-// ItemID.StickyGrenade, // 粘性手榴弹
-// ItemID.BouncyGrenade, // 弹力手榴弹
-// ItemID.Beenade, // 蜜蜂手榴弹
-// ItemID.PartyGirlGrenade, // 快乐手榴弹
-// ItemID.PaperAirplaneA, // 纸飞机
-// ItemID.PaperAirplaneB, // 白纸飞机
-// ItemID.Shuriken, // 手里剑
-// ItemID.ThrowingKnife, // 投刀
-// ItemID.PoisonedKnife, // 毒刀
-// ItemID.Snowball, // 雪球
-// ItemID.SpikyBall, // 尖球
-// ItemID.Bone, // 骨头
-// ItemID.RottenEgg, // 臭蛋
-// ItemID.StarAnise, // 星形茴香
-// ItemID.MolotovCocktail, // 莫洛托夫鸡尾酒
-// ItemID.FrostDaggerfish, // 寒霜飞鱼
-// ItemID.Javelin, // 标枪
-// ItemID.BoneJavelin, // 骨头标枪
-// ItemID.BoneDagger, // 骨投刀
+//             ItemID.PaperAirplaneA, // 纸飞机
+//             ItemID.PaperAirplaneB, // 白纸飞机
+//  ItemID.MolotovCocktail, // 莫洛托夫鸡尾酒
+//             ItemID.FrostDaggerfish, // 寒霜飞鱼
+//             ItemID.Javelin, // 标枪
+//             ItemID.BoneJavelin, // 骨头标枪
 
 // // 困难模式前：魔棒
 // ItemID.WandofSparking, // 火花魔棒
