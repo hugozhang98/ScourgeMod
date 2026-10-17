@@ -385,28 +385,45 @@ namespace ScourgeMod.Common.DisplayWeapons
         {
             if (DWHelper.GetDefaultVisibility(player, item) && DWRegistry.IsDW_Spear(item))
             {
-                float backArmRad = 50f;
-                float frontArmRad = 40f;
+                if (DWHelper.GetVanillaAnimationType(player) == DWVanillaAnimationType.Idle)
+                {
+                    float backArmRad = 60f;
 
-                Player.CompositeArmStretchAmount backArmStretchAmount = Player
-                    .CompositeArmStretchAmount
-                    .ThreeQuarters;
+                    Player.CompositeArmStretchAmount backArmStretchAmount = Player
+                        .CompositeArmStretchAmount
+                        .ThreeQuarters;
 
-                Player.CompositeArmStretchAmount frontArmStretchAmount = Player
-                    .CompositeArmStretchAmount
-                    .Full;
+                    player.SetCompositeArmBack(
+                        enabled: true,
+                        backArmStretchAmount,
+                        AngleHelper.DegToRad(player.direction * -backArmRad)
+                    );
+                }
+                else
+                {
+                    float backArmRad = 50f;
+                    float frontArmRad = 40f;
 
-                player.SetCompositeArmBack(
-                    enabled: true,
-                    backArmStretchAmount,
-                    AngleHelper.DegToRad(player.direction * -backArmRad)
-                );
+                    Player.CompositeArmStretchAmount backArmStretchAmount = Player
+                        .CompositeArmStretchAmount
+                        .ThreeQuarters;
 
-                player.SetCompositeArmFront(
-                    enabled: true,
-                    frontArmStretchAmount,
-                    AngleHelper.DegToRad(player.direction * -frontArmRad)
-                );
+                    Player.CompositeArmStretchAmount frontArmStretchAmount = Player
+                        .CompositeArmStretchAmount
+                        .Full;
+
+                    player.SetCompositeArmBack(
+                        enabled: true,
+                        backArmStretchAmount,
+                        AngleHelper.DegToRad(player.direction * -backArmRad)
+                    );
+
+                    player.SetCompositeArmFront(
+                        enabled: true,
+                        frontArmStretchAmount,
+                        AngleHelper.DegToRad(player.direction * -frontArmRad)
+                    );
+                }
             }
         }
     }
