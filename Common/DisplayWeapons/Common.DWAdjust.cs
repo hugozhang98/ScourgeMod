@@ -1,10 +1,27 @@
 ﻿using Microsoft.Xna.Framework;
+using Microsoft.Xna.Framework.Graphics;
 using ScourgeMod.Helper;
 using Terraria;
 using Terraria.ID;
 
 namespace ScourgeMod.Common.DisplayWeapons
 {
+    public static class DWAdjust_MolotovCocktail
+    {
+        public static bool AppliesTo(Item item) => item.type == ItemID.MolotovCocktail;
+
+        public static bool TryAdjustScale(Item item, ref float scale)
+        {
+            if (AppliesTo(item))
+            {
+                scale = 0.6f;
+                return true;
+            }
+
+            return false;
+        }
+    }
+
     public static class DWAdjust_FlyingKnife
     {
         public static bool AppliesTo(Item item) => item.type == ItemID.FlyingKnife;
@@ -377,6 +394,14 @@ namespace ScourgeMod.Common.DisplayWeapons
         public static bool GetDefaultVisibility(Player player, Item item)
         {
             return !(DWRegistry.IsDW_Sidearm(item) && player.ownedProjectileCounts[item.shoot] > 0);
+        }
+    }
+
+    public static class DWAdjust_Class_Grenade
+    {
+        public static bool GetDefaultVisibility(Player player, Item item)
+        {
+            return !(DWRegistry.IsDW_Grenade(item) && player.ownedProjectileCounts[item.shoot] > 0);
         }
     }
 }

@@ -519,8 +519,26 @@ namespace ScourgeMod.Common.DisplayWeapons
             return item.ModItem is IDW_Grenade || DWVanillaID_Grenade.Contains(item.type);
         }
     }
-}
 
+    //Javelin
+    public static partial class DWRegistry
+    {
+        public static readonly HashSet<int> DWVanillaID_Javelin = new()
+        {
+            ItemID.PaperAirplaneA, // 纸飞机
+            ItemID.PaperAirplaneB, // 白纸飞机
+            ItemID.MolotovCocktail, // 莫洛托夫鸡尾酒
+            ItemID.FrostDaggerfish, // 寒霜飞鱼
+            ItemID.Javelin, // 标枪
+            ItemID.BoneJavelin, // 骨头标枪
+        };
+
+        public static bool IsDW_Javelin(Item item)
+        {
+            return item.ModItem is IDW_Javelin || DWVanillaID_Javelin.Contains(item.type);
+        }
+    }
+}
 
 //------自带待机动画，不需要显示
 //芦苇呼吸管
@@ -534,12 +552,6 @@ namespace ScourgeMod.Common.DisplayWeapons
 // ItemID.VampireKnives, //吸血鬼刀
 
 // 手榴弹与投掷物
-//             ItemID.PaperAirplaneA, // 纸飞机
-//             ItemID.PaperAirplaneB, // 白纸飞机
-//  ItemID.MolotovCocktail, // 莫洛托夫鸡尾酒
-//             ItemID.FrostDaggerfish, // 寒霜飞鱼
-//             ItemID.Javelin, // 标枪
-//             ItemID.BoneJavelin, // 骨头标枪
 
 // // 困难模式前：魔棒
 // ItemID.WandofSparking, // 火花魔棒

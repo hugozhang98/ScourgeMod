@@ -33,4 +33,6 @@
     public interface IDW_Sidearm { }
 
     public interface IDW_Grenade { }
+
+    public interface IDW_Javelin { }
 }
