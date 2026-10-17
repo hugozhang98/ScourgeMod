@@ -464,4 +464,28 @@ namespace ScourgeMod.Common.DisplayWeapons
             return !(DWRegistry.IsDW_Grenade(item) && player.ownedProjectileCounts[item.shoot] > 0);
         }
     }
+
+    public static class DWAdjust_Class_Staff
+    {
+        public static void HoldItemFrame(Item item, Player player)
+        {
+            if (DWHelper.GetDefaultVisibility(player, item) && DWRegistry.IsDW_Staff(item))
+            {
+                if (DWHelper.GetVanillaAnimationType(player) == DWVanillaAnimationType.Idle)
+                {
+                    float backArmRad = 60f;
+
+                    Player.CompositeArmStretchAmount backArmStretchAmount = Player
+                        .CompositeArmStretchAmount
+                        .ThreeQuarters;
+
+                    player.SetCompositeArmBack(
+                        enabled: true,
+                        backArmStretchAmount,
+                        AngleHelper.DegToRad(player.direction * -backArmRad)
+                    );
+                }
+            }
+        }
+    }
 }

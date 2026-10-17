@@ -18,6 +18,7 @@ namespace ScourgeMod.Common.DisplayWeapons
             DWAdjust_Class_Stick.HoldItemFrame(item, player);
             DWAdjust_Class_Spear.HoldItemFrame(item, player);
             DWAdjust_Class_Lance.HoldItemFrame(item, player);
+            DWAdjust_Class_Staff.HoldItemFrame(item, player);
         }
     }
 }

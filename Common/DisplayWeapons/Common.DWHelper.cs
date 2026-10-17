@@ -52,6 +52,10 @@ namespace ScourgeMod.Common.DisplayWeapons
             if (player.mount.Active)
                 return false;
 
+            // 其他动作不绘制
+            if (GetVanillaAnimationType(player) == DWVanillaAnimationType.Other)
+                return false;
+
             return true;
         }
 
@@ -123,7 +127,10 @@ namespace ScourgeMod.Common.DisplayWeapons
 
             // 副手没有对应的原版公开坐标，仍以 OffsetsPlayerOffhand 为基准再校正到掌心。
             // 数值采用“面向右、正常重力”坐标；GetPlayerHandPosition 会负责镜像。
-            Vector2 _backHandPalmOffset = new(3.5f, 10f);
+            // 返回值会被像素对齐；这里必须保持整数像素。
+            // 3.5f 与末尾 Floor 叠加时，会在人物移动的子像素间隔中交替落到 +3 / +4，
+            // 造成相对人物的单像素抖动。
+            Vector2 _backHandPalmOffset = new(4f, 10f);
 
             Player player = drawInfo.drawPlayer;
 
@@ -227,11 +234,10 @@ namespace ScourgeMod.Common.DisplayWeapons
             palmOffset.X *= player.direction;
             palmOffset.Y *= player.gravDir;
 
-            return drawInfo.Position
-                - Main.screenPosition
-                + player.bodyPosition
-                + handOffset
-                + palmOffset;
+            // 与原版 OffsetsPlayerOffhand 的附着点公式保持一致。
+            // drawInfo.Position 已包含 gfxOffY；bodyPosition 只用于身体帧贴图基准，
+            // 额外叠加会使副手在倒重力等状态下偏移。
+            return drawInfo.Position - Main.screenPosition + handOffset + palmOffset;
         }
 
         private static Vector2 GetPlayerFrontHandPosition(

@@ -538,6 +538,43 @@ namespace ScourgeMod.Common.DisplayWeapons
             return item.ModItem is IDW_Javelin || DWVanillaID_Javelin.Contains(item.type);
         }
     }
+
+    //Staff
+    public static partial class DWRegistry
+    {
+        public static readonly HashSet<int> DWVanillaID_Staff = new()
+        {
+            // ItemID.DaybloomStaff, // 太阳花法杖 rrzz
+            ItemID.ThunderStaff, // 雷霆法杖
+            ItemID.AmethystStaff, // 紫晶法杖
+            ItemID.TopazStaff, // 黄玉法杖
+            ItemID.SapphireStaff, // 蓝玉法杖
+            ItemID.EmeraldStaff, // 翡翠法杖
+            ItemID.RubyStaff, // 红玉法杖
+            ItemID.DiamondStaff, // 钻石法杖
+            ItemID.AmberStaff, // 琥珀法杖
+            ItemID.AquaScepter, // 海蓝权杖
+            ItemID.SkyFracture, // 裂天剑
+            ItemID.FrostStaff, // 寒霜法杖
+            ItemID.MeteorStaff, // 流星法杖
+            ItemID.PoisonStaff, // 剧毒法杖
+            ItemID.UnholyTrident, // 邪恶三叉戟
+            ItemID.BookStaff, // 无限智慧巨著
+            ItemID.VenomStaff, // 毒液法杖
+            ItemID.NettleBurst, // 爆裂藤蔓
+            ItemID.BlizzardStaff, // 暴雪法杖
+            ItemID.InfernoFork, // 狱火叉
+            ItemID.ShadowbeamStaff, // 暗影束法杖
+            ItemID.SpectreStaff, // 幽灵法杖
+            ItemID.StaffofEarth, // 大地法杖
+            ItemID.ApprenticeStaffT3, // 双足翼龙怒气
+        };
+
+        public static bool IsDW_Staff(Item item)
+        {
+            return item.ModItem is IDW_Staff || DWVanillaID_Staff.Contains(item.type);
+        }
+    }
 }
 
 //------自带待机动画，不需要显示
@@ -554,49 +591,25 @@ namespace ScourgeMod.Common.DisplayWeapons
 // 手榴弹与投掷物
 
 // // 困难模式前：魔棒
-// ItemID.WandofSparking, // 火花魔棒
-// ItemID.WandofFrosting, // 结霜魔棒
-// ItemID.DaybloomStaff, // 太阳花法杖
-// ItemID.GlacierFang, // 冰川之牙
-// ItemID.ThunderStaff, // 雷霆法杖
-// ItemID.AmethystStaff, // 紫晶法杖
-// ItemID.TopazStaff, // 黄玉法杖
-// ItemID.SapphireStaff, // 蓝玉法杖
-// ItemID.EmeraldStaff, // 翡翠法杖
-// ItemID.RubyStaff, // 红玉法杖
-// ItemID.DiamondStaff, // 钻石法杖
-// ItemID.AmberStaff, // 琥珀法杖
-// ItemID.Vilethorn, // 魔刺
-// ItemID.WeatherPain, // 天候棒
-// ItemID.MagicMissile, // 魔法飞弹
-// ItemID.AquaScepter, // 海蓝权杖
-// ItemID.FlowerofFire, // 火之花
-// ItemID.Flamelash, // 烈焰火鞭
 
 // // 困难模式：魔棒
-// ItemID.SkyFracture, // 裂天剑
-// ItemID.CrystalSerpent, // 水晶蛇
-// ItemID.FlowerofFrost, // 寒霜之花
-// ItemID.FrostStaff, // 寒霜法杖
-// ItemID.CrystalVileShard, // 魔晶碎块
-// ItemID.SoulDrain, // 夺命杖
-// ItemID.LightningStrike, // 闪电之击
-// ItemID.MeteorStaff, // 流星法杖
-// ItemID.PoisonStaff, // 剧毒法杖
-// ItemID.RainbowRod, // 彩虹魔杖
-// ItemID.UnholyTrident, // 邪恶三叉戟
-// ItemID.BookStaff, // 无限智慧巨著
-// ItemID.VenomStaff, // 毒液法杖
-// ItemID.NettleBurst, // 爆裂藤蔓
-// ItemID.BatScepter, // 蝙蝠权杖
-// ItemID.BlizzardStaff, // 暴雪法杖
-// ItemID.InfernoFork, // 狱火叉
-// ItemID.ShadowbeamStaff, // 暗影束法杖
-// ItemID.SpectreStaff, // 幽灵法杖
-// ItemID.PrincessWeapon, // 共鸣权杖
-// ItemID.Razorpine, // 剃刀松
-// ItemID.StaffofEarth, // 大地法杖
-// ItemID.ApprenticeStaffT3, // 双足翼龙怒气
+// ItemID.WandofSparking, // 火花魔棒
+//         ItemID.WandofFrosting, // 结霜魔棒
+//         // ItemID.GlacierFang, // 冰川之牙 rrzz
+//         ItemID.Vilethorn, // 魔刺
+//         ItemID.WeatherPain, // 天候棒
+//         ItemID.MagicMissile, // 魔法飞弹
+//         ItemID.FlowerofFire, // 火之花
+//         ItemID.Flamelash, // 烈焰火鞭
+//  ItemID.CrystalSerpent, // 水晶蛇
+//         ItemID.FlowerofFrost, // 寒霜之花
+//                     ItemID.CrystalVileShard, // 魔晶碎块
+//         ItemID.SoulDrain, // 夺命杖
+//         // ItemID.LightningStrike, // 闪电之击 rrzz
+//         ItemID.RainbowRod, // 彩虹魔杖
+//         ItemID.BatScepter, // 蝙蝠权杖
+//                     ItemID.PrincessWeapon, // 共鸣权杖
+//         ItemID.Razorpine, // 剃刀松
 
 // // 其他魔法武器
 // ItemID.CrimsonRod, // 猩红魔杖
