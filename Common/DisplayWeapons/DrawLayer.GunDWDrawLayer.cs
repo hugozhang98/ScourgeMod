@@ -111,7 +111,7 @@ namespace ScourgeMod.Common.DisplayWeapons
 
         private float GetScale()
         {
-            float defaultScale = 1f;
+            float defaultScale = 0.9f;
 
             return defaultScale;
         }

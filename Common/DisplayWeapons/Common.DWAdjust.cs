@@ -6,6 +6,38 @@ using Terraria.ID;
 
 namespace ScourgeMod.Common.DisplayWeapons
 {
+    public static class DWAdjust_PiercingStarlight
+    {
+        public static bool AppliesTo(Item item) => item.type == ItemID.PiercingStarlight;
+
+        public static bool TryAdjustScale(Item item, ref float scale)
+        {
+            if (AppliesTo(item))
+            {
+                scale = 0.8f;
+                return true;
+            }
+
+            return false;
+        }
+    }
+
+    public static class DWAdjust_SolarEruption
+    {
+        public static bool AppliesTo(Item item) => item.type == ItemID.SolarEruption;
+
+        public static bool TryAdjustScale(Item item, ref float scale)
+        {
+            if (AppliesTo(item))
+            {
+                scale = 0.8f;
+                return true;
+            }
+
+            return false;
+        }
+    }
+
     public static class DWAdjust_MolotovCocktail
     {
         public static bool AppliesTo(Item item) => item.type == ItemID.MolotovCocktail;
@@ -306,7 +338,12 @@ namespace ScourgeMod.Common.DisplayWeapons
         {
             if (DWHelper.GetDefaultVisibility(player, item) && DWRegistry.IsDW_Rapier(item))
             {
-                float backArmRad = 55f;
+                if (DWHelper.GetVanillaAnimationType(player) != DWVanillaAnimationType.Idle)
+                {
+                    return;
+                }
+
+                float backArmRad = 62f;
 
                 Player.CompositeArmStretchAmount backArmStretchAmount = Player
                     .CompositeArmStretchAmount

@@ -32,7 +32,7 @@ namespace ScourgeMod.Common.DisplayWeapons
             Vector2 position = GetPosition(drawInfo, player);
             float rotation = GetRotation(player);
             Color lightColor = GetColor(drawInfo);
-            float scale = GetScale();
+            float scale = GetScale(item);
 
             DrawData drawData = new DrawData(
                 texture,
@@ -100,9 +100,12 @@ namespace ScourgeMod.Common.DisplayWeapons
 
         private Color GetColor(PlayerDrawSet drawInfo) => DWHelper.GetDefaultColor(drawInfo);
 
-        private float GetScale()
+        private float GetScale(Item item)
         {
             float scale = 1f;
+
+            DWAdjust_SolarEruption.TryAdjustScale(item, ref scale);
+            DWAdjust_PiercingStarlight.TryAdjustScale(item, ref scale);
 
             return scale;
         }
