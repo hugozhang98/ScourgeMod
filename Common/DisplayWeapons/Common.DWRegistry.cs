@@ -327,6 +327,7 @@ namespace ScourgeMod.Common.DisplayWeapons
             ItemID.Arkhalis, //Arkhalis剑
             ItemID.PiercingStarlight, //星光
             ItemID.SolarEruption, //日耀喷发剑
+            ItemID.AntlionClaw, //颌骨剑
         };
 
         public static bool IsDW_Rapier(Item item)
@@ -348,7 +349,6 @@ namespace ScourgeMod.Common.DisplayWeapons
             ItemID.TentacleSpike, //触手钉锤
             ItemID.StylistKilLaKillScissorsIWish, //时尚剪刀
             ItemID.BatBat, //蝙蝠棍
-            ItemID.AntlionClaw, //颌骨剑
             //燧石
             //ItemID.DeadCellsFlint, rrzz
         };

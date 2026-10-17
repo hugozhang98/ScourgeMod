@@ -10,7 +10,7 @@ namespace ScourgeMod.Common.DisplayWeapons
 {
     public class LanceDWDrawLayer : PlayerDrawLayer
     {
-        public override Position GetDefaultPosition() => new BeforeParent(PlayerDrawLayers.Torso);
+        public override Position GetDefaultPosition() => new AfterParent(PlayerDrawLayers.Skin);
 
         public override bool GetDefaultVisibility(PlayerDrawSet drawInfo)
         {
@@ -82,6 +82,11 @@ namespace ScourgeMod.Common.DisplayWeapons
 
             position += new Vector2(player.direction * 10f, player.gravDir * 27f);
 
+            if (DWHelper.GetVanillaAnimationType(player) == DWVanillaAnimationType.Walking)
+            {
+                position += new Vector2(player.direction * -29f, player.gravDir * -16f);
+            }
+
             position += DWHelper.GetUpperBodyBobbing(drawInfo);
 
             return position.Floor();
@@ -89,7 +94,12 @@ namespace ScourgeMod.Common.DisplayWeapons
 
         private float GetRotation(Player player)
         {
-            float baseRotation = AngleHelper.DegToRad(-player.direction * -43f);
+            float baseRotation = AngleHelper.DegToRad(player.direction * 43f);
+
+            if (DWHelper.GetVanillaAnimationType(player) == DWVanillaAnimationType.Walking)
+            {
+                baseRotation = AngleHelper.DegToRad(player.direction * 120f);
+            }
 
             baseRotation += DWHelper.GetMoveSway(player, 1f);
 
