@@ -87,7 +87,7 @@ namespace ScourgeMod.Common.DisplayWeapons
         {
             Vector2 position = drawInfo.Center - Main.screenPosition;
 
-            position += new Vector2(player.direction * 15f, player.gravDir * -0f);
+            position += new Vector2(player.direction * 12f, player.gravDir * -0f);
 
             position += DWHelper.GetUpperBodyBobbing(drawInfo);
 
@@ -109,7 +109,7 @@ namespace ScourgeMod.Common.DisplayWeapons
 
         private float GetScale()
         {
-            float defaultScale = 0.8f;
+            float defaultScale = 0.7f;
 
             return defaultScale;
         }
