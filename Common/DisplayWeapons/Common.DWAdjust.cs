@@ -239,6 +239,12 @@ namespace ScourgeMod.Common.DisplayWeapons
                 float backArmRad = 45f;
                 float frontArmRad = 70f;
 
+                if (DWHelper.GetVanillaAnimationType(player) == DWVanillaAnimationType.Idle)
+                {
+                    backArmRad = 15f;
+                    frontArmRad = 35f;
+                }
+
                 Player.CompositeArmStretchAmount backArmStretchAmount = Player
                     .CompositeArmStretchAmount
                     .Full;

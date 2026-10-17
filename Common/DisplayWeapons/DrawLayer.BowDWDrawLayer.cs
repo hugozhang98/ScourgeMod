@@ -71,18 +71,6 @@ namespace ScourgeMod.Common.DisplayWeapons
         )
         {
             return frame.Size() * 0.5f;
-
-            // Rectangle visibleFrame = TextureHelper.GetVisibleFrame(texture);
-
-            // if (visibleFrame == Rectangle.Empty)
-            //     return frame.Size() * 0.5f;
-
-            // // 原点在完整贴图中的位置
-            // Vector2 origin =
-            //     visibleFrame.Location.ToVector2()
-            //     + new Vector2(visibleFrame.Width * 0.33f, visibleFrame.Height * 0.3f);
-
-            // return TextureHelper.ApplyFlipToOrigin(origin, frame, effects);
         }
 
         private Vector2 GetPosition(PlayerDrawSet drawInfo, Player player, Item item)
@@ -90,6 +78,11 @@ namespace ScourgeMod.Common.DisplayWeapons
             Vector2 position = drawInfo.Center - Main.screenPosition;
 
             position += new Vector2(player.direction * 8f, player.gravDir * 5f);
+
+            if (DWHelper.GetVanillaAnimationType(player) == DWVanillaAnimationType.Idle)
+            {
+                position += new Vector2(player.direction * -5f, player.gravDir * 5f);
+            }
 
             position += DWHelper.GetUpperBodyBobbing(drawInfo);
 
@@ -99,6 +92,11 @@ namespace ScourgeMod.Common.DisplayWeapons
         private float GetRotation(Player player)
         {
             float baseRotation = AngleHelper.DegToRad(player.direction * 30f);
+
+            if (DWHelper.GetVanillaAnimationType(player) == DWVanillaAnimationType.Idle)
+            {
+                baseRotation += AngleHelper.DegToRad(player.direction * 30f);
+            }
 
             baseRotation += DWHelper.GetMoveSway(player, 1f);
 
