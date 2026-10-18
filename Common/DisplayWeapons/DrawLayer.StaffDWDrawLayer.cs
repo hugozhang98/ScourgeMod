@@ -119,7 +119,7 @@ namespace ScourgeMod.Common.DisplayWeapons
 
             if (DWHelper.GetVanillaAnimationType(player) == DWVanillaAnimationType.Jumping)
             {
-                baseRotation = AngleHelper.DegToRad(player.direction * -40f);
+                baseRotation = AngleHelper.DegToRad(player.direction * -100f);
             }
 
             baseRotation += DWHelper.GetMoveSway(player, 1f);
