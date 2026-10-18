@@ -117,11 +117,6 @@ namespace ScourgeMod.Common.DisplayWeapons
     {
         public static bool AppliesTo(Item item) => item.type == ItemID.Anchor;
 
-        public static bool GetDefaultVisibility(Player player, Item item)
-        {
-            return !(AppliesTo(item) && player.ownedProjectileCounts[item.shoot] > 0);
-        }
-
         public static bool TryAdjustPosition(Player player, Item item, ref Vector2 position)
         {
             if (AppliesTo(item))
@@ -446,22 +441,6 @@ namespace ScourgeMod.Common.DisplayWeapons
                     AngleHelper.DegToRad(player.direction * -backArmRad)
                 );
             }
-        }
-    }
-
-    public static class DWAdjust_Class_Sidearm
-    {
-        public static bool GetDefaultVisibility(Player player, Item item)
-        {
-            return !(DWRegistry.IsDW_Sidearm(item) && player.ownedProjectileCounts[item.shoot] > 0);
-        }
-    }
-
-    public static class DWAdjust_Class_Grenade
-    {
-        public static bool GetDefaultVisibility(Player player, Item item)
-        {
-            return !(DWRegistry.IsDW_Grenade(item) && player.ownedProjectileCounts[item.shoot] > 0);
         }
     }
 

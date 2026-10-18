@@ -17,9 +17,7 @@ namespace ScourgeMod.Common.DisplayWeapons
             Player player = drawInfo.drawPlayer;
             Item item = DWHelper.GetDisplayItem(player);
 
-            return DWHelper.GetDefaultVisibility(player, item)
-                && DWAdjust_Anchor.GetDefaultVisibility(player, item)
-                && DWRegistry.IsDW_Sword(item);
+            return DWHelper.GetDefaultVisibility(player, item) && DWRegistry.IsDW_Sword(item);
         }
 
         protected override void Draw(ref PlayerDrawSet drawInfo)

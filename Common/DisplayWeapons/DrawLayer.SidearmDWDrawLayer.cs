@@ -17,9 +17,7 @@ namespace ScourgeMod.Common.DisplayWeapons
             Player player = drawInfo.drawPlayer;
             Item item = DWHelper.GetDisplayItem(player);
 
-            return DWHelper.GetDefaultVisibility(player, item)
-                && DWRegistry.IsDW_Sidearm(item)
-                && DWAdjust_Class_Sidearm.GetDefaultVisibility(player, item);
+            return DWHelper.GetDefaultVisibility(player, item) && DWRegistry.IsDW_Sidearm(item);
         }
 
         protected override void Draw(ref PlayerDrawSet drawInfo)
