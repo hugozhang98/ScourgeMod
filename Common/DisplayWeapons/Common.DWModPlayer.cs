@@ -8,14 +8,14 @@ namespace ScourgeMod.Common.DisplayWeapons
     {
         public override void HideDrawLayers(PlayerDrawSet drawInfo)
         {
-            if (ShouldDrawShield(drawInfo.drawPlayer))
+            if (HideShield(drawInfo.drawPlayer))
             {
                 PlayerDrawLayers.Shield.Hide();
                 PlayerDrawLayers.SolarShield.Hide();
             }
         }
 
-        private static bool ShouldDrawShield(Player player)
+        private static bool HideShield(Player player)
         {
             Item item = DWHelper.GetDisplayItem(player);
 
@@ -27,10 +27,16 @@ namespace ScourgeMod.Common.DisplayWeapons
                 || DWRegistry.IsDW_Rapier(item)
                 || DWRegistry.IsDW_Spear(item)
                 || DWRegistry.IsDW_Lance(item)
-            //   || DWRegistry.IsDW_(item)
-            //    || DWRegistry.IsDW_(item)
-            //     || DWRegistry.IsDW_(item)
+                || DWRegistry.IsDW_Grenade(item)
+                || DWRegistry.IsDW_Javelin(item)
+                || DWRegistry.IsDW_Staff(item)
             //      || DWRegistry.IsDW_(item)
+            //      || DWRegistry.IsDW_(item)
+            //      || DWRegistry.IsDW_(item)
+            //      || DWRegistry.IsDW_(item)
+            //      || DWRegistry.IsDW_(item)
+            //      || DWRegistry.IsDW_(item)
+
             ;
         }
     }
