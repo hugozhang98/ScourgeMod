@@ -31,7 +31,7 @@ namespace ScourgeMod.Common.DisplayWeapons
             // 原点在完整贴图中的位置
             Vector2 origin =
                 visibleFrame.Location.ToVector2()
-                + new Vector2(visibleFrame.Width * 0.5f, visibleFrame.Height * 0.5f);
+                + new Vector2(visibleFrame.Width * 0.4f, visibleFrame.Height * 0.6f);
 
             return TextureHelper.ApplyFlipToOrigin(origin, frame, effects);
         }
@@ -49,7 +49,7 @@ namespace ScourgeMod.Common.DisplayWeapons
             return rotation;
         }
 
-        protected override float GetWeaponSway(Player player) => 7f;
+        protected override float GetWeaponSway(Player player) => 2f;
 
         protected override float GetScale(Item item)
         {

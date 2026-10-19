@@ -44,7 +44,7 @@ namespace ScourgeMod.Common.DisplayWeapons
         {
             if (AppliesTo(item))
             {
-                scale = 0.6f;
+                scale = 0.8f;
                 return true;
             }
 
