@@ -8,64 +8,18 @@ using Terraria.ModLoader;
 
 namespace ScourgeMod.Common.DisplayWeapons
 {
-    public class SpearDWDrawLayer : PlayerDrawLayer
+    public class SpearDWDrawLayer : DWDrawLayerBase
     {
         public override Position GetDefaultPosition() => new BeforeParent(PlayerDrawLayers.Head);
 
-        public override bool GetDefaultVisibility(PlayerDrawSet drawInfo)
-        {
-            Player player = drawInfo.drawPlayer;
-            Item item = DWHelper.GetDisplayItem(player);
+        public override bool MatchWeapon(Item item) => DWRegistry.IsDW_Spear(item);
 
-            return DWHelper.GetDefaultVisibility(player, item) && DWRegistry.IsDW_Spear(item);
-        }
-
-        protected override void Draw(ref PlayerDrawSet drawInfo)
-        {
-            Player player = drawInfo.drawPlayer;
-            Item item = DWHelper.GetDisplayItem(player);
-            Texture2D texture = TextureAssets.Item[item.type].Value;
-            Rectangle frame = texture.Frame();
-
-            SpriteEffects effects = GetEffects(player);
-            Vector2 origin = GetOrigin(frame, player, effects, texture);
-            Vector2 position = GetPosition(drawInfo, player);
-            float rotation = GetRotation(player);
-            Color lightColor = GetColor(drawInfo);
-            float scale = GetScale();
-
-            DrawData drawData = new DrawData(
-                texture,
-                position,
-                frame,
-                lightColor,
-                rotation,
-                origin,
-                scale,
-                effects
-            );
-
-            drawInfo.DrawDataCache.Add(drawData);
-        }
-
-        private SpriteEffects GetEffects(Player player)
-        {
-            SpriteEffects effects = SpriteEffects.None;
-
-            if (player.direction == -1)
-                effects |= SpriteEffects.FlipHorizontally;
-
-            if (player.gravDir == -1f)
-                effects |= SpriteEffects.FlipVertically;
-
-            return effects;
-        }
-
-        private Vector2 GetOrigin(
+        protected override Vector2 GetOrigin(
+            Texture2D texture,
             Rectangle frame,
-            Player player,
             SpriteEffects effects,
-            Texture2D texture
+            Item item,
+            Player player
         )
         {
             if (DWHelper.GetVanillaAnimationType(player) != DWVanillaAnimationType.Idle)
@@ -86,42 +40,38 @@ namespace ScourgeMod.Common.DisplayWeapons
             return TextureHelper.ApplyFlipToOrigin(origin, frame, effects);
         }
 
-        private Vector2 GetPosition(PlayerDrawSet drawInfo, Player player)
+        protected override Vector2 GetPositionOffset(
+            PlayerDrawSet drawInfo,
+            Player player,
+            Item item
+        )
         {
-            Vector2 position = drawInfo.Center - Main.screenPosition;
-
-            position += new Vector2(player.direction * 14f, player.gravDir * 0f);
+            Vector2 position = new Vector2(14f, 0f);
 
             if (DWHelper.GetVanillaAnimationType(player) == DWVanillaAnimationType.Idle)
             {
-                position += new Vector2(player.direction * 0f, player.gravDir * 27f);
+                position += new Vector2(0f, 27f);
             }
 
             DWAdjust_TheRottedFork.TryAdjustPosition(player, ref position);
 
-            position += DWHelper.GetUpperBodyBobbing(drawInfo);
-
-            return position.Floor();
+            return position;
         }
 
-        private float GetRotation(Player player)
+        protected override float GetRotationOffset(Player player)
         {
-            float baseRotation = AngleHelper.DegToRad(-player.direction * -10f);
+            float baseRotation = 10f;
 
             if (DWHelper.GetVanillaAnimationType(player) == DWVanillaAnimationType.Idle)
             {
-                baseRotation = AngleHelper.DegToRad(player.direction * -45f);
+                baseRotation = -45f;
             }
-
-            baseRotation += DWHelper.GetMoveSway(player, 2f);
-
-            baseRotation *= player.gravDir;
 
             return baseRotation;
         }
 
-        private Color GetColor(PlayerDrawSet drawInfo) => DWHelper.GetDefaultColor(drawInfo);
+        protected override float GetWeaponSway(Player player) => 2f;
 
-        private float GetScale() => 1.2f;
+        protected override float GetScale(Item item) => 1.2f;
     }
 }

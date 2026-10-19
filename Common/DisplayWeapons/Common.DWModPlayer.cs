@@ -30,7 +30,7 @@ namespace ScourgeMod.Common.DisplayWeapons
                 || DWRegistry.IsDW_Grenade(item)
                 || DWRegistry.IsDW_Javelin(item)
                 || DWRegistry.IsDW_Staff(item)
-            //      || DWRegistry.IsDW_(item)
+                || DWRegistry.IsDW_Wand(item)
             //      || DWRegistry.IsDW_(item)
             //      || DWRegistry.IsDW_(item)
             //      || DWRegistry.IsDW_(item)

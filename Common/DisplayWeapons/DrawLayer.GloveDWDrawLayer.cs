@@ -1,95 +1,25 @@
 ﻿using Microsoft.Xna.Framework;
-using Microsoft.Xna.Framework.Graphics;
-using ScourgeMod.Helper;
 using Terraria;
 using Terraria.DataStructures;
-using Terraria.GameContent;
-using Terraria.ModLoader;
 
 namespace ScourgeMod.Common.DisplayWeapons
 {
-    public class GloveDWDrawLayer : PlayerDrawLayer
+    public class GloveDWDrawLayer : DWDrawLayerBase
     {
         public override Position GetDefaultPosition() => new AfterParent(PlayerDrawLayers.Skin);
 
-        public override bool GetDefaultVisibility(PlayerDrawSet drawInfo)
-        {
-            Player player = drawInfo.drawPlayer;
-            Item item = DWHelper.GetDisplayItem(player);
+        public override bool MatchWeapon(Item item) => DWRegistry.IsDW_Glove(item);
 
-            return DWHelper.GetDefaultVisibility(player, item) && DWRegistry.IsDW_Glove(item);
-        }
+        protected override Vector2 GetPositionOffset(
+            PlayerDrawSet drawInfo,
+            Player player,
+            Item item
+        ) => new Vector2(7f, 8f);
 
-        protected override void Draw(ref PlayerDrawSet drawInfo)
-        {
-            Player player = drawInfo.drawPlayer;
-            Item item = DWHelper.GetDisplayItem(player);
-            Texture2D texture = TextureAssets.Item[item.type].Value;
-            Rectangle frame = texture.Frame();
+        protected override float GetRotationOffset(Player player) => 80f;
 
-            SpriteEffects effects = GetEffects(player);
-            Vector2 origin = GetOrigin(frame);
-            Vector2 position = GetPosition(drawInfo, player);
-            float rotation = GetRotation(player);
-            Color lightColor = GetColor(drawInfo);
-            float scale = GetScale();
+        protected override float GetWeaponSway(Player player) => 4f;
 
-            DrawData drawData = new DrawData(
-                texture,
-                position,
-                frame,
-                lightColor,
-                rotation,
-                origin,
-                scale,
-                effects
-            );
-
-            drawInfo.DrawDataCache.Add(drawData);
-        }
-
-        private SpriteEffects GetEffects(Player player)
-        {
-            SpriteEffects effects = SpriteEffects.None;
-
-            if (player.direction == -1)
-                effects |= SpriteEffects.FlipHorizontally;
-
-            if (player.gravDir == -1f)
-                effects |= SpriteEffects.FlipVertically;
-
-            return effects;
-        }
-
-        private Vector2 GetOrigin(Rectangle frame)
-        {
-            return frame.Size() * 0.5f;
-        }
-
-        private Vector2 GetPosition(PlayerDrawSet drawInfo, Player player)
-        {
-            Vector2 position = drawInfo.Center - Main.screenPosition;
-
-            position += new Vector2(player.direction * 7f, player.gravDir * 8f);
-
-            position += DWHelper.GetUpperBodyBobbing(drawInfo);
-
-            return position.Floor();
-        }
-
-        private float GetRotation(Player player)
-        {
-            float baseRotation = AngleHelper.DegToRad(-player.direction * -80f);
-
-            baseRotation += DWHelper.GetMoveSway(player, 4f);
-
-            baseRotation *= player.gravDir;
-
-            return baseRotation;
-        }
-
-        private Color GetColor(PlayerDrawSet drawInfo) => DWHelper.GetDefaultColor(drawInfo);
-
-        private float GetScale() => 0.65f;
+        protected override float GetScale(Item item) => 0.65f;
     }
 }

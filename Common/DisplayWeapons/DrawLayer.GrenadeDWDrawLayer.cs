@@ -8,65 +8,19 @@ using Terraria.ModLoader;
 
 namespace ScourgeMod.Common.DisplayWeapons
 {
-    public class GrenadeDWDrawLayer : PlayerDrawLayer
+    public class GrenadeDWDrawLayer : DWDrawLayerBase
     {
         public override Position GetDefaultPosition() =>
             new BeforeParent(PlayerDrawLayers.ArmOverItem);
 
-        public override bool GetDefaultVisibility(PlayerDrawSet drawInfo)
-        {
-            Player player = drawInfo.drawPlayer;
-            Item item = DWHelper.GetDisplayItem(player);
+        public override bool MatchWeapon(Item item) => DWRegistry.IsDW_Grenade(item);
 
-            return DWHelper.GetDefaultVisibility(player, item) && DWRegistry.IsDW_Grenade(item);
-        }
-
-        protected override void Draw(ref PlayerDrawSet drawInfo)
-        {
-            Player player = drawInfo.drawPlayer;
-            Item item = DWHelper.GetDisplayItem(player);
-            Texture2D texture = TextureAssets.Item[item.type].Value;
-            Rectangle frame = texture.Frame();
-
-            SpriteEffects effects = GetEffects(player);
-            Vector2 origin = GetOrigin(texture, frame, effects, item);
-            Vector2 position = GetPosition(drawInfo, player);
-            float rotation = GetRotation(player);
-            Color lightColor = GetColor(drawInfo);
-            float scale = GetScale(item);
-
-            DrawData drawData = new DrawData(
-                texture,
-                position,
-                frame,
-                lightColor,
-                rotation,
-                origin,
-                scale,
-                effects
-            );
-
-            drawInfo.DrawDataCache.Add(drawData);
-        }
-
-        private SpriteEffects GetEffects(Player player)
-        {
-            SpriteEffects effects = SpriteEffects.None;
-
-            if (player.direction == -1)
-                effects |= SpriteEffects.FlipHorizontally;
-
-            if (player.gravDir == -1f)
-                effects |= SpriteEffects.FlipVertically;
-
-            return effects;
-        }
-
-        private Vector2 GetOrigin(
+        protected override Vector2 GetOrigin(
             Texture2D texture,
             Rectangle frame,
             SpriteEffects effects,
-            Item item
+            Item item,
+            Player player
         )
         {
             Rectangle visibleFrame = TextureHelper.GetVisibleFrame(texture);
@@ -82,30 +36,24 @@ namespace ScourgeMod.Common.DisplayWeapons
             return TextureHelper.ApplyFlipToOrigin(origin, frame, effects);
         }
 
-        private Vector2 GetPosition(PlayerDrawSet drawInfo, Player player)
-        {
-            return DWHelper.GetPlayerJointPosition(drawInfo, DWPlayerJointType.FrontHand).Floor();
-        }
+        protected override Vector2 GetPosition(PlayerDrawSet drawInfo, Player player, Item item) =>
+            DWHelper.GetPlayerJointPosition(drawInfo, DWPlayerJointType.FrontHand).Floor();
 
-        private float GetRotation(Player player)
+        protected override float GetRotationOffset(Player player)
         {
-            float baseRotation = AngleHelper.DegToRad(player.direction * 55f);
+            float baseRotation = 55f;
 
             if (DWHelper.GetVanillaAnimationType(player) == DWVanillaAnimationType.Jumping)
             {
-                baseRotation = AngleHelper.DegToRad(player.direction * 0f);
+                baseRotation = 0f;
             }
-
-            baseRotation += DWHelper.GetMoveSway(player, 7f);
-
-            baseRotation *= player.gravDir;
 
             return baseRotation;
         }
 
-        private Color GetColor(PlayerDrawSet drawInfo) => DWHelper.GetDefaultColor(drawInfo);
+        protected override float GetWeaponSway(Player player) => 7f;
 
-        private float GetScale(Item item)
+        protected override float GetScale(Item item)
         {
             float defaultScale = 1f;
 

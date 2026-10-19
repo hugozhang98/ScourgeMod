@@ -56,8 +56,8 @@ namespace ScourgeMod.Common.DisplayWeapons
             if (GetVanillaAnimationType(player) == DWVanillaAnimationType.Other)
                 return false;
 
-            // 正在发射弹药时不绘制
-            if (player.ownedProjectileCounts[item.shoot] > 0)
+            // 特定武器在弹幕存活时不绘制
+            if (DWRegistry.HideWhenProjActive(item) && player.ownedProjectileCounts[item.shoot] > 0)
                 return false;
 
             return true;

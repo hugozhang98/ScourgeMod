@@ -1,115 +1,43 @@
 ﻿using Microsoft.Xna.Framework;
-using Microsoft.Xna.Framework.Graphics;
-using ScourgeMod.Helper;
 using Terraria;
 using Terraria.DataStructures;
-using Terraria.GameContent;
-using Terraria.ModLoader;
 
 namespace ScourgeMod.Common.DisplayWeapons
 {
-    public class BowDWDrawLayer : PlayerDrawLayer
+    public class BowDWDrawLayer : DWDrawLayerBase
     {
         public override Position GetDefaultPosition() => new BeforeParent(PlayerDrawLayers.Head);
 
-        public override bool GetDefaultVisibility(PlayerDrawSet drawInfo)
-        {
-            Player player = drawInfo.drawPlayer;
-            Item item = DWHelper.GetDisplayItem(player);
+        public override bool MatchWeapon(Item item) => DWRegistry.IsDW_Bow(item);
 
-            return DWHelper.GetDefaultVisibility(player, item) && DWRegistry.IsDW_Bow(item);
-        }
-
-        protected override void Draw(ref PlayerDrawSet drawInfo)
-        {
-            Player player = drawInfo.drawPlayer;
-            Item item = DWHelper.GetDisplayItem(player);
-            Texture2D texture = TextureAssets.Item[item.type].Value;
-            Rectangle frame = texture.Frame();
-
-            SpriteEffects effects = GetEffects(player);
-            Vector2 origin = GetOrigin(texture, frame, effects, item);
-            Vector2 position = GetPosition(drawInfo, player, item);
-            float rotation = GetRotation(player);
-            Color lightColor = GetColor(drawInfo);
-            float scale = GetScale();
-
-            DrawData drawData = new DrawData(
-                texture,
-                position,
-                frame,
-                lightColor,
-                rotation,
-                origin,
-                scale,
-                effects
-            );
-
-            drawInfo.DrawDataCache.Add(drawData);
-        }
-
-        private SpriteEffects GetEffects(Player player)
-        {
-            SpriteEffects effects = SpriteEffects.None;
-
-            if (player.direction == -1)
-                effects |= SpriteEffects.FlipHorizontally;
-
-            if (player.gravDir == -1f)
-                effects |= SpriteEffects.FlipVertically;
-
-            return effects;
-        }
-
-        private Vector2 GetOrigin(
-            Texture2D texture,
-            Rectangle frame,
-            SpriteEffects effects,
+        protected override Vector2 GetPositionOffset(
+            PlayerDrawSet drawInfo,
+            Player player,
             Item item
         )
         {
-            return frame.Size() * 0.5f;
-        }
-
-        private Vector2 GetPosition(PlayerDrawSet drawInfo, Player player, Item item)
-        {
-            Vector2 position = drawInfo.Center - Main.screenPosition;
-
-            position += new Vector2(player.direction * 8f, player.gravDir * 5f);
+            Vector2 offset = new Vector2(8f, 5f);
 
             if (DWHelper.GetVanillaAnimationType(player) == DWVanillaAnimationType.Idle)
             {
-                position += new Vector2(player.direction * -5f, player.gravDir * 5f);
+                offset += new Vector2(-5f, 5f);
             }
 
-            position += DWHelper.GetUpperBodyBobbing(drawInfo);
-
-            return position.Floor();
+            return offset;
         }
 
-        private float GetRotation(Player player)
+        protected override float GetRotationOffset(Player player)
         {
-            float baseRotation = AngleHelper.DegToRad(player.direction * 30f);
+            float offset = 30f;
 
             if (DWHelper.GetVanillaAnimationType(player) == DWVanillaAnimationType.Idle)
             {
-                baseRotation += AngleHelper.DegToRad(player.direction * 30f);
+                offset += 30f;
             }
 
-            baseRotation += DWHelper.GetMoveSway(player, 1f);
-
-            baseRotation *= player.gravDir;
-
-            return baseRotation;
+            return offset;
         }
 
-        private Color GetColor(PlayerDrawSet drawInfo) => DWHelper.GetDefaultColor(drawInfo);
-
-        private float GetScale()
-        {
-            float defaultScale = 1f;
-
-            return defaultScale;
-        }
+        protected override float GetWeaponSway(Player player) => 1f;
     }
 }

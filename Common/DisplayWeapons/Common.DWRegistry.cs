@@ -4,6 +4,23 @@ using Terraria.ID;
 
 namespace ScourgeMod.Common.DisplayWeapons
 {
+    //弹幕存在时需要隐藏的武器表
+    public static partial class DWRegistry
+    {
+        public static readonly HashSet<int> DWVanillaID_HideWhenProjActive = new()
+        {
+            ItemID.Anchor,
+            ItemID.FlyingKnife,
+        };
+
+        public static bool HideWhenProjActive(Item item)
+        {
+            return DWVanillaID_HideWhenProjActive.Contains(item.type)
+                || IsDW_Sidearm(item)
+                || IsDW_Trimarang(item);
+        }
+    }
+
     //Mace
     public static partial class DWRegistry
     {
@@ -196,6 +213,14 @@ namespace ScourgeMod.Common.DisplayWeapons
             ItemID.PiranhaGun, //食人鱼枪
             ItemID.ElfMelter, //精灵熔枪,
             ItemID.Uzi, //乌兹冲锋枪
+            ItemID.SpaceGun, // 太空枪
+            ItemID.BeeGun, // 蜜蜂枪
+            ItemID.LaserRifle, // 激光步枪
+            ItemID.WaspGun, // 胡蜂枪
+            ItemID.LeafBlower, // 吹叶机
+            ItemID.RainbowGun, // 彩虹枪
+            ItemID.LaserMachinegun, // 激光机枪
+            ItemID.BubbleGun, // 泡泡枪
         };
 
         public static bool IsDW_Gun(Item item)
@@ -216,6 +241,10 @@ namespace ScourgeMod.Common.DisplayWeapons
             ItemID.PhoenixBlaster, //凤凰爆破枪
             ItemID.PewMaticHorn, //气喇叭
             ItemID.VenusMagnum, //维纳斯万能枪
+            ItemID.ZapinatorGray, // 灰冲击枪
+            ItemID.ZapinatorOrange, // 橙冲击枪
+            ItemID.HeatRay, // 高温射线枪
+            ItemID.LeafBlower, // 吹叶机
         };
 
         public static bool IsDW_MiniGun(Item item)
@@ -477,7 +506,6 @@ namespace ScourgeMod.Common.DisplayWeapons
             ItemID.IceBoomerang, //冰雪回旋镖
             ItemID.ThornChakram, //荆棘旋刃
             // ItemID.Axearang, //斧头回旋镖 rrzz
-            ItemID.Trimarang, //三尖回旋镖
             ItemID.Flamarang, //烈焰回旋镖
             ItemID.Bananarang, //香蕉回旋镖
             ItemID.PossessedHatchet, //疯狂飞斧
@@ -488,6 +516,20 @@ namespace ScourgeMod.Common.DisplayWeapons
         public static bool IsDW_Sidearm(Item item)
         {
             return item.ModItem is IDW_Sidearm || DWVanillaID_Sidearm.Contains(item.type);
+        }
+    }
+
+    //Trimarang
+    public static partial class DWRegistry
+    {
+        public static readonly HashSet<int> DWVanillaID_Trimarang = new()
+        {
+            ItemID.Trimarang, //三尖回旋镖
+        };
+
+        public static bool IsDW_Trimarang(Item item)
+        {
+            return item.ModItem is IDW_Trimarang || DWVanillaID_Trimarang.Contains(item.type);
         }
     }
 
@@ -575,6 +617,36 @@ namespace ScourgeMod.Common.DisplayWeapons
             return item.ModItem is IDW_Staff || DWVanillaID_Staff.Contains(item.type);
         }
     }
+
+    //Wand
+    public static partial class DWRegistry
+    {
+        public static readonly HashSet<int> DWVanillaID_Wand = new()
+        {
+            ItemID.WandofSparking, // 火花魔棒
+            ItemID.WandofFrosting, // 结霜魔棒
+            // ItemID.GlacierFang, // 冰川之牙 rrzz
+            ItemID.Vilethorn, // 魔刺
+            ItemID.WeatherPain, // 天候棒
+            ItemID.MagicMissile, // 魔法飞弹
+            ItemID.FlowerofFire, // 火之花
+            ItemID.Flamelash, // 烈焰火鞭
+            ItemID.CrystalSerpent, // 水晶蛇
+            ItemID.FlowerofFrost, // 寒霜之花
+            ItemID.CrystalVileShard, // 魔晶碎块
+            ItemID.SoulDrain, // 夺命杖
+            // ItemID.LightningStrike, // 闪电之击 rrzz
+            ItemID.RainbowRod, // 彩虹魔杖
+            ItemID.BatScepter, // 蝙蝠权杖
+            ItemID.PrincessWeapon, // 共鸣权杖
+            ItemID.Razorpine, // 剃刀松
+        };
+
+        public static bool IsDW_Wand(Item item)
+        {
+            return item.ModItem is IDW_Wand || DWVanillaID_Wand.Contains(item.type);
+        }
+    }
 }
 
 //------自带待机动画，不需要显示
@@ -586,6 +658,7 @@ namespace ScourgeMod.Common.DisplayWeapons
 //ItemID.Umbrella,
 // ItemID.CombatWrench, //战斗扳手
 // ItemID.BouncingShield, //中士联盾
+
 // ItemID.VampireKnives, //吸血鬼刀
 
 // 手榴弹与投掷物
@@ -593,23 +666,6 @@ namespace ScourgeMod.Common.DisplayWeapons
 // // 困难模式前：魔棒
 
 // // 困难模式：魔棒
-// ItemID.WandofSparking, // 火花魔棒
-//         ItemID.WandofFrosting, // 结霜魔棒
-//         // ItemID.GlacierFang, // 冰川之牙 rrzz
-//         ItemID.Vilethorn, // 魔刺
-//         ItemID.WeatherPain, // 天候棒
-//         ItemID.MagicMissile, // 魔法飞弹
-//         ItemID.FlowerofFire, // 火之花
-//         ItemID.Flamelash, // 烈焰火鞭
-//  ItemID.CrystalSerpent, // 水晶蛇
-//         ItemID.FlowerofFrost, // 寒霜之花
-//                     ItemID.CrystalVileShard, // 魔晶碎块
-//         ItemID.SoulDrain, // 夺命杖
-//         // ItemID.LightningStrike, // 闪电之击 rrzz
-//         ItemID.RainbowRod, // 彩虹魔杖
-//         ItemID.BatScepter, // 蝙蝠权杖
-//                     ItemID.PrincessWeapon, // 共鸣权杖
-//         ItemID.Razorpine, // 剃刀松
 
 // // 其他魔法武器
 // ItemID.CrimsonRod, // 猩红魔杖
@@ -633,18 +689,8 @@ namespace ScourgeMod.Common.DisplayWeapons
 // ItemID.LastPrism, // 终极棱镜
 
 // // 魔法枪
-// ItemID.ZapinatorGray, // 灰冲击枪
-// ItemID.SpaceGun, // 太空枪
-// ItemID.BeeGun, // 蜜蜂枪
-// ItemID.LaserRifle, // 激光步枪
-// ItemID.ZapinatorOrange, // 橙冲击枪
-// ItemID.WaspGun, // 胡蜂枪
-// ItemID.LeafBlower, // 吹叶机
-// ItemID.RainbowGun, // 彩虹枪
-// ItemID.HeatRay, // 高温射线枪
-// ItemID.LaserMachinegun, // 激光机枪
+
 // ItemID.ChargedBlasterCannon, // 充能爆破炮
-// ItemID.BubbleGun, // 泡泡枪
 
 // // 法术书
 // ItemID.WaterBolt, // 水矢

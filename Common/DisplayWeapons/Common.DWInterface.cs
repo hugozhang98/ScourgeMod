@@ -45,8 +45,11 @@
     //手套
     public interface IDW_Glove { }
 
-    //胁差
+    //回旋镖、胁差
     public interface IDW_Sidearm { }
+
+    //三尖回旋镖
+    public interface IDW_Trimarang { }
 
     //手雷
     public interface IDW_Grenade { }
@@ -56,4 +59,7 @@
 
     //法杖
     public interface IDW_Staff { }
+
+    //魔棒
+    public interface IDW_Wand { }
 }
