@@ -11,13 +11,26 @@ namespace ScourgeMod.Common.DisplayWeapons
         {
             ItemID.Anchor,
             ItemID.FlyingKnife,
+            ItemID.WoodenBoomerang, //木回旋镖
+            ItemID.EnchantedBoomerang, //附魔回旋镖
+            ItemID.FruitcakeChakram, //水果蛋糕旋刃
+            ItemID.BloodyMachete, //血腥砍刀
+            ItemID.Shroomerang, //蘑菇回旋镖
+            ItemID.IceBoomerang, //冰雪回旋镖
+            ItemID.ThornChakram, //荆棘旋刃
+            // ItemID.Axearang, //斧头回旋镖 rrzz
+            ItemID.Flamarang, //烈焰回旋镖
+            ItemID.Bananarang, //香蕉回旋镖
+            ItemID.PossessedHatchet, //疯狂飞斧
+            ItemID.LightDisc, //光辉飞盘
+            ItemID.PaladinsHammer, //圣骑士锤
         };
 
         public static bool HideWhenProjActive(Item item)
         {
             return DWVanillaID_HideWhenProjActive.Contains(item.type)
-                || IsDW_Sidearm(item)
-                || IsDW_Trimarang(item);
+                || DWVanillaID_Sidearm.Contains(item.type)
+                || DWVanillaID_Trimarang.Contains(item.type);
         }
     }
 
