@@ -206,12 +206,6 @@ function writeVsCodeLaunchConfiguration(tModLoaderPath) {
     ...clientConfiguration,
     args: '${input:' + launchArgumentsInputId + '}',
   };
-  // 多人测试中启动额外调试进程时，复用现有模组，避免覆盖已被占用的 .tmod。
-  const noBuildConfiguration = {
-    ...chooseConfiguration,
-    name: 'Debug tModLoader (No Build)',
-  };
-  delete noBuildConfiguration.preLaunchTask;
   const launchArgumentsInput = {
     id: launchArgumentsInputId,
     type: 'pickString',
@@ -231,7 +225,7 @@ function writeVsCodeLaunchConfiguration(tModLoaderPath) {
     ],
   };
 
-  for (const configuration of [chooseConfiguration, serverConfiguration, noBuildConfiguration]) {
+  for (const configuration of [chooseConfiguration, serverConfiguration]) {
     const index = launchSettings.configurations.findIndex((item) => item.name === configuration.name);
     if (index >= 0) {
       launchSettings.configurations[index] = configuration;
