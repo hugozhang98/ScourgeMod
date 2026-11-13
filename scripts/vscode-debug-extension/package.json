@@ -1,0 +1,15 @@
+{
+  "name": "scourge-mod-start",
+  "displayName": "ScourgeMod Yarn Start",
+  "description": "让 yarn start client 在 VS Code 中启动 ScourgeMod 客户端调试。",
+  "version": "0.1.0",
+  "publisher": "scourgemod-local",
+  "engines": { "vscode": "^1.85.0" },
+  "main": "./extension.js",
+  "activationEvents": ["onUri"],
+  "extensionDependencies": ["ms-dotnettools.csharp"],
+  "capabilities": {
+    "untrustedWorkspaces": { "supported": false },
+    "virtualWorkspaces": false
+  }
+}

@@ -4,6 +4,9 @@
   "version": "0.0.0",
   "scripts": {
     "setup:tmodloader": "node scripts/setup-tmodloader.js",
+    "start": "node scripts/start.js",
+    "start:client": "node scripts/start.js client",
+    "start:server": "node scripts/start.js server",
     "client": "node scripts/launch-client.js"
   }
 }

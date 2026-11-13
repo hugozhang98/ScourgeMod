@@ -190,6 +190,11 @@ function writeVsCodeLaunchConfiguration(tModLoaderPath) {
   }
 
   const clientConfiguration = debugConfiguration(tModLoaderPath);
+  const directClientConfiguration = {
+    ...clientConfiguration,
+    name: 'Debug tModLoader Client',
+    args: [...clientConfiguration.args, '-nosteam'],
+  };
   const serverConfiguration = {
     ...clientConfiguration,
     name: 'Debug tModLoader Server',
@@ -225,7 +230,7 @@ function writeVsCodeLaunchConfiguration(tModLoaderPath) {
     ],
   };
 
-  for (const configuration of [chooseConfiguration, serverConfiguration]) {
+  for (const configuration of [chooseConfiguration, directClientConfiguration, serverConfiguration]) {
     const index = launchSettings.configurations.findIndex((item) => item.name === configuration.name);
     if (index >= 0) {
       launchSettings.configurations[index] = configuration;
