@@ -2,3 +2,4 @@ displayName = The Scourge
 author = Hugo Zhang
 version = 0.1
 modReferences = ScourgeModWeapon
+buildIgnore = serverconfig.local.txt, serverconfig.example.txt

@@ -3,6 +3,7 @@
   "private": true,
   "version": "0.0.0",
   "scripts": {
-    "setup:tmodloader": "node scripts/setup-tmodloader.js"
+    "setup:tmodloader": "node scripts/setup-tmodloader.js",
+    "client": "node scripts/launch-client.js"
   }
 }

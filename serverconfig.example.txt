@@ -1,0 +1,10 @@
+# 复制为 serverconfig.local.txt，并填写已有 .wld 世界文件的绝对路径。
+# Windows 示例：world=C:\Users\YOUR_USER\Documents\My Games\Terraria\tModLoader\Worlds\world.wld
+# macOS 示例：world=/Users/YOUR_USER/Library/Application Support/Terraria/tModLoader/Worlds/world.wld
+# 配置值不加引号，即使路径中含有空格。密码留空表示无密码。
+# serverconfig.local.txt 已被 Git 忽略，也不会打包进模组。
+world=REPLACE_WITH_YOUR_WORLD_PATH
+maxplayers=4
+port=7777
+password=
+upnp=0

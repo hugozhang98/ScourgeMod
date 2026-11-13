@@ -3,9 +3,12 @@
 const fs = require('fs');
 const path = require('path');
 const { execFileSync } = require('child_process');
+const { readConfiguredTModLoaderPath, tModLoaderLaunchOptions } = require('./tmodloader-config');
 
 const projectDirectory = path.resolve(__dirname, '..');
 const configPath = path.join(projectDirectory, 'tModLoader.local.props');
+const serverConfigPath = path.join(projectDirectory, 'serverconfig.local.txt');
+const serverConfigExamplePath = path.join(projectDirectory, 'serverconfig.example.txt');
 const vscodeDirectory = path.join(projectDirectory, '.vscode');
 const vscodeLaunchPath = path.join(vscodeDirectory, 'launch.json');
 
@@ -151,62 +154,23 @@ function writeConfig(tModLoaderPath) {
   fs.writeFileSync(configPath, contents, 'utf8');
 }
 
-function unescapeXml(value) {
-  return value
-    .replace(/&quot;/g, '"')
-    .replace(/&apos;/g, "'")
-    .replace(/&gt;/g, '>')
-    .replace(/&lt;/g, '<')
-    .replace(/&amp;/g, '&');
-}
-
-function configuredTModLoaderPath() {
-  if (!fs.existsSync(configPath)) {
-    return undefined;
-  }
-
-  const contents = fs.readFileSync(configPath, 'utf8');
-  const match = contents.match(/<TModLoaderPath>([\s\S]*?)<\/TModLoaderPath>/);
-  return match && match[1] ? unescapeXml(match[1].trim()) : undefined;
-}
-
 function debugConfiguration(tModLoaderPath) {
-  const isMacOS = process.platform === 'darwin';
-  const isWindows = process.platform === 'win32';
-  const bundledDotNetDirectories = isMacOS && process.arch === 'arm64'
-    ? ['dotnet_arm64', 'dotnet']
-    : ['dotnet'];
-  const bundledDotNetPath = bundledDotNetDirectories
-    .map((directory) => path.join(tModLoaderPath, directory, isWindows ? 'dotnet.exe' : 'dotnet'))
-    .find(fs.existsSync);
-  const configuration = {
+  return {
     name: 'Debug tModLoader',
     type: 'coreclr',
     request: 'launch',
     preLaunchTask: 'Build ScourgeMod',
-    // Prefer tModLoader's bundled runtime. Windows falls back to the SDK/runtime
-    // on PATH until Steam has downloaded the bundled runtime on its first launch.
-    program: bundledDotNetPath || 'dotnet',
-    args: [path.join(tModLoaderPath, 'tModLoader.dll')],
-    cwd: tModLoaderPath,
+    ...tModLoaderLaunchOptions(tModLoaderPath),
     console: 'integratedTerminal',
     justMyCode: true,
   };
+}
 
-  if (isMacOS) {
-    const nativeLibraryPath = path.join(tModLoaderPath, 'Libraries', 'Native', 'OSX');
-    configuration.env = {
-      DYLD_LIBRARY_PATH: nativeLibraryPath,
-      VK_ICD_FILENAMES: path.join(nativeLibraryPath, 'MoltenVK_icd.json'),
-    };
-  } else if (isWindows) {
-    const nativeLibraryPath = path.join(tModLoaderPath, 'Libraries', 'Native', 'Windows');
-    configuration.env = {
-      PATH: `${nativeLibraryPath}${path.delimiter}${process.env.PATH || ''}`,
-    };
-  }
-
-  return configuration;
+function debugCommandLine(args) {
+  // coreclr accepts a command-line string; quote paths for Windows and macOS.
+  return args.map((argument) => `"${argument
+    .replace(/(\\*)"/g, '$1$1\\"')
+    .replace(/(\\+)$/g, '$1$1')}"`).join(' ');
 }
 
 function writeVsCodeLaunchConfiguration(tModLoaderPath) {
@@ -225,13 +189,60 @@ function writeVsCodeLaunchConfiguration(tModLoaderPath) {
     }
   }
 
-  const configuration = debugConfiguration(tModLoaderPath);
-  const index = launchSettings.configurations.findIndex((item) => item.name === configuration.name);
-  if (index >= 0) {
-    launchSettings.configurations[index] = configuration;
-  } else {
-    launchSettings.configurations.push(configuration);
+  const clientConfiguration = debugConfiguration(tModLoaderPath);
+  const serverConfiguration = {
+    ...clientConfiguration,
+    name: 'Debug tModLoader Server',
+    args: [
+      ...clientConfiguration.args,
+      '-server',
+      '-nosteam',
+      '-config',
+      '${workspaceFolder}/serverconfig.local.txt',
+    ],
+  };
+  const launchArgumentsInputId = 'tModLoaderLaunchArguments';
+  const chooseConfiguration = {
+    ...clientConfiguration,
+    args: '${input:' + launchArgumentsInputId + '}',
+  };
+  // 多人测试中启动额外调试进程时，复用现有模组，避免覆盖已被占用的 .tmod。
+  const noBuildConfiguration = {
+    ...chooseConfiguration,
+    name: 'Debug tModLoader (No Build)',
+  };
+  delete noBuildConfiguration.preLaunchTask;
+  const launchArgumentsInput = {
+    id: launchArgumentsInputId,
+    type: 'pickString',
+    description: '选择要调试的 tModLoader 进程',
+    options: [
+      { label: '客户端', value: debugCommandLine(clientConfiguration.args) },
+      {
+        label: '服务器（读取 serverconfig.local.txt）',
+        value: debugCommandLine([
+          ...clientConfiguration.args,
+          '-server',
+          '-nosteam',
+          '-config',
+          serverConfigPath,
+        ]),
+      },
+    ],
+  };
+
+  for (const configuration of [chooseConfiguration, serverConfiguration, noBuildConfiguration]) {
+    const index = launchSettings.configurations.findIndex((item) => item.name === configuration.name);
+    if (index >= 0) {
+      launchSettings.configurations[index] = configuration;
+    } else {
+      launchSettings.configurations.push(configuration);
+    }
   }
+
+  launchSettings.inputs = (launchSettings.inputs || [])
+    .filter((input) => input.id !== launchArgumentsInputId);
+  launchSettings.inputs.push(launchArgumentsInput);
 
   fs.writeFileSync(vscodeLaunchPath, `${JSON.stringify(launchSettings, null, 2)}\n`, 'utf8');
   console.log(`Wrote VS Code debug configuration: ${vscodeLaunchPath}`);
@@ -240,9 +251,14 @@ function writeVsCodeLaunchConfiguration(tModLoaderPath) {
 try {
   const options = parseOptions(process.argv.slice(2));
 
+  if (!fs.existsSync(serverConfigPath)) {
+    fs.copyFileSync(serverConfigExamplePath, serverConfigPath);
+    console.log(`Created local server configuration. Set world to an existing .wld path: ${serverConfigPath}`);
+  }
+
   let tModLoaderPath;
   if (fs.existsSync(configPath) && !options.force && !hasPlaceholderConfig()) {
-    tModLoaderPath = configuredTModLoaderPath();
+    tModLoaderPath = readConfiguredTModLoaderPath(configPath);
     console.log(`Keeping existing local configuration: ${configPath}`);
   } else {
     tModLoaderPath = findTModLoader(options);
