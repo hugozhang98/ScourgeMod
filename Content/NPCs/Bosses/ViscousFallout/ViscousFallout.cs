@@ -20,6 +20,12 @@ namespace ScourgeMod.Content.NPCs.Bosses.ViscousFallout
 
         private const string CrownTexture = "ScourgeMod/Assets/Extra_ViscousFalloutCrown";
 
+        //基础碰撞箱宽度
+        private const int BaseWidth = 98;
+
+        //基础碰撞箱高度
+        private const int BaseHeight = 92;
+
         //行为-退出
         private const int Exiting = -1;
 
@@ -84,6 +90,10 @@ namespace ScourgeMod.Content.NPCs.Bosses.ViscousFallout
         #region 计算属性
         //是否单机或服务器权威
         private bool IsAuthority => Main.netMode != NetmodeID.MultiplayerClient;
+
+        //血量基础缩放：满血1.25，75%血1，半血及以下0.75
+        private float HealthScale =>
+            MathHelper.Clamp((float)NPC.life / NPC.lifeMax + 0.25f, 0.75f, 1.25f);
         #endregion
 
         #region 字段
@@ -127,8 +137,8 @@ namespace ScourgeMod.Content.NPCs.Bosses.ViscousFallout
         //是否找到有效闪现位置
         private bool IsFoundBlinkPosition { get; set; }
 
-        //闪现位置
-        private Vector2 BlinkCenter { get; set; }
+        //闪现位置（底部中心）
+        private Vector2 BlinkBottom { get; set; }
 
         //上一帧是否处于闪现后摇
         private bool WasBlinkRecovering { get; set; }
@@ -149,8 +159,8 @@ namespace ScourgeMod.Content.NPCs.Bosses.ViscousFallout
         public override void SetDefaults()
         {
             //碰撞箱大小
-            NPC.width = 98;
-            NPC.height = 92;
+            NPC.width = BaseWidth;
+            NPC.height = BaseHeight;
 
             //基础数值
             //最大生命值
@@ -257,7 +267,7 @@ namespace ScourgeMod.Content.NPCs.Bosses.ViscousFallout
             ActionTimer = 0;
             PhaseTimer = 0;
             IsFoundBlinkPosition = false;
-            BlinkCenter = Vector2.Zero;
+            BlinkBottom = Vector2.Zero;
             NPC.netUpdate = true;
         }
 
@@ -488,6 +498,19 @@ namespace ScourgeMod.Content.NPCs.Bosses.ViscousFallout
             }
         }
 
+        private void AdjustScale(float animationScale = 1f)
+        {
+            Vector2 bottom = NPC.Bottom;
+            float scale = HealthScale * animationScale;
+
+            NPC.scale = scale;
+            NPC.width = (int)(BaseWidth * scale);
+            NPC.height = (int)(BaseHeight * scale);
+
+            //保持脚底位置不变
+            NPC.Bottom = bottom;
+        }
+
         private void OnWaitAction()
         {
             int troubleBoundary = 600;
@@ -607,17 +630,16 @@ namespace ScourgeMod.Content.NPCs.Bosses.ViscousFallout
             //普通跳：水平约200像素
             Vector2 jumpVector = new Vector2(3.8f, -8);
             //平跳：水平约300像素
-            Vector2 jumpVectorII = new Vector2(7.5f, -6);
+            Vector2 jumpVectorII = new Vector2(9.1f, -5);
             //高跳：向上约160像素
             Vector2 jumpVectorIII = new Vector2(3, -10);
             //小跳：水平约140像素
             Vector2 jumpVectorIV = new Vector2(4.2f, -5);
 
             float jumpWeight = 0.4f;
-            float jumpWeightII = 0.3f;
+            float jumpWeightII = 0.2f;
             float jumpWeightIII = 0.2f;
-            float jumpWeightIV = 0.1f;
-            float specialJumpWeight = 0.6f;
+            float jumpWeightIV = 0.2f;
 
             Player target = Main.player[NPC.target];
             Vector2 targetOffset = target.Center - NPC.Center;
@@ -625,36 +647,35 @@ namespace ScourgeMod.Content.NPCs.Bosses.ViscousFallout
             float heightDifference = NPC.Top.Y - target.Bottom.Y;
             float distance = targetOffset.Length();
 
-            bool isLongJump = xDistance > 300f;
-            bool isHighJump = heightDifference > 100f;
+            bool isLongJump = xDistance > 200f;
+            bool isHighJump = heightDifference > 120f;
             bool isSmallJump = distance < 100f && !isLongJump && !isHighJump;
 
             //远距离特化平跳，并排除小跳
             if (isLongJump)
             {
-                jumpWeightII = specialJumpWeight;
+                jumpWeight = 0.1f;
+                jumpWeightII = 0.9f;
+                jumpWeightIII = 0f;
                 jumpWeightIV = 0f;
             }
 
             //高处特化高跳，可与远距离同时触发
             if (isHighJump)
             {
-                jumpWeightIII = specialJumpWeight;
+                jumpWeight = 0.1f;
+                jumpWeightII = 0f;
+                jumpWeightIII = 0.9f;
                 jumpWeightIV = 0f;
             }
 
             //近距离特化小跳，并排除平跳和高跳
             if (isSmallJump)
             {
+                jumpWeight = 0.1f;
                 jumpWeightII = 0f;
                 jumpWeightIII = 0f;
-                jumpWeightIV = specialJumpWeight;
-            }
-
-            //其余场景特化普通跳
-            if (!isLongJump && !isHighJump && !isSmallJump)
-            {
-                jumpWeight = specialJumpWeight;
+                jumpWeightIV = 0.9f;
             }
 
             WeightedRandom<Vector2> jumpRandom = new WeightedRandom<Vector2>(Main.rand);
@@ -667,17 +688,14 @@ namespace ScourgeMod.Content.NPCs.Bosses.ViscousFallout
             SetAction(Waiting);
         }
 
-        private bool TryFindBlinkPosition(Vector2 targetBottom, out Vector2 blinkCenter)
+        private bool TryFindBlinkPosition(Vector2 targetBottom, out Vector2 blinkBottom)
         {
             //所有返回路径都需要给 out 参数赋值
-            blinkCenter = Vector2.Zero;
+            blinkBottom = Vector2.Zero;
 
             const float BlinkLiftHeight = TextureHelper.TileSize * 2f; // 向上抬高2格
 
-            Vector2 baseCenter = new Vector2(
-                targetBottom.X,
-                targetBottom.Y - NPC.height / 2f - BlinkLiftHeight
-            );
+            Vector2 baseBottom = targetBottom - new Vector2(0f, BlinkLiftHeight);
 
             //依次尝试这些偏移，单位为像素
             Vector2[] offsets =
@@ -693,26 +711,15 @@ namespace ScourgeMod.Content.NPCs.Bosses.ViscousFallout
                 new Vector2(480f, 0f),
             };
 
-            //局部函数：只检查一个候选位置是否合法
-            bool IsValidPosition(Vector2 candidateCenter)
-            {
-                Vector2 topLeft = candidateCenter - NPC.Size / 2f;
-
-                if (!PositionHelper.InsideWorld(topLeft, NPC.width, NPC.height))
-                    return false;
-
-                return !Collision.SolidCollision(topLeft, NPC.width, NPC.height);
-            }
-
             foreach (Vector2 offset in offsets)
             {
-                Vector2 candidateCenter = baseCenter + offset;
+                Vector2 candidateBottom = baseBottom + offset;
 
-                if (!IsValidPosition(candidateCenter))
+                if (!IsValidBlinkPosition(candidateBottom))
                     continue;
 
                 //找到合法位置，交给调用方
-                blinkCenter = candidateCenter;
+                blinkBottom = candidateBottom;
                 return true;
             }
 
@@ -720,10 +727,24 @@ namespace ScourgeMod.Content.NPCs.Bosses.ViscousFallout
             return false;
         }
 
-        private void Blink(Vector2 center)
+        private bool IsValidBlinkPosition(Vector2 bottom)
         {
-            //传入的位置是经过校验的碰撞箱中心
-            NPC.Center = center;
+            //按恢复后的完整体型检查，避免缩小后进入狭窄位置
+            float scale = HealthScale;
+            int width = (int)(BaseWidth * scale);
+            int height = (int)(BaseHeight * scale);
+            Vector2 topLeft = bottom - new Vector2(width / 2f, height);
+
+            if (!PositionHelper.InsideWorld(topLeft, width, height))
+                return false;
+
+            return !Collision.SolidCollision(topLeft, width, height);
+        }
+
+        private void Blink(Vector2 bottom)
+        {
+            //传入的位置是经过校验的底部中心
+            NPC.Bottom = bottom;
             //清除原有运动，让 Boss 从新位置快速下落
             NPC.velocity = Vector2.Zero;
             NPC.netUpdate = true;
@@ -792,7 +813,7 @@ namespace ScourgeMod.Content.NPCs.Bosses.ViscousFallout
         {
             float progress = MathHelper.Clamp((float)PhaseTimer / BlinkWindUpFrameCount, 0f, 1f);
 
-            NPC.scale = MathHelper.Lerp(1f, BlinkAnimationMinScale, progress);
+            AdjustScale(MathHelper.Lerp(1f, BlinkAnimationMinScale, progress));
             NPC.Opacity = MathHelper.Lerp(1f, BlinkAnimationMinOpacity, progress);
 
             if (progress < 1f)
@@ -807,7 +828,7 @@ namespace ScourgeMod.Content.NPCs.Bosses.ViscousFallout
         {
             float progress = MathHelper.Clamp((float)PhaseTimer / BlinkRecoveryFrameCount, 0f, 1f);
 
-            NPC.scale = MathHelper.Lerp(BlinkAnimationMinScale, 1f, progress);
+            AdjustScale(MathHelper.Lerp(BlinkAnimationMinScale, 1f, progress));
             NPC.Opacity = MathHelper.Lerp(BlinkAnimationMinOpacity, 1f, progress);
 
             if (progress < 1f)
@@ -818,13 +839,13 @@ namespace ScourgeMod.Content.NPCs.Bosses.ViscousFallout
 
         private void KeepBlinkAnimation()
         {
-            NPC.scale = BlinkAnimationMinScale;
+            AdjustScale(BlinkAnimationMinScale);
             NPC.Opacity = BlinkAnimationMinOpacity;
         }
 
         private void ReStoreBlinkAnimation()
         {
-            NPC.scale = 1f;
+            AdjustScale();
             NPC.Opacity = 1f;
         }
 
@@ -837,10 +858,10 @@ namespace ScourgeMod.Content.NPCs.Bosses.ViscousFallout
                 {
                     Player target = Main.player[NPC.target];
 
-                    if (TryFindBlinkPosition(target.Bottom, out Vector2 targetCenter))
+                    if (TryFindBlinkPosition(target.Bottom, out Vector2 targetBottom))
                     {
                         IsFoundBlinkPosition = true;
-                        BlinkCenter = targetCenter;
+                        BlinkBottom = targetBottom;
                     }
                 }
 
@@ -861,8 +882,8 @@ namespace ScourgeMod.Content.NPCs.Bosses.ViscousFallout
                 return;
             }
 
-            //尝试寻找有效闪现位置
-            if (!IsFoundBlinkPosition)
+            //释放前再次检查，防止锁定后地形发生变化
+            if (!IsFoundBlinkPosition || !IsValidBlinkPosition(BlinkBottom))
             {
                 if (!TryOutSevereTrouble())
                 {
@@ -871,7 +892,7 @@ namespace ScourgeMod.Content.NPCs.Bosses.ViscousFallout
                 return;
             }
 
-            Blink(BlinkCenter);
+            Blink(BlinkBottom);
             SetPhase(BlinkRecoveryPhase);
         }
 
@@ -879,7 +900,7 @@ namespace ScourgeMod.Content.NPCs.Bosses.ViscousFallout
         {
             float progress = MathHelper.Clamp((float)PhaseTimer / ExitFrameCount, 0f, 1f);
 
-            NPC.scale = MathHelper.Lerp(1f, BlinkAnimationMinScale, progress);
+            AdjustScale(MathHelper.Lerp(1f, BlinkAnimationMinScale, progress));
             NPC.Opacity = MathHelper.Lerp(1f, BlinkAnimationMinOpacity, progress);
 
             if (progress < 1f)
