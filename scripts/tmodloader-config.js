@@ -38,6 +38,13 @@ function tModLoaderLaunchOptions(tModLoaderPath) {
     cwd: tModLoaderPath,
   };
 
+  // -nosteam 的专用服务器不会通过 Steam API 定位创意工坊。
+  // Steam 安装目录为 steamapps/common/tModLoader，订阅目录为 steamapps/workshop。
+  const workshopDirectory = path.resolve(tModLoaderPath, '..', '..', 'workshop');
+  if (fs.existsSync(workshopDirectory)) {
+    options.args.push('-steamworkshopfolder', workshopDirectory);
+  }
+
   if (isMacOS) {
     const nativeLibraryPath = path.join(tModLoaderPath, 'Libraries', 'Native', 'OSX');
     options.env = {

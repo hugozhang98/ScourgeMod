@@ -8,7 +8,12 @@ namespace ScourgeMod.Helper
 {
     public static class TextureHelper
     {
-        private static readonly Dictionary<(Texture2D texture, byte alphaThreshold), Rectangle> VisibleFrameCache = new();
+        public const float TileSize = 16f;
+
+        private static readonly Dictionary<
+            (Texture2D texture, byte alphaThreshold),
+            Rectangle
+        > VisibleFrameCache = new();
 
         public static Rectangle GetVisibleFrame(Texture2D texture, byte alphaThreshold = 1)
         {

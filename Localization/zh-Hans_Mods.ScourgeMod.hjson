@@ -1,0 +1,10 @@
+Items: {
+	Hugos: {
+		DisplayName: 雨果
+		// Tooltip: ""
+	}
+}
+
+NPCs: {
+	ViscousFallout.DisplayName: 粘性辐射尘
+}
