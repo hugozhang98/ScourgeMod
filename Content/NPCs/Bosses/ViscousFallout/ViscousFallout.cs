@@ -29,6 +29,9 @@ namespace ScourgeMod.Content.NPCs.Bosses.ViscousFallout
         //行为-闪现
         private const int Blinking = 2;
 
+        //行为-喷发
+        private const int Erupting = 3;
+
         //闪现前摇阶段
         private const int BlinkWindUpPhase = 0;
 
