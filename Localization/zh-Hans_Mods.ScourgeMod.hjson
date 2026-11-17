@@ -5,6 +5,4 @@ Items: {
 	}
 }
 
-NPCs: {
-	ViscousFallout.DisplayName: 粘性辐射尘
-}
+NPCs.ViscousFallout.DisplayName: 粘性辐射尘

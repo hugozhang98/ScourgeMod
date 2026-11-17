@@ -2,10 +2,13 @@ using System;
 using System.IO;
 using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Graphics;
+using ReLogic.Utilities;
 using ScourgeMod.Helper;
 using Terraria;
+using Terraria.Audio;
 using Terraria.ID;
 using Terraria.ModLoader;
+using Terraria.Utilities;
 
 namespace ScourgeMod.Content.NPCs.Bosses.ViscousFallout
 {
@@ -60,7 +63,7 @@ namespace ScourgeMod.Content.NPCs.Bosses.ViscousFallout
         private const float BlinkAnimationMinOpacity = 0.5f;
 
         //Y轴阻塞间距
-        private const float YTroubleSpacing = 100f;
+        private const float YTroubleSpacing = 170f;
 
         private const float XTroubleSpacing = 2000f;
 
@@ -122,10 +125,17 @@ namespace ScourgeMod.Content.NPCs.Bosses.ViscousFallout
         private int SevereBlockCounter { get; set; }
 
         //是否找到有效闪现位置
-        private bool ISFoundBlinkPosition { get; set; }
+        private bool IsFoundBlinkPosition { get; set; }
 
         //闪现位置
         private Vector2 BlinkCenter { get; set; }
+
+        //上一帧是否处于闪现后摇
+        private bool WasBlinkRecovering { get; set; }
+
+        //闪现前摇音效槽位
+        private SlotId BlinkWindupSoundSlot = SlotId.Invalid;
+
         #endregion
 
         public override string Texture => MainTexture;
@@ -246,7 +256,7 @@ namespace ScourgeMod.Content.NPCs.Bosses.ViscousFallout
             Phase = 0;
             ActionTimer = 0;
             PhaseTimer = 0;
-            ISFoundBlinkPosition = false;
+            IsFoundBlinkPosition = false;
             BlinkCenter = Vector2.Zero;
             NPC.netUpdate = true;
         }
@@ -429,6 +439,16 @@ namespace ScourgeMod.Content.NPCs.Bosses.ViscousFallout
 
         private void AdjustSync()
         {
+            bool isBlinkRecovering = Action == Blinking && Phase == BlinkRecoveryPhase;
+
+            //进入闪现后摇时播放一次，客户端也会执行
+            if (isBlinkRecovering && !WasBlinkRecovering)
+            {
+                PlayBlinkSound();
+            }
+
+            WasBlinkRecovering = isBlinkRecovering;
+
             if (NPC.velocity.Y == 0f)
             {
                 TryStop();
@@ -573,7 +593,6 @@ namespace ScourgeMod.Content.NPCs.Bosses.ViscousFallout
 
             //前摇帧数
             int windUpFrameCount = 60;
-            Vector2 jumpVector = new Vector2(4, -8);
 
             //前摇
             if (Phase == windUpPhase)
@@ -582,12 +601,70 @@ namespace ScourgeMod.Content.NPCs.Bosses.ViscousFallout
                 {
                     SetPhase(jumpPhase);
                 }
+                return;
             }
-            else
+
+            //普通跳：水平约200像素
+            Vector2 jumpVector = new Vector2(3.8f, -8);
+            //平跳：水平约300像素
+            Vector2 jumpVectorII = new Vector2(7.5f, -6);
+            //高跳：向上约160像素
+            Vector2 jumpVectorIII = new Vector2(3, -10);
+            //小跳：水平约140像素
+            Vector2 jumpVectorIV = new Vector2(4.2f, -5);
+
+            float jumpWeight = 0.4f;
+            float jumpWeightII = 0.3f;
+            float jumpWeightIII = 0.2f;
+            float jumpWeightIV = 0.1f;
+            float specialJumpWeight = 0.6f;
+
+            Player target = Main.player[NPC.target];
+            Vector2 targetOffset = target.Center - NPC.Center;
+            float xDistance = Math.Abs(targetOffset.X);
+            float heightDifference = NPC.Top.Y - target.Bottom.Y;
+            float distance = targetOffset.Length();
+
+            bool isLongJump = xDistance > 300f;
+            bool isHighJump = heightDifference > 100f;
+            bool isSmallJump = distance < 100f && !isLongJump && !isHighJump;
+
+            //远距离特化平跳，并排除小跳
+            if (isLongJump)
             {
-                Jump(jumpVector);
-                SetAction(Waiting);
+                jumpWeightII = specialJumpWeight;
+                jumpWeightIV = 0f;
             }
+
+            //高处特化高跳，可与远距离同时触发
+            if (isHighJump)
+            {
+                jumpWeightIII = specialJumpWeight;
+                jumpWeightIV = 0f;
+            }
+
+            //近距离特化小跳，并排除平跳和高跳
+            if (isSmallJump)
+            {
+                jumpWeightII = 0f;
+                jumpWeightIII = 0f;
+                jumpWeightIV = specialJumpWeight;
+            }
+
+            //其余场景特化普通跳
+            if (!isLongJump && !isHighJump && !isSmallJump)
+            {
+                jumpWeight = specialJumpWeight;
+            }
+
+            WeightedRandom<Vector2> jumpRandom = new WeightedRandom<Vector2>(Main.rand);
+            jumpRandom.Add(jumpVector, jumpWeight);
+            jumpRandom.Add(jumpVectorII, jumpWeightII);
+            jumpRandom.Add(jumpVectorIII, jumpWeightIII);
+            jumpRandom.Add(jumpVectorIV, jumpWeightIV);
+
+            Jump(jumpRandom.Get());
+            SetAction(Waiting);
         }
 
         private bool TryFindBlinkPosition(Vector2 targetBottom, out Vector2 blinkCenter)
@@ -660,7 +737,7 @@ namespace ScourgeMod.Content.NPCs.Bosses.ViscousFallout
             Vector2 center = NPC.Center + new Vector2(0f, 15f);
             float radius = 100f * NPC.scale;
 
-            for (int i = 0; i < 20; i++)
+            for (int i = 0; i < 10; i++)
             {
                 // 两个半径相同，生成范围就是圆形
                 Vector2 offset = Main.rand.NextVector2Circular(radius, radius);
@@ -670,10 +747,45 @@ namespace ScourgeMod.Content.NPCs.Bosses.ViscousFallout
                 Dust dust = Dust.NewDustPerfect(spawnPosition, DustID.Blood);
 
                 dust.noGravity = true;
-                dust.scale = 1.3f;
+                dust.scale = 1.6f;
 
                 dust.velocity = direction * offset.SafeNormalize(Vector2.Zero) * 2f;
             }
+        }
+
+        private void PlayBlinkWindupSound()
+        {
+            int blinkWindUpSoundFrameCount = Math.Min(BlinkWindUpFrameCount, 40);
+
+            BlinkWindupSoundSlot = SoundHelper.PlayLooped(
+                BlinkWindupSoundSlot,
+                SoundID.Mummy with
+                {
+                    Volume = 0.6f,
+                    Identifier = $"ViscousFalloutBlinkWindup_{NPC.whoAmI}",
+                    PauseBehavior = PauseBehavior.PauseWithGame,
+                },
+                () => NPC.Center,
+                () =>
+                    NPC.active
+                    && Action == Blinking
+                    && Phase == BlinkWindUpPhase
+                    && PhaseTimer < blinkWindUpSoundFrameCount
+            );
+        }
+
+        private void PlayBlinkSound()
+        {
+            SoundHelper.PlayOnce(
+                SoundID.NPCDeath27 with
+                {
+                    Volume = 0.6f,
+                    Identifier = $"ViscousFalloutBlink_{NPC.whoAmI}",
+                    PauseBehavior = PauseBehavior.PauseWithGame,
+                },
+                () => NPC.Center,
+                () => NPC.active
+            );
         }
 
         private void BlinkWindupAnimation()
@@ -686,6 +798,8 @@ namespace ScourgeMod.Content.NPCs.Bosses.ViscousFallout
             if (progress < 1f)
             {
                 SpawnBloodDust(-1);
+
+                PlayBlinkWindupSound();
             }
         }
 
@@ -725,7 +839,7 @@ namespace ScourgeMod.Content.NPCs.Bosses.ViscousFallout
 
                     if (TryFindBlinkPosition(target.Bottom, out Vector2 targetCenter))
                     {
-                        ISFoundBlinkPosition = true;
+                        IsFoundBlinkPosition = true;
                         BlinkCenter = targetCenter;
                     }
                 }
@@ -748,7 +862,7 @@ namespace ScourgeMod.Content.NPCs.Bosses.ViscousFallout
             }
 
             //尝试寻找有效闪现位置
-            if (!ISFoundBlinkPosition)
+            if (!IsFoundBlinkPosition)
             {
                 if (!TryOutSevereTrouble())
                 {

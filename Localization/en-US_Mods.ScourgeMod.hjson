@@ -5,6 +5,4 @@ Items: {
 	}
 }
 
-NPCs: {
-	ViscousFallout.DisplayName: Viscous Fallout
-}
+NPCs.ViscousFallout.DisplayName: Viscous Fallout
