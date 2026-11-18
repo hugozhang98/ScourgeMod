@@ -1,10 +1,13 @@
 using System;
 using Microsoft.Xna.Framework;
+using ScourgeMod.Content.Dusts;
 using Terraria;
+using Terraria.ID;
+using Terraria.ModLoader;
 
 namespace ScourgeMod.Helper
 {
-    public static class NPCHelper
+    public static class BattleHelper
     {
         public static bool TryFindTarget(NPC npc, float maxDistance)
         {
@@ -111,6 +114,40 @@ namespace ScourgeMod.Helper
             //沿用原版TargetClosest的横纵距离算法
             return Math.Abs(candidateCenter.X - npc.position.X + npc.width / 2)
                 + Math.Abs(candidateCenter.Y - npc.position.Y + npc.height / 2);
+        }
+
+        //每帧调用，在指定圆周上生成向外渐隐的粒子，圆心和半径使用世界像素
+        public static void SpawnSceneBoundaryDust(Vector2 center, float radius)
+        {
+            if (
+                Main.netMode == NetmodeID.Server
+                || radius <= 0f
+                || Main.GameUpdateCount % SceneBoundaryDust.SpawnInterval != 0
+            )
+                return;
+
+            const float dustSpacing = 16f;
+            const float dustSpeed = 1.5f;
+            const int screenPadding = 64;
+            Rectangle screenBounds = new Rectangle(
+                (int)Main.screenPosition.X - screenPadding,
+                (int)Main.screenPosition.Y - screenPadding,
+                Main.screenWidth + screenPadding * 2,
+                Main.screenHeight + screenPadding * 2
+            );
+
+            int count = (int)Math.Ceiling(MathHelper.TwoPi * radius / dustSpacing);
+            int dustType = ModContent.DustType<SceneBoundaryDust>();
+            for (int i = 0; i < count; i++)
+            {
+                float angle = MathHelper.TwoPi * i / count;
+                Vector2 outward = angle.ToRotationVector2();
+                Vector2 position = center + outward * radius;
+                if (!screenBounds.Contains(position.ToPoint()))
+                    continue;
+
+                Dust.NewDustPerfect(position, dustType, outward * dustSpeed, Scale: 1.5f);
+            }
         }
     }
 }

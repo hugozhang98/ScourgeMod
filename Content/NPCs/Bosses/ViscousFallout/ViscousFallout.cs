@@ -79,10 +79,14 @@ namespace ScourgeMod.Content.NPCs.Bosses.ViscousFallout
         private const float XTroubleSpacingIV = 200f;
 
         //脱战距离
-        private const float ExitDistance = 3000f;
+        private const float ExitDistance = 2000f;
 
         //脱战帧数
         private const int ExitFrameCount = 60;
+
+        private const int XFarBoundary = 250;
+        private const int YFarBoundary = 100;
+        private const int XNearBoundary = 100;
 
         #endregion
 
@@ -143,10 +147,7 @@ namespace ScourgeMod.Content.NPCs.Bosses.ViscousFallout
         //闪现前摇音效槽位
         private SlotId BlinkWindupSoundSlot = SlotId.Invalid;
 
-        private const int XFarBoundary = 250;
-        private const int YFarBoundary = 100;
-        private const int XNearBoundary = 100;
-
+        private Vector2 SceneCenter { get; set; } = new Vector2(33648, 3792); //rrzz 临时写死
         #endregion
 
         public override string Texture => MainTexture;
@@ -209,6 +210,9 @@ namespace ScourgeMod.Content.NPCs.Bosses.ViscousFallout
 
             AdjustSync();
 
+            if (Action != Exiting)
+                BattleHelper.SpawnSceneBoundaryDust(SceneCenter, ExitDistance);
+
             if (!IsAuthority)
                 return;
 
@@ -217,7 +221,7 @@ namespace ScourgeMod.Content.NPCs.Bosses.ViscousFallout
             if (IsSilent())
                 return;
 
-            if (Action != Exiting && !NPCHelper.TryFindTarget(NPC, ExitDistance)) //rrzz 后面替换成固定坐标监测
+            if (Action != Exiting && !BattleHelper.TryFindTarget(NPC, SceneCenter, ExitDistance))
             {
                 SetAction(Exiting);
             }
