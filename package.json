@@ -7,6 +7,7 @@
     "start": "node scripts/start.js",
     "start:client": "node scripts/start.js client",
     "start:server": "node scripts/start.js server",
-    "client": "node scripts/launch-client.js"
+    "client": "node scripts/launch-client.js",
+    "jump": "node scripts/jump.js"
   }
 }

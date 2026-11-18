@@ -1,5 +1,4 @@
 using System;
-using System.IO;
 using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Graphics;
 using ReLogic.Utilities;
@@ -69,7 +68,7 @@ namespace ScourgeMod.Content.NPCs.Bosses.ViscousFallout
         private const float BlinkAnimationMinOpacity = 0.5f;
 
         //Y轴阻塞间距
-        private const float YTroubleSpacing = 170f;
+        private const float YTroubleSpacing = 160f;
 
         private const float XTroubleSpacing = 2000f;
 
@@ -94,6 +93,7 @@ namespace ScourgeMod.Content.NPCs.Bosses.ViscousFallout
         //血量基础缩放：满血1.25，75%血1，半血及以下0.75
         private float HealthScale =>
             MathHelper.Clamp((float)NPC.life / NPC.lifeMax + 0.25f, 0.75f, 1.25f);
+
         #endregion
 
         #region 字段
@@ -140,11 +140,12 @@ namespace ScourgeMod.Content.NPCs.Bosses.ViscousFallout
         //闪现位置（底部中心）
         private Vector2 BlinkBottom { get; set; }
 
-        //上一帧是否处于闪现后摇
-        private bool WasBlinkRecovering { get; set; }
-
         //闪现前摇音效槽位
         private SlotId BlinkWindupSoundSlot = SlotId.Invalid;
+
+        private const int XFarBoundary = 250;
+        private const int YFarBoundary = 100;
+        private const int XNearBoundary = 100;
 
         #endregion
 
@@ -216,7 +217,7 @@ namespace ScourgeMod.Content.NPCs.Bosses.ViscousFallout
             if (IsSilent())
                 return;
 
-            if (Action != Exiting && !TryFindTarget())
+            if (Action != Exiting && !NPCHelper.TryFindTarget(NPC, ExitDistance)) //rrzz 后面替换成固定坐标监测
             {
                 SetAction(Exiting);
             }
@@ -241,23 +242,6 @@ namespace ScourgeMod.Content.NPCs.Bosses.ViscousFallout
         public override bool CanHitPlayer(Player target, ref int cooldownSlot)
         {
             return Action != Exiting;
-        }
-
-        public override void SendExtraAI(BinaryWriter writer)
-        {
-            bool isBlinkReleased = Action == Blinking && Phase == BlinkPhase;
-            writer.Write(isBlinkReleased);
-        }
-
-        public override void ReceiveExtraAI(BinaryReader reader)
-        {
-            bool isBlinkReleased = reader.ReadBoolean();
-
-            //抵消多人模式闪现偏移
-            if (isBlinkReleased)
-            {
-                NPC.netOffset = Vector2.Zero;
-            }
         }
 
         private void SetAction(int action)
@@ -319,6 +303,32 @@ namespace ScourgeMod.Content.NPCs.Bosses.ViscousFallout
             );
         }
 
+        private int GetHitBoxDistanceY()
+        {
+            Player target = Main.player[NPC.target];
+
+            Rectangle bossHitbox = NPC.Hitbox;
+            Rectangle playerHitbox = target.Hitbox;
+
+            return Math.Max(
+                0,
+                Math.Max(bossHitbox.Top - playerHitbox.Bottom, playerHitbox.Top - bossHitbox.Bottom)
+            );
+        }
+
+        private int GetHitBoxDistanceX()
+        {
+            Player target = Main.player[NPC.target];
+
+            Rectangle bossHitbox = NPC.Hitbox;
+            Rectangle playerHitbox = target.Hitbox;
+
+            return Math.Max(
+                0,
+                Math.Max(bossHitbox.Left - playerHitbox.Right, playerHitbox.Left - bossHitbox.Right)
+            );
+        }
+
         private bool IsSilent()
         {
             return GlobalTimer <= SilentFrameCount;
@@ -326,17 +336,14 @@ namespace ScourgeMod.Content.NPCs.Bosses.ViscousFallout
 
         private bool IsYFar()
         {
-            Player target = Main.player[NPC.target];
-
-            //玩家在Boss头上，且距离大于Y轴阻塞间距
-            return NPC.Top.Y - target.Bottom.Y > YTroubleSpacing;
+            return GetHitBoxDistanceY() > YTroubleSpacing;
         }
 
         private bool IsFar(float spacing)
         {
             Player target = Main.player[NPC.target];
 
-            return Vector2.Distance(NPC.Center, target.Center) > spacing;
+            return GetHitBoxDistanceX() > spacing;
         }
 
         private bool TryOutTrouble(int val = 1)
@@ -392,32 +399,6 @@ namespace ScourgeMod.Content.NPCs.Bosses.ViscousFallout
             return isSevereBlock;
         }
 
-        private bool TryFindTarget()
-        {
-            float maxDistance = ExitDistance;
-
-            bool checkValid()
-            {
-                return NPC.HasValidTarget
-                    && Vector2.Distance(NPC.Center, Main.player[NPC.target].Center) <= maxDistance;
-            }
-
-            NPC.TargetClosest();
-
-            bool isTargetValid = checkValid();
-
-            //先检查目标是否有效或距离过远
-            if (!isTargetValid)
-            {
-                //无有效目标，重新寻找
-                NPC.TargetClosest();
-
-                isTargetValid = checkValid();
-            }
-
-            return isTargetValid;
-        }
-
         private bool TryStop()
         {
             //判断是否接触地面
@@ -449,16 +430,6 @@ namespace ScourgeMod.Content.NPCs.Bosses.ViscousFallout
 
         private void AdjustSync()
         {
-            bool isBlinkRecovering = Action == Blinking && Phase == BlinkRecoveryPhase;
-
-            //进入闪现后摇时播放一次，客户端也会执行
-            if (isBlinkRecovering && !WasBlinkRecovering)
-            {
-                PlayBlinkSound();
-            }
-
-            WasBlinkRecovering = isBlinkRecovering;
-
             if (NPC.velocity.Y == 0f)
             {
                 TryStop();
@@ -480,6 +451,7 @@ namespace ScourgeMod.Content.NPCs.Bosses.ViscousFallout
                 }
                 else if (Phase == BlinkRecoveryPhase)
                 {
+                    ClearBlinkNetOffset();
                     BlinkRecoveryAnimation();
                 }
             }
@@ -509,6 +481,11 @@ namespace ScourgeMod.Content.NPCs.Bosses.ViscousFallout
 
             //保持脚底位置不变
             NPC.Bottom = bottom;
+        }
+
+        private void ClearBlinkNetOffset()
+        {
+            NPC.netOffset = Vector2.Zero;
         }
 
         private void OnWaitAction()
@@ -591,10 +568,145 @@ namespace ScourgeMod.Content.NPCs.Bosses.ViscousFallout
             }
         }
 
+        private Vector2 GetJumpVector()
+        {
+            /*
+                【普通跳】
+
+                起跳速度   X 5   Y 8（px/tick，Y 向上）
+                跳跃结果 · 空气
+                已落回起跳高度   总计 128 tick（2.13 秒）
+                前摇 60 帧   腾空 53 帧   后摇 15 帧
+
+                速度统计                px/tick     px/s   格/s (约)
+                ---------------------   -------   ------   ---------
+                腾空平均 X 速度           5.000   300.00       18.75
+                含前后摇的平均 X 速度     2.070   124.22        7.76
+
+                距离统计         px   格 (约)
+                ----------   ------   -------
+                X 最远距离   265.00     16.56
+                Y 上升高度   102.70      6.42
+            */
+            Vector2 jumpVector = new Vector2(5, 8);
+
+            /*
+                【平跳】
+
+                起跳速度   X 12   Y 5（px/tick，Y 向上）
+                跳跃结果 · 空气
+                已落回起跳高度   总计 108 tick（1.80 秒）
+                前摇 60 帧   腾空 33 帧   后摇 15 帧
+
+                速度统计                px/tick     px/s   格/s (约)
+                ---------------------   -------   ------   ---------
+                腾空平均 X 速度          12.000   720.00       45.00
+                含前后摇的平均 X 速度     3.667   220.00       13.75
+
+                距离统计         px   格 (约)
+                ----------   ------   -------
+                X 最远距离   396.00     24.75
+                Y 上升高度    39.20      2.45
+            */
+            Vector2 jumpVectorII = new Vector2(12f, 5);
+
+            /*
+                【高跳】
+
+                起跳速度   X 3   Y 10（px/tick，Y 向上）
+                跳跃结果 · 空气
+                已落回起跳高度   总计 141 tick（2.35 秒）
+                前摇 60 帧   腾空 66 帧   后摇 15 帧
+
+                速度统计                px/tick     px/s   格/s (约)
+                ---------------------   -------   ------   ---------
+                腾空平均 X 速度           3.000   180.00       11.25
+                含前后摇的平均 X 速度     1.404    84.26        5.27
+
+                距离统计         px   格 (约)
+                ----------   ------   -------
+                X 最远距离   198.00     12.38
+                Y 上升高度   161.70     10.11
+            */
+            Vector2 jumpVectorIII = new Vector2(3, 10);
+
+            /*
+                【小跳】
+
+                起跳速度   X 4.3   Y 5（px/tick，Y 向上）
+                跳跃结果 · 空气
+                已落回起跳高度   总计 108 tick（1.80 秒）
+                前摇 60 帧   腾空 33 帧   后摇 15 帧
+
+                速度统计                px/tick     px/s   格/s (约)
+                ---------------------   -------   ------   ---------
+                腾空平均 X 速度           4.300   258.00       16.12
+                含前后摇的平均 X 速度     1.314    78.83        4.93
+
+                距离统计         px   格 (约)
+                ----------   ------   -------
+                X 最远距离   141.90      8.87
+                Y 上升高度    39.20      2.45
+            */
+            Vector2 jumpVectorIV = new Vector2(4.3f, 5);
+
+            float jumpWeight = 3;
+            float jumpWeightII = 1;
+            float jumpWeightIII = 1;
+            float jumpWeightIV = 1;
+
+            Player target = Main.player[NPC.target];
+
+            //每个轴取两碰撞箱相邻边的间距，接触或重叠时为 0
+            int xDistance = GetHitBoxDistanceX();
+            int yDistance = GetHitBoxDistanceY();
+
+            float distance = Vector2.Distance(target.Center, NPC.Center);
+
+            bool isLongJump = xDistance > XFarBoundary;
+            bool isHighJump = yDistance > YFarBoundary;
+            bool isSmallJump = distance < XNearBoundary && !isLongJump && !isHighJump;
+
+            //远距离特化平跳，并排除小跳
+            if (isLongJump)
+            {
+                jumpWeight = 1f;
+                jumpWeightII = 9f;
+                jumpWeightIII = 0f;
+                jumpWeightIV = 0f;
+            }
+
+            //高处特化高跳，可与远距离同时触发
+            if (isHighJump)
+            {
+                jumpWeight = 1f;
+                jumpWeightII = 0f;
+                jumpWeightIII = 9f;
+                jumpWeightIV = 0f;
+            }
+
+            //近距离特化小跳，并排除平跳和高跳
+            if (isSmallJump)
+            {
+                jumpWeight = 2f;
+                jumpWeightII = 0f;
+                jumpWeightIII = 1f;
+                jumpWeightIV = 5f;
+            }
+
+            WeightedRandom<Vector2> jumpRandom = new WeightedRandom<Vector2>(Main.rand);
+            jumpRandom.Add(jumpVector, jumpWeight);
+            jumpRandom.Add(jumpVectorII, jumpWeightII);
+            jumpRandom.Add(jumpVectorIII, jumpWeightIII);
+            jumpRandom.Add(jumpVectorIV, jumpWeightIV);
+
+            return jumpRandom.Get();
+        }
+
         private void Jump(Vector2 jumpVector)
         {
             NPC.velocity.X = jumpVector.X * NPC.direction;
-            NPC.velocity.Y = jumpVector.Y;
+            NPC.velocity.Y = -jumpVector.Y;
             NPC.netUpdate = true;
         }
 
@@ -627,64 +739,7 @@ namespace ScourgeMod.Content.NPCs.Bosses.ViscousFallout
                 return;
             }
 
-            //普通跳：水平约200像素
-            Vector2 jumpVector = new Vector2(3.8f, -8);
-            //平跳：水平约300像素
-            Vector2 jumpVectorII = new Vector2(9.1f, -5);
-            //高跳：向上约160像素
-            Vector2 jumpVectorIII = new Vector2(3, -10);
-            //小跳：水平约140像素
-            Vector2 jumpVectorIV = new Vector2(4.2f, -5);
-
-            float jumpWeight = 0.4f;
-            float jumpWeightII = 0.2f;
-            float jumpWeightIII = 0.2f;
-            float jumpWeightIV = 0.2f;
-
-            Player target = Main.player[NPC.target];
-            Vector2 targetOffset = target.Center - NPC.Center;
-            float xDistance = Math.Abs(targetOffset.X);
-            float heightDifference = NPC.Top.Y - target.Bottom.Y;
-            float distance = targetOffset.Length();
-
-            bool isLongJump = xDistance > 200f;
-            bool isHighJump = heightDifference > 120f;
-            bool isSmallJump = distance < 100f && !isLongJump && !isHighJump;
-
-            //远距离特化平跳，并排除小跳
-            if (isLongJump)
-            {
-                jumpWeight = 0.1f;
-                jumpWeightII = 0.9f;
-                jumpWeightIII = 0f;
-                jumpWeightIV = 0f;
-            }
-
-            //高处特化高跳，可与远距离同时触发
-            if (isHighJump)
-            {
-                jumpWeight = 0.1f;
-                jumpWeightII = 0f;
-                jumpWeightIII = 0.9f;
-                jumpWeightIV = 0f;
-            }
-
-            //近距离特化小跳，并排除平跳和高跳
-            if (isSmallJump)
-            {
-                jumpWeight = 0.1f;
-                jumpWeightII = 0f;
-                jumpWeightIII = 0f;
-                jumpWeightIV = 0.9f;
-            }
-
-            WeightedRandom<Vector2> jumpRandom = new WeightedRandom<Vector2>(Main.rand);
-            jumpRandom.Add(jumpVector, jumpWeight);
-            jumpRandom.Add(jumpVectorII, jumpWeightII);
-            jumpRandom.Add(jumpVectorIII, jumpWeightIII);
-            jumpRandom.Add(jumpVectorIV, jumpWeightIV);
-
-            Jump(jumpRandom.Get());
+            Jump(GetJumpVector());
             SetAction(Waiting);
         }
 
@@ -750,15 +805,17 @@ namespace ScourgeMod.Content.NPCs.Bosses.ViscousFallout
             NPC.netUpdate = true;
         }
 
-        private void SpawnBloodDust(float direction = 1f)
+        private void SpawnBloodDust(
+            Vector2 center,
+            float radius,
+            float direction = 1f,
+            int count = 10
+        )
         {
             if (Main.netMode == NetmodeID.Server)
                 return;
 
-            Vector2 center = NPC.Center + new Vector2(0f, 15f);
-            float radius = 100f * NPC.scale;
-
-            for (int i = 0; i < 10; i++)
+            for (int i = 0; i < count; i++)
             {
                 // 两个半径相同，生成范围就是圆形
                 Vector2 offset = Main.rand.NextVector2Circular(radius, radius);
@@ -818,7 +875,19 @@ namespace ScourgeMod.Content.NPCs.Bosses.ViscousFallout
 
             if (progress < 1f)
             {
-                SpawnBloodDust(-1);
+                Vector2 center = NPC.Center + new Vector2(0f, 15f);
+                float radius = 100f * NPC.scale;
+
+                SpawnBloodDust(center, radius, -1);
+
+                if (
+                    IsFoundBlinkPosition
+                    && PhaseTimer > BlinkFindTargetFrameCount
+                    && TryFindBlinkPosition(BlinkBottom, out Vector2 targetBottom)
+                )
+                {
+                    SpawnBloodDust(targetBottom, 50f, 1, 3);
+                }
 
                 PlayBlinkWindupSound();
             }
@@ -833,7 +902,10 @@ namespace ScourgeMod.Content.NPCs.Bosses.ViscousFallout
 
             if (progress < 1f)
             {
-                SpawnBloodDust(1);
+                Vector2 center = NPC.Center + new Vector2(0f, 15f);
+                float radius = 100f * NPC.scale;
+
+                SpawnBloodDust(center, radius, 1);
             }
         }
 
@@ -841,6 +913,11 @@ namespace ScourgeMod.Content.NPCs.Bosses.ViscousFallout
         {
             AdjustScale(BlinkAnimationMinScale);
             NPC.Opacity = BlinkAnimationMinOpacity;
+
+            if (PhaseTimer == 1)
+            {
+                PlayBlinkSound();
+            }
         }
 
         private void ReStoreBlinkAnimation()
@@ -905,7 +982,10 @@ namespace ScourgeMod.Content.NPCs.Bosses.ViscousFallout
 
             if (progress < 1f)
             {
-                SpawnBloodDust(-1);
+                Vector2 center = NPC.Center + new Vector2(0f, 15f);
+                float radius = 100f * NPC.scale;
+
+                SpawnBloodDust(center, radius, -1);
             }
         }
 
