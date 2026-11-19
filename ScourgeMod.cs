@@ -1,3 +1,4 @@
+using System.IO;
 using ScourgeMod.Helper;
 using Terraria.ModLoader;
 
@@ -19,7 +20,13 @@ namespace ScourgeMod
         {
             base.Unload();
 
+            SyncHelper.Unload();
             Instance = null;
+        }
+
+        public override void HandlePacket(BinaryReader reader, int whoAmI)
+        {
+            SyncHelper.HandlePacket(reader, whoAmI);
         }
     }
 }

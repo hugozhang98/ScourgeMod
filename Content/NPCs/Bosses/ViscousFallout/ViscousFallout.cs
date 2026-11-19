@@ -4,6 +4,7 @@ using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Graphics;
 using ReLogic.Utilities;
 using ScourgeMod.Helper;
+using ScourgeMod.ID;
 using Terraria;
 using Terraria.Audio;
 using Terraria.DataStructures;
@@ -148,7 +149,12 @@ namespace ScourgeMod.Content.NPCs.Bosses.ViscousFallout
         //闪现前摇音效槽位
         private SlotId BlinkWindupSoundSlot { get; set; } = SlotId.Invalid;
 
+        //战斗场地中心
         private Vector2 SceneCenter { get; set; }
+
+        //未命中玩家计时器
+        public int NoHitTimer { get; private set; }
+
         #endregion
 
         public override string Texture => MainTexture;
@@ -260,6 +266,18 @@ namespace ScourgeMod.Content.NPCs.Bosses.ViscousFallout
             return Action != Exiting;
         }
 
+        public override void OnHitPlayer(Player target, Player.HurtInfo hurtInfo)
+        {
+            if (Main.netMode == NetmodeID.SinglePlayer)
+            {
+                NoHitTimer = 0;
+            }
+            else
+            {
+                SyncHelper.SendToServer(SyncID.Event_ViscousFallout_Hit_Player, NPC.whoAmI);
+            }
+        }
+
         public override void SendExtraAI(BinaryWriter writer)
         {
             writer.WriteVector2(SceneCenter);
@@ -332,6 +350,11 @@ namespace ScourgeMod.Content.NPCs.Bosses.ViscousFallout
                 effects,
                 0f
             );
+        }
+
+        public void UpdateNoHitTimer()
+        {
+            NoHitTimer++;
         }
 
         private int GetHitBoxDistanceY()
@@ -463,7 +486,9 @@ namespace ScourgeMod.Content.NPCs.Bosses.ViscousFallout
         {
             if (GlobalTimer == 0)
                 //rrzz 临时写死
-                SceneCenter = new Vector2(51280, 7296);
+                // (33648, 3792)`
+                //(51280, 7296 mac
+                SceneCenter = new Vector2(33648, 3792);
         }
 
         private void AdjustSync()
@@ -541,6 +566,7 @@ namespace ScourgeMod.Content.NPCs.Bosses.ViscousFallout
         private void OnWaitAction()
         {
             int troubleBoundary = 600;
+            int noHitBoundary = 180;
 
             if (!IsStop())
             {
@@ -577,6 +603,11 @@ namespace ScourgeMod.Content.NPCs.Bosses.ViscousFallout
             }
 
             if (IsYFar() && TryOutTrouble(20))
+            {
+                return;
+            }
+
+            if (NoHitTimer >= noHitBoundary && TryOutTrouble(10))
             {
                 return;
             }
@@ -1046,5 +1077,31 @@ namespace ScourgeMod.Content.NPCs.Bosses.ViscousFallout
         }
 
         private void OnEruptingAction() { }
+    }
+
+    public class ViscousFalloutSystem : ModSystem
+    {
+        public override void Load()
+        {
+            SyncHelper.RegisterHandler(
+                SyncID.Event_ViscousFallout_Hit_Player,
+                serverHandler: (data, fromClient) =>
+                {
+                    if (data is not [int npcIndex])
+                        return;
+
+                    if (npcIndex < 0 || npcIndex >= Main.maxNPCs)
+                        return;
+
+                    NPC npc = Main.npc[npcIndex];
+
+                    if (npc.active && npc.ModNPC is ViscousFallout boss)
+                    {
+                        boss.UpdateNoHitTimer();
+                    }
+                }
+            );
+        }
+        // public const byte SyncId = 0x01;
     }
 }
