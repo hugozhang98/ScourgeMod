@@ -147,7 +147,7 @@ namespace ScourgeMod.Content.NPCs.Bosses.ViscousFallout
         //闪现前摇音效槽位
         private SlotId BlinkWindupSoundSlot = SlotId.Invalid;
 
-        private Vector2 SceneCenter { get; set; } = new Vector2(33648, 3792); //rrzz 临时写死
+        private Vector2 SceneCenter { get; set; }
         #endregion
 
         public override string Texture => MainTexture;
@@ -205,13 +205,12 @@ namespace ScourgeMod.Content.NPCs.Bosses.ViscousFallout
 
         public override void AI()
         {
+            Init();
+
             ActionTimer++;
             PhaseTimer++;
 
             AdjustSync();
-
-            if (Action != Exiting)
-                BattleHelper.SpawnSceneBoundaryDust(SceneCenter, ExitDistance);
 
             if (!IsAuthority)
                 return;
@@ -432,6 +431,13 @@ namespace ScourgeMod.Content.NPCs.Bosses.ViscousFallout
             return NPC.velocity.X == 0f && NPC.velocity.Y == 0f;
         }
 
+        private void Init()
+        {
+            if (GlobalTimer == 0)
+                //rrzz 临时写死
+                SceneCenter = new Vector2(51280, 7296);
+        }
+
         private void AdjustSync()
         {
             if (NPC.velocity.Y == 0f)
@@ -468,10 +474,22 @@ namespace ScourgeMod.Content.NPCs.Bosses.ViscousFallout
                     ExitAnimation();
                 }
             }
-            else
-            {
+
+            if (Action != Blinking)
                 ReStoreBlinkAnimation();
-            }
+
+            if (Action != Exiting)
+                BattleHelper.SpawnSceneBoundaryDust(
+                    center: SceneCenter,
+                    radius: ExitDistance,
+                    dustId: DustID.Blood,
+                    initialScale: 1.5f,
+                    initialOpacity: 1f,
+                    layerAngleOffsetDegrees: 0f,
+                    outwardLayerCount: 5,
+                    layerInterval: 15,
+                    dustSpacing: 25f
+                );
         }
 
         private void AdjustScale(float animationScale = 1f)

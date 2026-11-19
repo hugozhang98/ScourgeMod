@@ -116,37 +116,90 @@ namespace ScourgeMod.Helper
                 + Math.Abs(candidateCenter.Y - npc.position.Y + npc.height / 2);
         }
 
-        //每帧调用，在指定圆周上生成向外渐隐的粒子，圆心和半径使用世界像素
-        public static void SpawnSceneBoundaryDust(Vector2 center, float radius)
+        /// <summary>每帧调用，在指定圆周上生成向外缩小、渐隐的粉尘。圆心和半径使用世界像素。</summary>
+        /// <remarks>
+        /// 自定义粉尘沿用 OnSpawn、GetAlpha 和 PreDraw，由边界接管 Update。
+        /// 完全自绘的 PreDraw 应使用 dust.scale 和 dust.alpha 来呈现逐层缩小和渐隐。
+        /// </remarks>
+        /// <param name="center">边界圆心的世界坐标。</param>
+        /// <param name="radius">边界半径，单位为像素。</param>
+        /// <param name="dustId">原版 DustID 或 ModContent.DustType&lt;T&gt;() 返回的粉尘类型。</param>
+        /// <param name="initialScale">首层粉尘的缩放倍率。</param>
+        /// <param name="initialOpacity">首层不透明度，0 为全透明，1 为完全不透明。</param>
+        /// <param name="layerAngleOffsetDegrees">每个外层相对相邻内层的角度偏移，正值为顺时针。</param>
+        /// <param name="outwardLayerCount">首层以外的飘出层数。设为 0 时只显示首层。</param>
+        /// <param name="layerInterval">相邻两圈的生成间隔，单位为游戏刻，须大于 0。</param>
+        /// <param name="dustSpacing">同一圈内相邻粉尘沿圆周的目标间距，单位为像素，须大于 0。</param>
+        public static void SpawnSceneBoundaryDust(
+            Vector2 center,
+            float radius,
+            int dustId,
+            float initialScale = 1.5f,
+            float initialOpacity = 1f,
+            float layerAngleOffsetDegrees = 0f,
+            int outwardLayerCount = SceneBoundaryDust.DefaultOutwardLayerCount,
+            int layerInterval = SceneBoundaryDust.SpawnInterval,
+            float dustSpacing = 20f
+        )
         {
             if (
                 Main.netMode == NetmodeID.Server
                 || radius <= 0f
-                || Main.GameUpdateCount % SceneBoundaryDust.SpawnInterval != 0
+                || !float.IsFinite(radius)
+                || dustId < 0
+                || initialScale <= 0f
+                || initialOpacity <= 0f
+                || layerInterval <= 0
+                || dustSpacing <= 0f
+                || !float.IsFinite(dustSpacing)
+                || Main.GameUpdateCount % (uint)layerInterval != 0
             )
                 return;
 
-            const float dustSpacing = 16f;
+            ModDust source = DustLoader.GetDust(dustId);
+            if (dustId >= DustID.Count && source == null)
+                return;
+
             const float dustSpeed = 1.5f;
-            const int screenPadding = 64;
+            outwardLayerCount = Math.Max(outwardLayerCount, 0);
+            float driftDistance = outwardLayerCount * (float)layerInterval * dustSpeed;
+            //覆盖能飘入画面的粒子，原版粉尘生成范围最多延伸到屏外 400 像素。
+            int screenPadding = (int)Math.Clamp(driftDistance + dustSpacing, 64f, 400f);
             Rectangle screenBounds = new Rectangle(
                 (int)Main.screenPosition.X - screenPadding,
                 (int)Main.screenPosition.Y - screenPadding,
                 Main.screenWidth + screenPadding * 2,
                 Main.screenHeight + screenPadding * 2
             );
+            Vector2 halfViewSize = new Vector2(screenBounds.Width, screenBounds.Height) * 0.5f;
+            float centerDistance = Vector2.Distance(center, screenBounds.TopLeft() + halfViewSize);
+            if (MathF.Abs(centerDistance - radius) > halfViewSize.Length())
+                return;
 
-            int count = (int)Math.Ceiling(MathHelper.TwoPi * radius / dustSpacing);
-            int dustType = ModContent.DustType<SceneBoundaryDust>();
+            int count = (int)Math.Min(
+                Math.Ceiling(MathHelper.TwoPi * (double)radius / dustSpacing), Main.maxDust
+            );
+            //每批首层反向错开一个角度，已经向外飘的上一批便相对新首层正向错开。
+            double batch = Main.GameUpdateCount / (uint)layerInterval;
+            float phase =
+                outwardLayerCount == 0
+                    ? 0f
+                    : MathHelper.ToRadians((float)(-batch * layerAngleOffsetDegrees % 360.0));
+            var fade = new SceneBoundaryDust.FadeSettings(
+                initialScale,
+                Math.Min(initialOpacity, 1f),
+                outwardLayerCount,
+                layerInterval
+            );
             for (int i = 0; i < count; i++)
             {
-                float angle = MathHelper.TwoPi * i / count;
+                float angle = phase + MathHelper.TwoPi * i / count;
                 Vector2 outward = angle.ToRotationVector2();
                 Vector2 position = center + outward * radius;
                 if (!screenBounds.Contains(position.ToPoint()))
                     continue;
 
-                Dust.NewDustPerfect(position, dustType, outward * dustSpeed, Scale: 1.5f);
+                SceneBoundaryDust.Spawn(position, outward * dustSpeed, dustId, source, fade);
             }
         }
     }
