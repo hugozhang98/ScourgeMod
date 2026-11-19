@@ -249,6 +249,9 @@ namespace ScourgeMod.Content.NPCs.Bosses.ViscousFallout
                 case Blinking:
                     OnBlinkAction();
                     break;
+                case Erupting:
+                    OnEruptingAction();
+                    break;
             }
         }
 
@@ -1041,5 +1044,7 @@ namespace ScourgeMod.Content.NPCs.Bosses.ViscousFallout
             NPC.netUpdate = true;
             BattleHelper.Announce(this, "DespawnAnnouncement", DisplayName.ToNetworkText());
         }
+
+        private void OnEruptingAction() { }
     }
 }
