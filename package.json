@@ -8,6 +8,7 @@
     "start:client": "node scripts/start.js client",
     "start:server": "node scripts/start.js server",
     "client": "node scripts/launch-client.js",
-    "jump": "node scripts/jump.js"
+    "jump": "node scripts/jump.js",
+    "oxipng": "node scripts/oxipng.js"
   }
 }

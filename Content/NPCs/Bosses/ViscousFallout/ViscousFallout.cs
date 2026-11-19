@@ -19,7 +19,7 @@ namespace ScourgeMod.Content.NPCs.Bosses.ViscousFallout
         #region 常量
         private const string MainTexture = "ScourgeMod/Assets/NPC_ViscousFallout";
 
-        private const string CrownTexture = "ScourgeMod/Assets/Extra_ViscousFalloutCrown";
+        private const string CrownTexture = "ScourgeMod/Assets/Extra_ViscousFallout_Crown";
 
         //基础碰撞箱宽度
         private const int BaseWidth = 98;
