@@ -1,10 +1,12 @@
 using System;
+using System.IO;
 using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Graphics;
 using ReLogic.Utilities;
 using ScourgeMod.Helper;
 using Terraria;
 using Terraria.Audio;
+using Terraria.DataStructures;
 using Terraria.ID;
 using Terraria.ModLoader;
 using Terraria.Utilities;
@@ -70,7 +72,7 @@ namespace ScourgeMod.Content.NPCs.Bosses.ViscousFallout
         //Y轴阻塞间距
         private const float YTroubleSpacing = 160f;
 
-        private const float XTroubleSpacing = 2000f;
+        private const float XTroubleSpacing = 1500f;
 
         private const float XTroubleSpacingII = 1000f;
 
@@ -79,7 +81,7 @@ namespace ScourgeMod.Content.NPCs.Bosses.ViscousFallout
         private const float XTroubleSpacingIV = 200f;
 
         //脱战距离
-        private const float ExitDistance = 2000f;
+        private const float ExitDistance = 1500f;
 
         //脱战帧数
         private const int ExitFrameCount = 60;
@@ -98,6 +100,8 @@ namespace ScourgeMod.Content.NPCs.Bosses.ViscousFallout
         private float HealthScale =>
             MathHelper.Clamp((float)NPC.life / NPC.lifeMax + 0.25f, 0.75f, 1.25f);
 
+        //是否找到有效闪现位置
+        private bool IsFoundBlinkPosition => BlinkBottom != Vector2.Zero;
         #endregion
 
         #region 字段
@@ -138,14 +142,11 @@ namespace ScourgeMod.Content.NPCs.Bosses.ViscousFallout
         //严重阻塞计数器
         private int SevereBlockCounter { get; set; }
 
-        //是否找到有效闪现位置
-        private bool IsFoundBlinkPosition { get; set; }
-
         //闪现位置（底部中心）
         private Vector2 BlinkBottom { get; set; }
 
         //闪现前摇音效槽位
-        private SlotId BlinkWindupSoundSlot = SlotId.Invalid;
+        private SlotId BlinkWindupSoundSlot { get; set; } = SlotId.Invalid;
 
         private Vector2 SceneCenter { get; set; }
         #endregion
@@ -166,11 +167,11 @@ namespace ScourgeMod.Content.NPCs.Bosses.ViscousFallout
 
             //基础数值
             //最大生命值
-            NPC.lifeMax = 2000;
+            NPC.lifeMax = 4500;
             //伤害值
-            NPC.damage = 40;
+            NPC.damage = 50;
             //防御值
-            NPC.defense = 10;
+            NPC.defense = 15;
             //击退抵抗值（0～1，0为免疫，1为完全承受）
             NPC.knockBackResist = 0f;
             //是否不受重力影响
@@ -201,6 +202,15 @@ namespace ScourgeMod.Content.NPCs.Bosses.ViscousFallout
         public override void PostDraw(SpriteBatch spriteBatch, Vector2 screenPos, Color drawColor)
         {
             DrawCrown(spriteBatch, screenPos, drawColor);
+        }
+
+        public override void OnSpawn(IEntitySource source)
+        {
+            //原版 Boss 召唤入口会自行发出苏醒公告。
+            if (source is not EntitySource_BossSpawn)
+            {
+                BattleHelper.Announce(this, $"SpawnAnnouncement{Main.rand.Next(1, 5)}");
+            }
         }
 
         public override void AI()
@@ -247,13 +257,28 @@ namespace ScourgeMod.Content.NPCs.Bosses.ViscousFallout
             return Action != Exiting;
         }
 
+        public override void SendExtraAI(BinaryWriter writer)
+        {
+            writer.WriteVector2(SceneCenter);
+            writer.WriteVector2(BlinkBottom);
+            writer.Write(NPC.width);
+            writer.Write(NPC.height);
+        }
+
+        public override void ReceiveExtraAI(BinaryReader reader)
+        {
+            SceneCenter = reader.ReadVector2();
+            BlinkBottom = reader.ReadVector2();
+            NPC.width = reader.ReadInt32();
+            NPC.height = reader.ReadInt32();
+        }
+
         private void SetAction(int action)
         {
             Action = action;
             Phase = 0;
             ActionTimer = 0;
             PhaseTimer = 0;
-            IsFoundBlinkPosition = false;
             BlinkBottom = Vector2.Zero;
             NPC.netUpdate = true;
         }
@@ -902,13 +927,9 @@ namespace ScourgeMod.Content.NPCs.Bosses.ViscousFallout
 
                 SpawnBloodDust(center, radius, -1);
 
-                if (
-                    IsFoundBlinkPosition
-                    && PhaseTimer > BlinkFindTargetFrameCount
-                    && TryFindBlinkPosition(BlinkBottom, out Vector2 targetBottom)
-                )
+                if (IsFoundBlinkPosition && PhaseTimer > BlinkFindTargetFrameCount)
                 {
-                    SpawnBloodDust(targetBottom, 50f, 1, 3);
+                    SpawnBloodDust(BlinkBottom, 50f, 1, 3);
                 }
 
                 PlayBlinkWindupSound();
@@ -959,8 +980,8 @@ namespace ScourgeMod.Content.NPCs.Bosses.ViscousFallout
 
                     if (TryFindBlinkPosition(target.Bottom, out Vector2 targetBottom))
                     {
-                        IsFoundBlinkPosition = true;
                         BlinkBottom = targetBottom;
+                        NPC.netUpdate = true;
                     }
                 }
 
@@ -1013,17 +1034,12 @@ namespace ScourgeMod.Content.NPCs.Bosses.ViscousFallout
 
         private void OnExitAction()
         {
-            // 与原版类似，缩短引擎的剩余存在时间。
-            NPC.EncourageDespawn(ExitFrameCount);
-
-            // 使用自己的计时器，保证退场有明确终点。
-            if (ActionTimer < ExitFrameCount)
-            {
+            if (!NPC.active || ActionTimer < ExitFrameCount)
                 return;
-            }
 
             NPC.active = false;
             NPC.netUpdate = true;
+            BattleHelper.Announce(this, "DespawnAnnouncement", DisplayName.ToNetworkText());
         }
     }
 }

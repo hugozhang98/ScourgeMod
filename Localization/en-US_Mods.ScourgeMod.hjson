@@ -5,4 +5,13 @@ Items: {
 	}
 }
 
-NPCs.ViscousFallout.DisplayName: Viscous Fallout
+NPCs: {
+	ViscousFallout: {
+		DisplayName: Viscous Fallout
+		SpawnAnnouncement1: The Geiger counter lets out a loud crack!
+		SpawnAnnouncement2: The Geiger counter starts spewing black smoke!
+		SpawnAnnouncement3: The Geiger counter goes off the scale!
+		SpawnAnnouncement4: The Geiger counter is heating up!
+		DespawnAnnouncement: "{0} has dissipated."
+	}
+}

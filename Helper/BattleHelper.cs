@@ -2,7 +2,9 @@ using System;
 using Microsoft.Xna.Framework;
 using ScourgeMod.Content.Dusts;
 using Terraria;
+using Terraria.Chat;
 using Terraria.ID;
+using Terraria.Localization;
 using Terraria.ModLoader;
 
 namespace ScourgeMod.Helper
@@ -116,6 +118,18 @@ namespace ScourgeMod.Helper
                 + Math.Abs(candidateCenter.Y - npc.position.Y + npc.height / 2);
         }
 
+        public static void Announce(ModNPC npc, string suffix, params object[] substitutions)
+        {
+            if (Main.netMode == NetmodeID.MultiplayerClient)
+                return;
+
+            NetworkText message = NetworkText.FromKey(
+                npc.GetLocalizationKey(suffix),
+                substitutions
+            );
+            ChatHelper.BroadcastChatMessage(message, new Color(175, 75, 255));
+        }
+
         /// <summary>每帧调用，在指定圆周上生成向外缩小、渐隐的粉尘。圆心和半径使用世界像素。</summary>
         /// <remarks>
         /// 自定义粉尘沿用 OnSpawn、GetAlpha 和 PreDraw，由边界接管 Update。
@@ -176,9 +190,11 @@ namespace ScourgeMod.Helper
             if (MathF.Abs(centerDistance - radius) > halfViewSize.Length())
                 return;
 
-            int count = (int)Math.Min(
-                Math.Ceiling(MathHelper.TwoPi * (double)radius / dustSpacing), Main.maxDust
-            );
+            int count = (int)
+                Math.Min(
+                    Math.Ceiling(MathHelper.TwoPi * (double)radius / dustSpacing),
+                    Main.maxDust
+                );
             //每批首层反向错开一个角度，已经向外飘的上一批便相对新首层正向错开。
             double batch = Main.GameUpdateCount / (uint)layerInterval;
             float phase =

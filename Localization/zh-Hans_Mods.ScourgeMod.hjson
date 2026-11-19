@@ -5,4 +5,13 @@ Items: {
 	}
 }
 
-NPCs.ViscousFallout.DisplayName: 粘性辐射尘
+NPCs: {
+	ViscousFallout: {
+		DisplayName: 粘性辐射尘
+		SpawnAnnouncement1: 盖格计数器发出爆鸣！
+		SpawnAnnouncement2: 盖格计数器冒出黑烟！
+		SpawnAnnouncement3: 盖格计数器爆表了！
+		SpawnAnnouncement4: 盖格计数器开始发烫！
+		DespawnAnnouncement: "{0}消散了"
+	}
+}
