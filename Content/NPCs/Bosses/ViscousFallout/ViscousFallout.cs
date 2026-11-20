@@ -225,6 +225,7 @@ namespace ScourgeMod.Content.NPCs.Bosses.ViscousFallout
 
             ActionTimer++;
             PhaseTimer++;
+            NoHitTimer++;
 
             AdjustSync();
 
@@ -352,9 +353,9 @@ namespace ScourgeMod.Content.NPCs.Bosses.ViscousFallout
             );
         }
 
-        public void UpdateNoHitTimer()
+        public void ResetNoHitTimer()
         {
-            NoHitTimer++;
+            NoHitTimer = 0;
         }
 
         private int GetHitBoxDistanceY()
@@ -566,7 +567,7 @@ namespace ScourgeMod.Content.NPCs.Bosses.ViscousFallout
         private void OnWaitAction()
         {
             int troubleBoundary = 600;
-            int noHitBoundary = 180;
+            int noHitBoundary = 300;
 
             if (!IsStop())
             {
@@ -607,7 +608,7 @@ namespace ScourgeMod.Content.NPCs.Bosses.ViscousFallout
                 return;
             }
 
-            if (NoHitTimer >= noHitBoundary && TryOutTrouble(10))
+            if (NoHitTimer >= noHitBoundary && TryOutTrouble(20))
             {
                 return;
             }
@@ -1097,11 +1098,10 @@ namespace ScourgeMod.Content.NPCs.Bosses.ViscousFallout
 
                     if (npc.active && npc.ModNPC is ViscousFallout boss)
                     {
-                        boss.UpdateNoHitTimer();
+                        boss.ResetNoHitTimer();
                     }
                 }
             );
         }
-        // public const byte SyncId = 0x01;
     }
 }
