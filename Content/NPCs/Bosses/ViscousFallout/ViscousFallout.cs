@@ -71,18 +71,22 @@ namespace ScourgeMod.Content.NPCs.Bosses.ViscousFallout
         private const float BlinkAnimationMinOpacity = 0.5f;
 
         //Y轴阻塞间距
-        private const float YTroubleSpacing = 160f;
+        private const int YTroubleSpacing = 160;
 
-        private const float XTroubleSpacing = 1500f;
+        //X轴阻塞间距
+        private const int XTroubleSpacing = 1500;
 
-        private const float XTroubleSpacingII = 1000f;
+        private const int XTroubleSpacingII = XTroubleSpacing - 500;
 
-        private const float XTroubleSpacingIII = 500f;
+        private const int XTroubleSpacingIII = XTroubleSpacingII - 500;
 
-        private const float XTroubleSpacingIV = 200f;
+        private const int XTroubleSpacingIV = XTroubleSpacingIII - 300;
 
         //脱战距离
-        private const float ExitDistance = 1500f;
+        private const int ExitDistance = 2000;
+
+        //警告距离
+        private const int WarningDistance = ExitDistance - 300;
 
         //脱战帧数
         private const int ExitFrameCount = 60;
@@ -97,9 +101,19 @@ namespace ScourgeMod.Content.NPCs.Bosses.ViscousFallout
         //是否单机或服务器权威
         private bool IsAuthority => Main.netMode != NetmodeID.MultiplayerClient;
 
-        //血量基础缩放：满血1.25，75%血1，半血及以下0.75
-        private float HealthScale =>
-            MathHelper.Clamp((float)NPC.life / NPC.lifeMax + 0.25f, 0.75f, 1.25f);
+        private bool IsHalfHealth => NPC.life <= NPC.lifeMax / 2;
+
+        //血量基础缩放：高于75%为1.25，高于50%且不超过75%为1，半血及以下为0.75
+        private float HealthScale
+        {
+            get
+            {
+                if (NPC.life > NPC.lifeMax * 0.75)
+                    return 1.25f;
+
+                return IsHalfHealth ? 0.75f : 1f;
+            }
+        }
 
         //是否找到有效闪现位置
         private bool IsFoundBlinkPosition => BlinkBottom != Vector2.Zero;
@@ -173,9 +187,9 @@ namespace ScourgeMod.Content.NPCs.Bosses.ViscousFallout
 
             //基础数值
             //最大生命值
-            NPC.lifeMax = 4500;
+            NPC.lifeMax = 2600;
             //伤害值
-            NPC.damage = 50;
+            NPC.damage = 40;
             //防御值
             NPC.defense = 15;
             //击退抵抗值（0～1，0为免疫，1为完全承受）
@@ -394,10 +408,8 @@ namespace ScourgeMod.Content.NPCs.Bosses.ViscousFallout
             return GetHitBoxDistanceY() > YTroubleSpacing;
         }
 
-        private bool IsFar(float spacing)
+        private bool IsXFar(float spacing)
         {
-            Player target = Main.player[NPC.target];
-
             return GetHitBoxDistanceX() > spacing;
         }
 
@@ -408,7 +420,7 @@ namespace ScourgeMod.Content.NPCs.Bosses.ViscousFallout
 
             int previewVal = BlockCounter;
 
-            BlockCounter += val;
+            BlockCounter += Math.Max(val, 1);
 
             int previewSevereLevel = previewVal / SevereBlockInterval;
             int currentSevereLevel = BlockCounter / SevereBlockInterval;
@@ -439,7 +451,7 @@ namespace ScourgeMod.Content.NPCs.Bosses.ViscousFallout
 
             int previewVal = SevereBlockCounter;
 
-            SevereBlockCounter += val;
+            SevereBlockCounter += Math.Max(val, 1);
 
             int previewSevereLevel = previewVal / SevereBlockCountBoundary;
             int currentSevereLevel = SevereBlockCounter / SevereBlockCountBoundary;
@@ -489,7 +501,7 @@ namespace ScourgeMod.Content.NPCs.Bosses.ViscousFallout
                 //rrzz 临时写死
                 // (33648, 3792)`
                 //(51280, 7296 mac
-                SceneCenter = new Vector2(33648, 3792);
+                SceneCenter = new Vector2(51280, 7296);
         }
 
         private void AdjustSync()
@@ -562,58 +574,6 @@ namespace ScourgeMod.Content.NPCs.Bosses.ViscousFallout
         private void ClearBlinkNetOffset()
         {
             NPC.netOffset = Vector2.Zero;
-        }
-
-        private void OnWaitAction()
-        {
-            int troubleBoundary = 600;
-            int noHitBoundary = 300;
-
-            if (!IsStop())
-            {
-                if (ActionTimer >= troubleBoundary)
-                {
-                    TryOutTrouble();
-                }
-
-                return;
-            }
-
-            int farTroubleValue = 0;
-
-            if (IsFar(XTroubleSpacing))
-            {
-                farTroubleValue = 60;
-            }
-            else if (IsFar(XTroubleSpacingII))
-            {
-                farTroubleValue = 40;
-            }
-            else if (IsFar(XTroubleSpacingIII))
-            {
-                farTroubleValue = 25;
-            }
-            else if (IsFar(XTroubleSpacingIV))
-            {
-                farTroubleValue = 15;
-            }
-
-            if (farTroubleValue > 0 && TryOutTrouble(farTroubleValue))
-            {
-                return;
-            }
-
-            if (IsYFar() && TryOutTrouble(20))
-            {
-                return;
-            }
-
-            if (NoHitTimer >= noHitBoundary && TryOutTrouble(20))
-            {
-                return;
-            }
-
-            SetAction(Jumping);
         }
 
         private void TryKeepXVelocity()
@@ -753,7 +713,7 @@ namespace ScourgeMod.Content.NPCs.Bosses.ViscousFallout
             if (isLongJump)
             {
                 jumpWeight = 1f;
-                jumpWeightII = 9f;
+                jumpWeightII = 3f;
                 jumpWeightIII = 0f;
                 jumpWeightIV = 0f;
             }
@@ -763,17 +723,17 @@ namespace ScourgeMod.Content.NPCs.Bosses.ViscousFallout
             {
                 jumpWeight = 1f;
                 jumpWeightII = 0f;
-                jumpWeightIII = 9f;
+                jumpWeightIII = 6f;
                 jumpWeightIV = 0f;
             }
 
             //近距离特化小跳，并排除平跳和高跳
             if (isSmallJump)
             {
-                jumpWeight = 2f;
+                jumpWeight = 1f;
                 jumpWeightII = 0f;
                 jumpWeightIII = 1f;
-                jumpWeightIV = 5f;
+                jumpWeightIV = 2f;
             }
 
             WeightedRandom<Vector2> jumpRandom = new WeightedRandom<Vector2>(Main.rand);
@@ -790,39 +750,6 @@ namespace ScourgeMod.Content.NPCs.Bosses.ViscousFallout
             NPC.velocity.X = jumpVector.X * NPC.direction;
             NPC.velocity.Y = -jumpVector.Y;
             NPC.netUpdate = true;
-        }
-
-        private void OnJumpAction()
-        {
-            //持续监测是否停止移动
-            if (!IsStop())
-            {
-                if (!TryOutTrouble())
-                {
-                    SetAction(Waiting);
-                }
-
-                return;
-            }
-
-            int windUpPhase = 0;
-            int jumpPhase = 1;
-
-            //前摇帧数
-            int windUpFrameCount = 60;
-
-            //前摇
-            if (Phase == windUpPhase)
-            {
-                if (PhaseTimer >= windUpFrameCount)
-                {
-                    SetPhase(jumpPhase);
-                }
-                return;
-            }
-
-            Jump(GetJumpVector());
-            SetAction(Waiting);
         }
 
         private bool TryFindBlinkPosition(Vector2 targetBottom, out Vector2 blinkBottom)
@@ -1004,6 +931,129 @@ namespace ScourgeMod.Content.NPCs.Bosses.ViscousFallout
             NPC.Opacity = 1f;
         }
 
+        private void ExitAnimation()
+        {
+            float progress = MathHelper.Clamp((float)PhaseTimer / ExitFrameCount, 0f, 1f);
+
+            AdjustScale(MathHelper.Lerp(1f, BlinkAnimationMinScale, progress));
+            NPC.Opacity = MathHelper.Lerp(1f, BlinkAnimationMinOpacity, progress);
+
+            if (progress < 1f)
+            {
+                Vector2 center = NPC.Center + new Vector2(0f, 15f);
+                float radius = 100f * NPC.scale;
+
+                SpawnBloodDust(center, radius, -1);
+            }
+        }
+
+        private bool IsInWaringArea()
+        {
+            Player target = Main.player[NPC.target];
+
+            return Vector2.Distance(SceneCenter, target.Center) >= WarningDistance;
+        }
+
+        private void OnWaitAction()
+        {
+            int jumpBoundaryI = 90;
+            int jumpBoundaryII = 30;
+            int cantStopBoundary = 600;
+            int noHitBoundary = 300;
+
+            if (!IsStop())
+            {
+                //避免一直停不下来
+                if (ActionTimer >= cantStopBoundary)
+                {
+                    TryOutTrouble();
+                }
+
+                return;
+            }
+
+            //半血以后狂暴，加快跳跃速度
+            int currentJumpBoundary = IsHalfHealth ? jumpBoundaryII : jumpBoundaryI;
+
+            if (ActionTimer <= currentJumpBoundary)
+                return;
+
+            if (IsInWaringArea())
+            {
+                //rrzz 喷发逻辑
+            }
+
+            int farTroubleValue = 0;
+
+            if (IsXFar(XTroubleSpacing))
+            {
+                farTroubleValue = 60;
+            }
+            else if (IsXFar(XTroubleSpacingII))
+            {
+                farTroubleValue = 30;
+            }
+            else if (IsXFar(XTroubleSpacingIII))
+            {
+                farTroubleValue = 20;
+            }
+            else if (IsXFar(XTroubleSpacingIV))
+            {
+                farTroubleValue = 10;
+            }
+
+            if (farTroubleValue > 0 && TryOutTrouble(farTroubleValue))
+            {
+                return;
+            }
+
+            if (IsYFar() && TryOutTrouble(20))
+            {
+                return;
+            }
+
+            if (NoHitTimer >= noHitBoundary && TryOutTrouble(20))
+            {
+                ResetNoHitTimer();
+                return;
+            }
+
+            SetAction(Jumping);
+        }
+
+        private void OnJumpAction()
+        {
+            //持续监测是否停止移动
+            if (!IsStop())
+            {
+                if (!TryOutTrouble())
+                {
+                    SetAction(Waiting);
+                }
+
+                return;
+            }
+
+            int windUpPhase = 0;
+            int jumpPhase = 1;
+
+            //前摇帧数
+            int windUpFrameCount = 60;
+
+            //前摇
+            if (Phase == windUpPhase)
+            {
+                if (PhaseTimer >= windUpFrameCount)
+                {
+                    SetPhase(jumpPhase);
+                }
+                return;
+            }
+
+            Jump(GetJumpVector());
+            SetAction(Waiting);
+        }
+
         private void OnBlinkAction()
         {
             //前摇
@@ -1049,22 +1099,6 @@ namespace ScourgeMod.Content.NPCs.Bosses.ViscousFallout
 
             Blink(BlinkBottom);
             SetPhase(BlinkRecoveryPhase);
-        }
-
-        private void ExitAnimation()
-        {
-            float progress = MathHelper.Clamp((float)PhaseTimer / ExitFrameCount, 0f, 1f);
-
-            AdjustScale(MathHelper.Lerp(1f, BlinkAnimationMinScale, progress));
-            NPC.Opacity = MathHelper.Lerp(1f, BlinkAnimationMinOpacity, progress);
-
-            if (progress < 1f)
-            {
-                Vector2 center = NPC.Center + new Vector2(0f, 15f);
-                float radius = 100f * NPC.scale;
-
-                SpawnBloodDust(center, radius, -1);
-            }
         }
 
         private void OnExitAction()
